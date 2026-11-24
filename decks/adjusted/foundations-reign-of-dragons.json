@@ -1,0 +1,233 @@
+{
+  "name": "Reign of Dragons",
+  "format": "commander",
+  "commander": "Lathliss, Dragon Queen",
+  "archetype": "dragons",
+  "notes": "Official Foundations Commander Reign of Dragons precon decklist (set FDC, released 2026-10-02); source https://magic.wizards.com/en/news/announcements/foundations-commander-decklists; card list from MTGJSON, 69 distinct names, commander first.",
+  "cards": [
+    {
+      "name": "Lathliss, Dragon Queen",
+      "count": 1
+    },
+    {
+      "name": "Atsushi, the Blazing Sky",
+      "count": 1
+    },
+    {
+      "name": "Blasphemous Act",
+      "count": 1
+    },
+    {
+      "name": "Chain Reaction",
+      "count": 1
+    },
+    {
+      "name": "Chaos Warp",
+      "count": 1
+    },
+    {
+      "name": "Count on Luck",
+      "count": 1
+    },
+    {
+      "name": "Crucible of Fire",
+      "count": 1
+    },
+    {
+      "name": "Dragon Tempest",
+      "count": 1
+    },
+    {
+      "name": "Dragonmaster Outcast",
+      "count": 1
+    },
+    {
+      "name": "Drakuseth, Maw of Flames",
+      "count": 1
+    },
+    {
+      "name": "Goldlust Triad",
+      "count": 1
+    },
+    {
+      "name": "Hellkite Charger",
+      "count": 1
+    },
+    {
+      "name": "Magmaquake",
+      "count": 1
+    },
+    {
+      "name": "Minion of the Mighty",
+      "count": 1
+    },
+    {
+      "name": "Nogi, Draco-Zealot",
+      "count": 1
+    },
+    {
+      "name": "Outpost Siege",
+      "count": 1
+    },
+    {
+      "name": "Parapet Thrasher",
+      "count": 1
+    },
+    {
+      "name": "Sarkhan, Dragon Ascendant",
+      "count": 1
+    },
+    {
+      "name": "Scourge of the Throne",
+      "count": 1
+    },
+    {
+      "name": "Scourge of Valkas",
+      "count": 1
+    },
+    {
+      "name": "Shivan Devastator",
+      "count": 1
+    },
+    {
+      "name": "Spit Flame",
+      "count": 1
+    },
+    {
+      "name": "Taurean Mauler",
+      "count": 1
+    },
+    {
+      "name": "Terror of Mount Velus",
+      "count": 1
+    },
+    {
+      "name": "Thunderbreak Regent",
+      "count": 1
+    },
+    {
+      "name": "Tyrant's Familiar",
+      "count": 1
+    },
+    {
+      "name": "Utvara Hellkite",
+      "count": 1
+    },
+    {
+      "name": "Warstorm Surge",
+      "count": 1
+    },
+    {
+      "name": "Basilisk Collar",
+      "count": 1
+    },
+    {
+      "name": "Dragon's Hoard",
+      "count": 1
+    },
+    {
+      "name": "Bonders' Enclave",
+      "count": 1
+    },
+    {
+      "name": "Abrade",
+      "count": 1
+    },
+    {
+      "name": "Anger",
+      "count": 1
+    },
+    {
+      "name": "Bitter Reunion",
+      "count": 1
+    },
+    {
+      "name": "Breaching Dragonstorm",
+      "count": 1
+    },
+    {
+      "name": "Breath Weapon",
+      "count": 1
+    },
+    {
+      "name": "Carnelian Orb of Dragonkind",
+      "count": 1
+    },
+    {
+      "name": "Dragonlord's Servant",
+      "count": 1
+    },
+    {
+      "name": "Dragonspeaker Shaman",
+      "count": 1
+    },
+    {
+      "name": "Firespitter Whelp",
+      "count": 1
+    },
+    {
+      "name": "Lightning Bolt",
+      "count": 1
+    },
+    {
+      "name": "Mana Geyser",
+      "count": 1
+    },
+    {
+      "name": "Rapacious Dragon",
+      "count": 1
+    },
+    {
+      "name": "Skyline Despot",
+      "count": 1
+    },
+    {
+      "name": "Thrill of Possibility",
+      "count": 1
+    },
+    {
+      "name": "Unexpected Windfall",
+      "count": 1
+    },
+    {
+      "name": "Arcane Signet",
+      "count": 1
+    },
+    {
+      "name": "Commander's Sphere",
+      "count": 1
+    },
+    {
+      "name": "Dragonstorm Globe",
+      "count": 1
+    },
+    {
+      "name": "Fire Diamond",
+      "count": 1
+    },
+    {
+      "name": "Hazoret's Monument",
+      "count": 1
+    },
+    {
+      "name": "Sol Ring",
+      "count": 1
+    },
+    {
+      "name": "Swiftfoot Boots",
+      "count": 1
+    },
+    {
+      "name": "Forgotten Cave",
+      "count": 1
+    },
+    {
+      "name": "Temple of the False God",
+      "count": 1
+    },
+    {
+      "name": "Mountain",
+      "count": 45
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "table": "adjusted",
+  "provenance": {
+    "engine_repo": "https://github.com/adams-shaun/gorge.git",
+    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+  },
+  "config": {
+    "card_set": "cmd5",
+    "surface": "full",
+    "pilot": "hbot",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 1,
+    "games": 1000
+  },
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/adjusted/foundations-calling-all-angels.json",
+      "name": "Calling All Angels",
+      "commanders": [
+        "Giada, Font of Hope"
+      ],
+      "cards": 100,
+      "sha256": "295d1e23ac5e2ae5012c99b5a16e469e43cc38fe433a48b7b382d54608222870"
+    },
+    {
+      "seat": 1,
+      "file": "decks/adjusted/foundations-keen-engineering.json",
+      "name": "Keen Engineering",
+      "commanders": [
+        "Sai, Master Thopterist"
+      ],
+      "cards": 100,
+      "sha256": "3861ef49cd1d1b2f04c211edb813f99adfea5b710a9e4242933b25b74b4c8a21"
+    },
+    {
+      "seat": 2,
+      "file": "decks/adjusted/foundations-reign-of-dragons.json",
+      "name": "Reign of Dragons",
+      "commanders": [
+        "Lathliss, Dragon Queen"
+      ],
+      "cards": 100,
+      "sha256": "d1d41a9550bf42419308dbcf8259a4561f80ac241e34129e4d489b0a281783db"
+    },
+    {
+      "seat": 3,
+      "file": "decks/adjusted/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "2110f36e9603dd0a2673f210135bf510953f6dce34754de8c47308936ca2f0ec"
+    }
+  ],
+  "status": "played",
+  "summary": {
+    "games": 1000,
+    "finished": 998,
+    "wins": [
+      452,
+      28,
+      387,
+      131
+    ],
+    "draws": 0,
+    "stalled": 2,
+    "truncated": 0,
+    "failed": 0,
+    "turns": 42157,
+    "decisions": 302816,
+    "aborts_by": {
+      "board": 2
+    },
+    "games_sha256": "5ad8d913fd4457cf062865bd199d8bd924c5640ca429f6ad30fd6ad80e0348b6"
+  },
+  "aborts": [
+    {
+      "seed": 156,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 50,
+      "decisions": 532,
+      "hash": "77e6a38aa7129cfa",
+      "reason": "board",
+      "class": "capacity"
+    },
+    {
+      "seed": 361,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 48,
+      "decisions": 404,
+      "hash": "4f5b12d6007f87e7",
+      "reason": "board",
+      "class": "capacity"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "table": "original",
+  "provenance": {
+    "engine_repo": "https://github.com/adams-shaun/gorge.git",
+    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+  },
+  "config": {
+    "card_set": "cmd5",
+    "surface": "full",
+    "pilot": "hbot",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 1,
+    "games": 1000
+  },
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/original/foundations-calling-all-angels.json",
+      "name": "Calling All Angels",
+      "commanders": [
+        "Giada, Font of Hope"
+      ],
+      "cards": 100,
+      "sha256": "85cd7fc0176669f492be7b144c59430bf8b86506f7e0bd9a129b50237b2e397c"
+    },
+    {
+      "seat": 1,
+      "file": "decks/original/foundations-keen-engineering.json",
+      "name": "Keen Engineering",
+      "commanders": [
+        "Sai, Master Thopterist"
+      ],
+      "cards": 100,
+      "sha256": "8a427df3d8b21b372e69dbf7375a9100427deef8a28a8b43bea0a2a266ce2d78"
+    },
+    {
+      "seat": 2,
+      "file": "decks/original/foundations-reign-of-dragons.json",
+      "name": "Reign of Dragons",
+      "commanders": [
+        "Lathliss, Dragon Queen"
+      ],
+      "cards": 100,
+      "sha256": "16fc0818ad26ace9dad7289ddc207071a0fa5930fcece249287afa0776cd5eaf"
+    },
+    {
+      "seat": 3,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283"
+    }
+  ],
+  "status": "refused",
+  "refusal": {
+    "kind": "card",
+    "card": "Emeria Shepherd",
+    "status": "not lowered",
+    "reason": "not lowered: DB$ ChangeZone: DestAltSVar$ \"TriggeredCard$Valid Plains\" without MANDATORY (a destination choice)",
+    "error": "card \"Emeria Shepherd\" is not supported: not lowered: DB$ ChangeZone: DestAltSVar$ \"TriggeredCard$Valid Plains\" without MANDATORY (a destination choice)"
+  }
+}

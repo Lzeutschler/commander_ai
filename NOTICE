@@ -1,0 +1,12 @@
+commander_ai
+Copyright 2026 The commander_ai authors
+
+The deck lists under decks/original are copied unchanged from gorge
+(https://github.com/adams-shaun/gorge, testkit/testutil/decks, revision
+16ec2936189a6b8bd224816906d69f38fa3ccc0f, Apache-2.0, Copyright 2026 Shaun
+Adams). The lists under decks/adjusted are derived from them: card slots the
+dirac kernel did not play at that revision are replaced by basic lands.
+
+The engine itself is not part of this repository. It is referenced as a git
+submodule under third_party/gorge. The Forge card scripts it compiles are
+GPL-3.0, are fetched at build time, and are never committed here.

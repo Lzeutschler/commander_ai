@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "table": "original",
+  "provenance": {
+    "engine_repo": "https://github.com/adams-shaun/gorge.git",
+    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+  },
+  "gap_slots": 21,
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/original/foundations-calling-all-angels.json",
+      "name": "Calling All Angels",
+      "commanders": [
+        "Giada, Font of Hope"
+      ],
+      "cards": 100,
+      "sha256": "85cd7fc0176669f492be7b144c59430bf8b86506f7e0bd9a129b50237b2e397c",
+      "gap_slots": 6,
+      "gaps": [
+        {
+          "card": "Emeria Shepherd",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: DB$ ChangeZone: DestAltSVar$ \"TriggeredCard$Valid Plains\" without MANDATORY (a destination choice)"
+        },
+        {
+          "card": "Fateful Absence",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: DB$ Investigate: Investigate Defined$ \"TargetedController\""
+        },
+        {
+          "card": "Sephara, Sky's Blade",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: alternative cost with a non-mana part (the kernel offers mana-only alternatives)"
+        },
+        {
+          "card": "Endless Atlas",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: SVar X=\"Count$MostCardName Land.YouCtrl\": Count$MostCardName Land.YouCtrl"
+        },
+        {
+          "card": "War Room",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
+        },
+        {
+          "card": "Cut a Deal",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: DB$ Draw: SVar X=\"PlayerCountOpponents$HasPropertyIsRememberedOrController\": PlayerCountOpponents$HasPropertyIsRememberedOrController"
+        }
+      ]
+    },
+    {
+      "seat": 1,
+      "file": "decks/original/foundations-keen-engineering.json",
+      "name": "Keen Engineering",
+      "commanders": [
+        "Sai, Master Thopterist"
+      ],
+      "cards": 100,
+      "sha256": "8a427df3d8b21b372e69dbf7375a9100427deef8a28a8b43bea0a2a266ce2d78",
+      "gap_slots": 2,
+      "gaps": [
+        {
+          "card": "War Room",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
+        },
+        {
+          "card": "Padeem, Consul of Innovation",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: SVar X=\"Count$Valid Artifact.greatestCMC_Artifact+YouCtrl\": filter \"Artifact.greatestCMC_Artifact+YouCtrl\": \"Artifact.greatestCMC_Artifact+YouCtrl\": unknown property \"greatestCMC_Artifact\""
+        }
+      ]
+    },
+    {
+      "seat": 2,
+      "file": "decks/original/foundations-reign-of-dragons.json",
+      "name": "Reign of Dragons",
+      "commanders": [
+        "Lathliss, Dragon Queen"
+      ],
+      "cards": 100,
+      "sha256": "16fc0818ad26ace9dad7289ddc207071a0fa5930fcece249287afa0776cd5eaf",
+      "gap_slots": 13,
+      "gaps": [
+        {
+          "card": "Chandra's Ignition",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: DB$ DamageAll: DamageAll DamageSource$ beside ValidPlayers"
+        },
+        {
+          "card": "Cursed Mirror",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: Clone unread params [Duration]"
+        },
+        {
+          "card": "Dragonhawk, Fate's Tempest",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: DB$ DelayedTrigger: delayed trigger RememberObjects \"Remembered\" in a triggered ability: a set of several objects (the record holds one)"
+        },
+        {
+          "card": "The Elder Dragon War",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: read ahead (CR 714.3b): the kernel has no lore-count entry choice"
+        },
+        {
+          "card": "Goddric, Cloaked Reveler",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: global override RemoveCreatureTypes without RemoveCardTypes"
+        },
+        {
+          "card": "Hit the Mother Lode",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: Discover free cast with a program tail (the kernel defers the cast past the tail)"
+        },
+        {
+          "card": "Leyline Tyrant",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: AB$ ImmediateTrigger: unread params [XAnnounceTitle XColor]"
+        },
+        {
+          "card": "Orb of Dragonkind",
+          "count": 1,
+          "status": "unverified",
+          "reason": "unverified: in no evidence list"
+        },
+        {
+          "card": "Thundermane Dragon",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: static SpellCast trigger body is not the proven ask-free rider shape"
+        },
+        {
+          "card": "Haven of the Spirit Dragon",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: AB$ ChangeZone: filter \"Creature.Dragon+YouCtrl,Planeswalker.Ugin+YouCtrl\": \"Planeswalker.Ugin+YouCtrl\": unknown property \"Ugin\""
+        },
+        {
+          "card": "Spinerock Knoll",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: AB$ Play: SVar X=\"Count$MaxOppDamageThisTurn\": Count$MaxOppDamageThisTurn"
+        },
+        {
+          "card": "War Room",
+          "count": 1,
+          "status": "not lowered",
+          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
+        },
+        {
+          "card": "Herald's Horn",
+          "count": 1,
+          "status": "unverified",
+          "reason": "unverified: in no evidence list"
+        }
+      ]
+    },
+    {
+      "seat": 3,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283",
+      "gap_slots": 0,
+      "gaps": []
+    }
+  ],
+  "interaction": {
+    "kind": "interaction",
+    "reason": "atktax",
+    "cards": [
+      "Archangel of Tithes",
+      "Propaganda",
+      "Carnelian Orb of Dragonkind"
+    ],
+    "why": "an attack tax beside an attack requirement, a can't-attack-alone creature, a Taps watcher, a land-type grant or a mana source of another shape: gorge's budget and payment window for that part are not modelled (combat_attacktax.go)",
+    "error": "interaction atktax: Archangel of Tithes, Propaganda, Carnelian Orb of Dragonkind: an attack tax beside an attack requirement, a can't-attack-alone creature, a Taps watcher, a land-type grant or a mana source of another shape: gorge's budget and payment window for that part are not modelled (combat_attacktax.go)"
+  }
+}

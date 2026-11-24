@@ -1,0 +1,709 @@
+{
+  "schema": 1,
+  "table": "mirror",
+  "provenance": {
+    "engine_repo": "https://github.com/adams-shaun/gorge.git",
+    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+  },
+  "config": {
+    "card_set": "cmd5",
+    "surface": "full",
+    "pilot": "hbot",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 1,
+    "games": 1000
+  },
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283"
+    },
+    {
+      "seat": 1,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283"
+    },
+    {
+      "seat": 2,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283"
+    },
+    {
+      "seat": 3,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "d40b1bcc4009eaeafec86c388394cd2645ef9c5d69e0a5b56926d6c6f38c9283"
+    }
+  ],
+  "status": "played",
+  "summary": {
+    "games": 1000,
+    "finished": 938,
+    "wins": [
+      188,
+      262,
+      247,
+      241
+    ],
+    "draws": 0,
+    "stalled": 62,
+    "truncated": 0,
+    "failed": 0,
+    "turns": 37132,
+    "decisions": 249855,
+    "aborts_by": {
+      "board": 1,
+      "exilerider": 58,
+      "options": 3
+    },
+    "games_sha256": "1f4a9423bf39982c5e7049bc458e5e3420e7565fede5650070b89741941c9a16"
+  },
+  "aborts": [
+    {
+      "seed": 19,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 17,
+      "decisions": 64,
+      "hash": "1ecf4e71b8d94092",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 29,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 28,
+      "decisions": 146,
+      "hash": "6ade7f51a5145e34",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 44,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 24,
+      "decisions": 92,
+      "hash": "4788638681391666",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 50,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 17,
+      "decisions": 64,
+      "hash": "16914ba2c19efa77",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 84,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 32,
+      "decisions": 179,
+      "hash": "e42596d2777c8413",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 94,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 68,
+      "hash": "171c167484cbd22f",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 97,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 40,
+      "decisions": 219,
+      "hash": "e92ea2192795fa3e",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 101,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 32,
+      "decisions": 149,
+      "hash": "fdb30b8dcad201d5",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 110,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 28,
+      "decisions": 144,
+      "hash": "d5c9a00515a8609d",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 121,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 31,
+      "decisions": 137,
+      "hash": "d26c9863ca4da5df",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 134,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 20,
+      "decisions": 74,
+      "hash": "4dd499a594577796",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 138,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 64,
+      "hash": "1cffb76deb00d1cf",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 164,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 29,
+      "decisions": 125,
+      "hash": "e50f1a2152d7fa28",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 261,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 42,
+      "decisions": 228,
+      "hash": "4063a6a43af1ef3a",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 271,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 21,
+      "decisions": 124,
+      "hash": "09a4f3ffdad8f574",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 288,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 45,
+      "decisions": 443,
+      "hash": "3a2465738585abb5",
+      "reason": "board",
+      "class": "capacity"
+    },
+    {
+      "seed": 313,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 25,
+      "decisions": 107,
+      "hash": "cc5d04cc2248c532",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 317,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 28,
+      "decisions": 112,
+      "hash": "e31ddd79f47b3904",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 322,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 75,
+      "hash": "329cda0b9c6522ca",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 334,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 72,
+      "hash": "bab527c2d00d251b",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 338,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 20,
+      "decisions": 87,
+      "hash": "200cff3891da42a8",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 350,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 66,
+      "hash": "4cef0653932e1984",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 369,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 29,
+      "decisions": 134,
+      "hash": "76513cb3caedd366",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 402,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 23,
+      "decisions": 95,
+      "hash": "6e0e7e7313d38472",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 403,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 34,
+      "decisions": 178,
+      "hash": "f8c94a7108c84cf5",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 417,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 22,
+      "decisions": 84,
+      "hash": "976f9a4897299120",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 429,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 30,
+      "decisions": 179,
+      "hash": "f46d0e4fceb7718e",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 447,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 64,
+      "hash": "dd7bc34001ab519b",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 455,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 15,
+      "decisions": 45,
+      "hash": "59853459d8f74f74",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 462,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 20,
+      "decisions": 70,
+      "hash": "25f2c520b224fcaa",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 472,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 21,
+      "decisions": 80,
+      "hash": "03daf5b2b38ebce2",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 480,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 23,
+      "decisions": 91,
+      "hash": "f3ea3df0d202cd37",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 482,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 38,
+      "decisions": 166,
+      "hash": "a6dad140f649debf",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 484,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 21,
+      "decisions": 80,
+      "hash": "3880632d247f3af1",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 511,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 27,
+      "decisions": 112,
+      "hash": "8306d2bcf75362d9",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 514,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 21,
+      "decisions": 75,
+      "hash": "67c781b1f6099301",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 551,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 20,
+      "decisions": 55,
+      "hash": "ab35f0c6385e15c8",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 554,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 55,
+      "hash": "447f2650ea76ed47",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 559,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 32,
+      "decisions": 108,
+      "hash": "87a3eb6be8dbcfe0",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 566,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 77,
+      "hash": "39b7c02f412fe2ab",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 606,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 38,
+      "decisions": 230,
+      "hash": "8f648d276eb3fb92",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 626,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 66,
+      "hash": "ac8f0eab2ab70da9",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 631,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 26,
+      "decisions": 150,
+      "hash": "aa12e4271b90f8cf",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 695,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 24,
+      "decisions": 93,
+      "hash": "db1176f821734f4b",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 756,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 30,
+      "decisions": 182,
+      "hash": "c24bd6dd24412f53",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 763,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 17,
+      "decisions": 56,
+      "hash": "5a5a27906fc05da7",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 771,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 16,
+      "decisions": 49,
+      "hash": "803354b4ea281398",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 775,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 23,
+      "decisions": 111,
+      "hash": "d9d140cc53620074",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 814,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 31,
+      "decisions": 194,
+      "hash": "0875c8a3830d8999",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 818,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 42,
+      "decisions": 338,
+      "hash": "c847e9a8a0c080c0",
+      "reason": "options",
+      "class": "capacity"
+    },
+    {
+      "seed": 834,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 35,
+      "decisions": 175,
+      "hash": "e05171d6cbe517bb",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 842,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 71,
+      "hash": "c4a31ce27cb0341d",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 872,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 31,
+      "decisions": 185,
+      "hash": "67053f9de430c3a2",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 884,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 20,
+      "decisions": 86,
+      "hash": "12ed70d5cc0e059e",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 894,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 10,
+      "decisions": 29,
+      "hash": "b8e1353b69a7e299",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 906,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 19,
+      "decisions": 53,
+      "hash": "64f52a82f1b209e3",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 953,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 41,
+      "decisions": 293,
+      "hash": "1436a172f42e30fc",
+      "reason": "options",
+      "class": "capacity"
+    },
+    {
+      "seed": 959,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 27,
+      "decisions": 151,
+      "hash": "159c59efcdf1ed2e",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 966,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 27,
+      "decisions": 120,
+      "hash": "7edb6e332a074b4e",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 971,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 82,
+      "hash": "a2d65402345c0d84",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    },
+    {
+      "seed": 972,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 46,
+      "decisions": 350,
+      "hash": "3de3fc2dbe968e5c",
+      "reason": "options",
+      "class": "capacity"
+    },
+    {
+      "seed": 994,
+      "outcome": "stalled",
+      "winner": -1,
+      "turns": 18,
+      "decisions": 76,
+      "hash": "3b364a182787694d",
+      "reason": "exilerider",
+      "class": "unmodelled"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "table": "adjusted",
+  "host": {
+    "os": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M3 Max",
+    "num_cpu": 14,
+    "go": "go1.27.4"
+  },
+  "workers": 14,
+  "setup_seconds": 0.003,
+  "play_seconds": 1.034,
+  "games": 1000,
+  "finished": 998,
+  "finished_per_second": 964.946,
+  "decisions_per_second": 292786.749,
+  "measured_at": "2026-11-24T14:45:35Z"
+}
