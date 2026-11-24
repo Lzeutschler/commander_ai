@@ -2,13 +2,13 @@
   "schema": 1,
   "table": "mirror",
   "provenance": {
-    "engine_repo": "https://github.com/adams-shaun/gorge.git",
-    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "558c52da7b95fc6d803423a6f30b4ba40b97c6c7",
     "engine_dirty": false,
     "cards_repo": "https://github.com/adams-shaun/forge.git",
     "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
     "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
-    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
   },
   "config": {
     "card_set": "cmd5",
@@ -17,7 +17,8 @@
     "mulligans": 1,
     "max_steps": 20000,
     "first_seed": 1,
-    "games": 1000
+    "games": 1000,
+    "allow": []
   },
   "decks": [
     {

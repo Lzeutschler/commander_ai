@@ -3,6 +3,7 @@
 //	podbench run   -table adjusted -n 1000 -out results/baseline
 //	podbench cards -table original -out results/baseline
 //	podbench repro -table mirror -seed 17 -trace 30
+//	podbench export -table frontier -allow decks/allow.txt -out /tmp/pool
 //
 // Exit status: 0 the table was played (or the report written), 1 an error,
 // 2 bad usage, 3 the kernel refused to deal the table.
@@ -35,6 +36,8 @@ func main() {
 		err = cmdCards(os.Args[2:])
 	case "repro":
 		err = cmdRepro(os.Args[2:])
+	case "export":
+		err = cmdExport(os.Args[2:])
 	default:
 		usage()
 	}
@@ -49,7 +52,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
+	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
 	os.Exit(2)
 }
 
@@ -62,28 +65,42 @@ type common struct {
 	fs    *flag.FlagSet
 	table *string
 	root  *string
+	allow *string
 }
 
 func newCommon(name, defTable string) common {
 	fs := flag.NewFlagSet(name, flag.ExitOnError)
 	return common{fs,
-		fs.String("table", defTable, "fixed table: "+strings.Join(pod.TableNames(), ", ")),
-		fs.String("root", "", "repo root (default: found from the working directory)")}
+		fs.String("table", defTable, "table: "+strings.Join(pod.TableNames(), ", ")),
+		fs.String("root", "", "repo root (default: found from the working directory)"),
+		fs.String("allow", "", "file naming unverified cards to play anyway, one per line (decks/allow.txt)")}
 }
 
-func (c common) open(args []string) (string, pod.Table, error) {
+func (c common) open(args []string) (string, pod.Table, []string, error) {
 	_ = c.fs.Parse(args)
 	t, err := pod.TableByName(*c.table)
 	if err != nil {
-		return "", t, err
+		return "", t, nil, err
 	}
 	root := *c.root
 	if root == "" {
 		if root, err = pod.FindRoot(); err != nil {
-			return "", t, err
+			return "", t, nil, err
 		}
 	}
-	return root, t, pod.UseCorpus(root)
+	var allow []string
+	if *c.allow != "" {
+		raw, err := os.ReadFile(*c.allow)
+		if err != nil {
+			return "", t, nil, err
+		}
+		for _, line := range strings.Split(string(raw), "\n") {
+			if line = strings.TrimSpace(line); line != "" && !strings.HasPrefix(line, "#") {
+				allow = append(allow, line)
+			}
+		}
+	}
+	return root, t, allow, pod.UseCorpus(root)
 }
 
 func cmdRun(args []string) error {
@@ -96,11 +113,11 @@ func cmdRun(args []string) error {
 	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
 	out := c.fs.String("out", "", "directory for <table>.json and <table>.timing.json")
 	games := c.fs.String("games", "", "also write every game as a JSON line to this file")
-	root, t, err := c.open(args)
+	root, t, allow, err := c.open(args)
 	if err != nil {
 		return err
 	}
-	opts := pod.Options{Table: t, FirstSeed: *seed, Games: *n, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull}
+	opts := pod.Options{Table: t, FirstSeed: *seed, Games: *n, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow}
 	rep, rows, tim, err := pod.Run(root, opts)
 	if err != nil {
 		return err
@@ -110,6 +127,7 @@ func cmdRun(args []string) error {
 	for _, d := range rep.Decks {
 		fmt.Printf("  seat %d  %-22s %3d cards  sha256 %s\n", d.Seat, d.Name, d.Cards, d.SHA256[:12])
 	}
+	printSubstitutions(rep.Substitutions)
 	if *out != "" {
 		if err := writeJSON(filepath.Join(*out, t.Name+".json"), rep); err != nil {
 			return err
@@ -156,11 +174,11 @@ func cmdRun(args []string) error {
 func cmdCards(args []string) error {
 	c := newCommon("cards", "original")
 	out := c.fs.String("out", "", "directory for cards-<table>.json")
-	root, t, err := c.open(args)
+	root, t, allow, err := c.open(args)
 	if err != nil {
 		return err
 	}
-	rep, err := pod.Cards(root, t)
+	rep, err := pod.Cards(root, t, allow)
 	if err != nil {
 		return err
 	}
@@ -189,7 +207,7 @@ func cmdRepro(args []string) error {
 	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before the game counts as truncated")
 	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
 	trace := c.fs.Int("trace", 0, "print the last N decisions (-1: all)")
-	root, t, err := c.open(args)
+	root, t, allow, err := c.open(args)
 	if err != nil {
 		return err
 	}
@@ -203,7 +221,7 @@ func cmdRepro(args []string) error {
 			}
 		}
 	}
-	opts := pod.Options{Table: t, MaxSteps: *maxSteps, Mulligans: *mull}
+	opts := pod.Options{Table: t, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow}
 	row, err := pod.Replay(root, opts, *seed, fn)
 	if err != nil {
 		return err
@@ -223,6 +241,61 @@ func cmdRepro(args []string) error {
 	}
 	fmt.Printf(", turn %d, %d decisions, position %s\n", row.Turns, row.Decisions, row.Hash)
 	return nil
+}
+
+// cmdExport writes the lists a table deals as a deck pool the engine's own
+// tools read: <out>/decks/<name>.json and <out>/pool.tsv. `make lockstep`
+// plays that pool on both engines and compares them decision by decision.
+func cmdExport(args []string) error {
+	c := newCommon("export", "frontier")
+	out := c.fs.String("out", "", "directory to write (required)")
+	root, t, allow, err := c.open(args)
+	if err != nil {
+		return err
+	}
+	if *out == "" {
+		return errors.New("export: -out is required")
+	}
+	decks, infos, subs, err := pod.PlayedTable(root, t, allow)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Join(*out, "decks"), 0o755); err != nil {
+		return err
+	}
+	var pool strings.Builder
+	pool.WriteString("deck\tsplit\tcolors\tmain_colors\tcards\n")
+	seen := map[string]bool{}
+	for seat, d := range decks {
+		if seen[d.Name] {
+			return fmt.Errorf("export: table %s seats %s twice; a pool holds distinct decks", t.Name, d.Name)
+		}
+		seen[d.Name] = true
+		if err := os.WriteFile(filepath.Join(*out, "decks", d.Name+".json"), pod.DeckJSON(d, subs, seat), 0o644); err != nil {
+			return err
+		}
+		fmt.Fprintf(&pool, "%s\ttrain\tC\tC\t%d\n", d.Name, infos[seat].Cards)
+	}
+	if err := os.WriteFile(filepath.Join(*out, "pool.tsv"), []byte(pool.String()), 0o644); err != nil {
+		return err
+	}
+	fmt.Printf("table %s: %d decks written to %s\n", t.Name, len(decks), *out)
+	printSubstitutions(subs)
+	return nil
+}
+
+func printSubstitutions(subs []pod.Substitution) {
+	if len(subs) == 0 {
+		return
+	}
+	n := 0
+	for _, s := range subs {
+		n += s.Count
+	}
+	fmt.Printf("%d card slots replaced by basic lands:\n", n)
+	for _, s := range subs {
+		fmt.Printf("  seat %d  %-30s -> %-8s %s\n", s.Seat, s.Card, s.Basic, s.Reason)
+	}
 }
 
 func writeJSON(path string, v any) error {

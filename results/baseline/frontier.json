@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "table": "frontier",
+  "provenance": {
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "558c52da7b95fc6d803423a6f30b4ba40b97c6c7",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
+  },
+  "config": {
+    "card_set": "cmd5",
+    "surface": "full",
+    "pilot": "hbot",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 1,
+    "games": 1000,
+    "allow": [
+      "War Room"
+    ]
+  },
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/original/foundations-calling-all-angels.json",
+      "name": "Calling All Angels",
+      "commanders": [
+        "Giada, Font of Hope"
+      ],
+      "cards": 100,
+      "sha256": "010f4850e0650c7e19d1c30c4fc28cbae7567eab99ff570fbb33a3cd7fe6987b"
+    },
+    {
+      "seat": 1,
+      "file": "decks/original/foundations-keen-engineering.json",
+      "name": "Keen Engineering",
+      "commanders": [
+        "Sai, Master Thopterist"
+      ],
+      "cards": 100,
+      "sha256": "1eebb80d2e1015301e3446395b16bb92f77a1659c5cf16c69371e1afe5b2f707"
+    },
+    {
+      "seat": 2,
+      "file": "decks/original/foundations-reign-of-dragons.json",
+      "name": "Reign of Dragons",
+      "commanders": [
+        "Lathliss, Dragon Queen"
+      ],
+      "cards": 100,
+      "sha256": "73385fd3549c1c10ac7c91d5a5abad08c09a3a4e360686b261c0eee0cbe68dc7"
+    },
+    {
+      "seat": 3,
+      "file": "decks/original/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "f7877a4043ea838d24cfe21a971f5a58c5b32d69fcfa249578e7663af179cdb7"
+    }
+  ],
+  "substitutions": [
+    {
+      "seat": 0,
+      "card": "Emeria Shepherd",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "not lowered: DB$ ChangeZone: DestAltSVar$ \"TriggeredCard$Valid Plains\" without MANDATORY (a destination choice)"
+    },
+    {
+      "seat": 0,
+      "card": "Fateful Absence",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "not lowered: DB$ Investigate: Investigate Defined$ \"TargetedController\""
+    },
+    {
+      "seat": 0,
+      "card": "Sephara, Sky's Blade",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "not lowered: alternative cost with a non-mana part (the kernel offers mana-only alternatives)"
+    },
+    {
+      "seat": 0,
+      "card": "Endless Atlas",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "not lowered: SVar X=\"Count$MostCardName Land.YouCtrl\": Count$MostCardName Land.YouCtrl"
+    },
+    {
+      "seat": 0,
+      "card": "Cut a Deal",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "not lowered: DB$ Draw: SVar X=\"PlayerCountOpponents$HasPropertyIsRememberedOrController\": PlayerCountOpponents$HasPropertyIsRememberedOrController"
+    },
+    {
+      "seat": 1,
+      "card": "Padeem, Consul of Innovation",
+      "count": 1,
+      "basic": "Island",
+      "reason": "not lowered: SVar X=\"Count$Valid Artifact.greatestCMC_Artifact+YouCtrl\": filter \"Artifact.greatestCMC_Artifact+YouCtrl\": \"Artifact.greatestCMC_Artifact+YouCtrl\": unknown property \"greatestCMC_Artifact\""
+    },
+    {
+      "seat": 2,
+      "card": "Chandra's Ignition",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: DB$ DamageAll: DamageAll DamageSource$ beside ValidPlayers"
+    },
+    {
+      "seat": 2,
+      "card": "Cursed Mirror",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: Clone unread params [Duration]"
+    },
+    {
+      "seat": 2,
+      "card": "Dragonhawk, Fate's Tempest",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: DB$ DelayedTrigger: delayed trigger RememberObjects \"Remembered\" in a triggered ability: a set of several objects (the record holds one)"
+    },
+    {
+      "seat": 2,
+      "card": "The Elder Dragon War",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: read ahead (CR 714.3b): the kernel has no lore-count entry choice"
+    },
+    {
+      "seat": 2,
+      "card": "Goddric, Cloaked Reveler",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: global override RemoveCreatureTypes without RemoveCardTypes"
+    },
+    {
+      "seat": 2,
+      "card": "Hit the Mother Lode",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: Discover free cast with a program tail (the kernel defers the cast past the tail)"
+    },
+    {
+      "seat": 2,
+      "card": "Leyline Tyrant",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: AB$ ImmediateTrigger: unread params [XAnnounceTitle XColor]"
+    },
+    {
+      "seat": 2,
+      "card": "Orb of Dragonkind",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "unverified: in no evidence list"
+    },
+    {
+      "seat": 2,
+      "card": "Thundermane Dragon",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: static SpellCast trigger body is not the proven ask-free rider shape"
+    },
+    {
+      "seat": 2,
+      "card": "Haven of the Spirit Dragon",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: AB$ ChangeZone: filter \"Creature.Dragon+YouCtrl,Planeswalker.Ugin+YouCtrl\": \"Planeswalker.Ugin+YouCtrl\": unknown property \"Ugin\""
+    },
+    {
+      "seat": 2,
+      "card": "Spinerock Knoll",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "not lowered: AB$ Play: SVar X=\"Count$MaxOppDamageThisTurn\": Count$MaxOppDamageThisTurn"
+    },
+    {
+      "seat": 2,
+      "card": "Herald's Horn",
+      "count": 1,
+      "basic": "Mountain",
+      "reason": "unverified: in no evidence list"
+    },
+    {
+      "seat": 0,
+      "card": "Archangel of Tithes",
+      "count": 1,
+      "basic": "Plains",
+      "reason": "interaction atktax among Archangel of Tithes, Propaganda, Carnelian Orb of Dragonkind"
+    },
+    {
+      "seat": 1,
+      "card": "Propaganda",
+      "count": 1,
+      "basic": "Island",
+      "reason": "interaction atktax among Propaganda, Carnelian Orb of Dragonkind"
+    }
+  ],
+  "status": "played",
+  "summary": {
+    "games": 1000,
+    "finished": 1000,
+    "wins": [
+      448,
+      28,
+      400,
+      124
+    ],
+    "draws": 0,
+    "stalled": 0,
+    "truncated": 0,
+    "failed": 0,
+    "turns": 42831,
+    "decisions": 314558,
+    "aborts_by": {},
+    "games_sha256": "0987af782130c33e136ed790f6d23b30502823b9ef8ed8eb752896266521a3bc"
+  }
+}

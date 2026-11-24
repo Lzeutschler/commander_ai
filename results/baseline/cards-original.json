@@ -2,15 +2,18 @@
   "schema": 1,
   "table": "original",
   "provenance": {
-    "engine_repo": "https://github.com/adams-shaun/gorge.git",
-    "engine_rev": "16ec2936189a6b8bd224816906d69f38fa3ccc0f",
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "558c52da7b95fc6d803423a6f30b4ba40b97c6c7",
     "engine_dirty": false,
     "cards_repo": "https://github.com/adams-shaun/forge.git",
     "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
     "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
-    "table_key": "0becb9e617c0c715-62d8c58ebffd8595"
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
   },
-  "gap_slots": 21,
+  "allow": [
+    "War Room"
+  ],
+  "gap_slots": 18,
   "decks": [
     {
       "seat": 0,
@@ -21,7 +24,7 @@
       ],
       "cards": 100,
       "sha256": "85cd7fc0176669f492be7b144c59430bf8b86506f7e0bd9a129b50237b2e397c",
-      "gap_slots": 6,
+      "gap_slots": 5,
       "gaps": [
         {
           "card": "Emeria Shepherd",
@@ -48,12 +51,6 @@
           "reason": "not lowered: SVar X=\"Count$MostCardName Land.YouCtrl\": Count$MostCardName Land.YouCtrl"
         },
         {
-          "card": "War Room",
-          "count": 1,
-          "status": "not lowered",
-          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
-        },
-        {
           "card": "Cut a Deal",
           "count": 1,
           "status": "not lowered",
@@ -70,14 +67,8 @@
       ],
       "cards": 100,
       "sha256": "8a427df3d8b21b372e69dbf7375a9100427deef8a28a8b43bea0a2a266ce2d78",
-      "gap_slots": 2,
+      "gap_slots": 1,
       "gaps": [
-        {
-          "card": "War Room",
-          "count": 1,
-          "status": "not lowered",
-          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
-        },
         {
           "card": "Padeem, Consul of Innovation",
           "count": 1,
@@ -95,7 +86,7 @@
       ],
       "cards": 100,
       "sha256": "16fc0818ad26ace9dad7289ddc207071a0fa5930fcece249287afa0776cd5eaf",
-      "gap_slots": 13,
+      "gap_slots": 12,
       "gaps": [
         {
           "card": "Chandra's Ignition",
@@ -162,12 +153,6 @@
           "count": 1,
           "status": "not lowered",
           "reason": "not lowered: AB$ Play: SVar X=\"Count$MaxOppDamageThisTurn\": Count$MaxOppDamageThisTurn"
-        },
-        {
-          "card": "War Room",
-          "count": 1,
-          "status": "not lowered",
-          "reason": "not lowered: life cost PayLife\u003cX\u003e with SVar X \"Count$ColorsColorIdentity\""
         },
         {
           "card": "Herald's Horn",

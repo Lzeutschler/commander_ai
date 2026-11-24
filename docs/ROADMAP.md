@@ -7,7 +7,8 @@ Ziel: ein Agent, der in Viererpartien beliebige Commander-Decks pilotiert und au
 - **Erst messen, dann ändern.** Jede Änderung an Regeln oder Geschwindigkeit wird an den eingefrorenen Tischen beurteilt: Welche Decks lädt die Engine zusätzlich, welche Seeds enden jetzt korrekt, was kostet es an Durchsatz? `make test` hält den jeweils gültigen Stand fest.
 - **Korrektheit vor Durchsatz.** Der schnelle Kern schafft mit heuristischen Piloten rund 965 Partien und 290.000 Entscheidungen pro Sekunde auf einem Laptop. Sobald ein Modell die Entscheidungen trifft, bestimmt dessen Inferenz die Geschwindigkeit. Der Engpass ist deshalb zuerst die Kartenabdeckung, danach die Schnittstelle zum Modell.
 - **Engine-Änderungen gehen upstream.** gorge wird sehr aktiv entwickelt (38 neue Commits in den 35 Minuten nach unserem Pin). Kartenlücken schließen wir in einem Fork und reichen sie als Pull Request ein. In gorge gilt: Eine Karte, die `dirac` spielt, muss sich dort genauso verhalten wie in der breiten Engine. Diese Gegenprobe übernehmen wir.
-- **Den Pin regelmäßig anheben.** Vor der Arbeit an einer Lücke prüfen, ob Upstream sie schon geschlossen hat. Pin anheben, `make setup baseline`, Diff lesen. Stand 24.11.2026, Upstream `82dba846`: alle 21 Lücken und alle Abbrüche unverändert.
+- **Den Pin regelmäßig anheben.** Vor der Arbeit an einer Lücke prüfen, ob Upstream sie schon geschlossen hat. Fork auf Upstream rebasen, `make setup baseline lockstep`, Diff lesen. Stand 24.11.2026, Upstream `9ee19e82`: alle Lücken und Abbrüche unverändert.
+- **Selbst belegen, was wir spielen.** Upstream prüft Karten in Partien zu zweit. Unser Maßstab ist `make lockstep`: unsere eigenen Decks zu viert, beide Engines im Gleichschritt.
 
 ## Etappe 0 · Baseline ✅
 
@@ -15,15 +16,21 @@ Fester Tisch, reproduzierbarer Runner, Kartenbericht, Reproduktion einzelner See
 
 ## Etappe 1 · Der Originaltisch spielt im schnellen Kern
 
-Abnahme: Alle vier Originaldecks laden mit unveränderten Prüfsummen. Ein veröffentlichter Lauf über 1.000 Seeds weist Abschlussquote, Abbruchursachen und Durchsatz aus. Schwierige Stellungen sind zusätzlich Zug für Zug gegen die Referenz-Engine geprüft.
+Abnahme: Alle vier Originaldecks laden mit unveränderten Prüfsummen. Ein veröffentlichter Lauf über 1.000 Seeds weist Abschlussquote, Abbruchursachen und Durchsatz aus. `make lockstep` weist für den Originaltisch aus, wie viele Partien Zug für Zug mit der Referenz-Engine übereinstimmen.
 
-1. **War Room.** Lebenskosten in Höhe der Farbanzahl der Commander-Farbidentität. Schließt eine Lücke in drei Decks. Tests für farblosen und mehrfarbigen Commander, Partnerpaar mit überlappenden Farben, zu wenig Lebenspunkte.
-2. **Abbrüche im Spiegeltest.** 58 von 62 entfallen auf `exilerider`. Seed 19 bricht schon nach 64 Entscheidungen in Zug 17 ab und eignet sich als Ausgangspunkt für die kleinste Stellung.
-3. **Die übrigen Kartenlücken, nach Mechanik gebündelt.** Zählausdrücke (*Endless Atlas*, *Padeem*, *Spinerock Knoll*, *Cut a Deal*), Filter und Parameter (*Haven of the Spirit Dragon*, *Cursed Mirror*, *Leyline Tyrant*, *Chandra's Ignition*), Entscheidungen beim Eintreten (*Emeria Shepherd*, *The Elder Dragon War*), Sonderfälle (*Sephara*, *Hit the Mother Lode*, *Dragonhawk*, *Thundermane Dragon*, *Goddric*, *Fateful Absence*). *Orb of Dragonkind* und *Herald's Horn* sind schon übersetzt, ihnen fehlt nur der Verhaltensnachweis.
-4. **Angriffskosten.** *Archangel of Tithes* und *Propaganda* zusammen mit Angriffspflichten und Manaquellen anderer Form.
-5. **Kapazitätsabbrüche.** Über 10.000 Seeds am angepassten Tisch bleiben 7 Abbrüche (`board` 5, `prolif` 2). Prüfen, ob größere Kapazitäten sie ohne messbaren Durchsatzverlust beseitigen.
+Der Fortschritt ist am Tisch `frontier` ablesbar: 23 ersetzte Kartenplätze am Ausgangsstand, 20 seit *War Room*, 0 am Ziel.
 
-Jede Karte wird von zwei Seiten geprüft: gegen die breite Engine über gorge's eigenes Vergleichswerkzeug und gegen unabhängig aus dem Oracle-Text entworfene Teststellungen. In Streitfällen dient XMage als dritte Meinung, weil `dirac` und `gorge` denselben Kartencompiler teilen und eine falsche Lesart gemeinsam erben können.
+1. ✅ **War Room.** Lebenskosten in Höhe der Farbanzahl der Commander-Farbidentität, nur in Commander-Partien. Umgesetzt im Fork (Zweig `war-room`) mit Teststellungen im Kern, Gleichschritt-Tests zu zweit und zu viert und einem Gegentest. Offen: Pull Request bei Upstream.
+2. **Regeltreue zu viert.** Der Gleichschritt-Lauf zeigt 14 bis 18 abweichende von 4.000 Viererpartien, auch ohne unsere Änderungen. Hauptursache ist die Reihenfolge gleichzeitiger Auslöser mehrerer Spieler, dazu einzelne Fälle rund um ausscheidende Spieler. Für ein Trainingsziel zu viert ist das die wichtigste Korrektheitsbaustelle, weil Upstream Karten nur in Partien zu zweit belegt.
+3. **Abbrüche im Spiegeltest.** 58 von 62 entfallen auf `exilerider`. Seed 19 bricht schon nach 64 Entscheidungen in Zug 17 ab und eignet sich als Ausgangspunkt für die kleinste Stellung.
+4. **Orb of Dragonkind und Herald's Horn.** Beide sind übersetzt, aber unbelegt. *Orb of Dragonkind* weicht im Gleichschritt ab und führt mit dem heuristischen Piloten zu Kernfehlern (`autopay found no plan`, meist wenn *Lathliss, Dragon Queen* ihre Fähigkeit mit dem Mana des Orbs bezahlen will). *Herald's Horn* fiel in 4.000 Partien nicht auf, braucht aber noch einen gezielten Test.
+5. **Die übrigen 16 Kartenlücken, nach Mechanik gebündelt.** Zählausdrücke (*Endless Atlas*, *Padeem*, *Spinerock Knoll*, *Cut a Deal*), Filter und Parameter (*Haven of the Spirit Dragon*, *Cursed Mirror*, *Leyline Tyrant*, *Chandra's Ignition*, *Fateful Absence*), Entscheidungen, die der Kern noch nicht stellt (*Emeria Shepherd*, *The Elder Dragon War*, *Sephara*), Sonderfälle (*Hit the Mother Lode*, *Dragonhawk*, *Thundermane Dragon*, *Goddric*).
+6. **Angriffskosten.** *Archangel of Tithes* und *Propaganda* zusammen mit Angriffspflichten und Manaquellen anderer Form.
+7. **Kapazitätsabbrüche.** Über 10.000 Seeds am angepassten Tisch bleiben 7 Abbrüche (`board` 5, `prolif` 2). Prüfen, ob größere Kapazitäten sie ohne messbaren Durchsatzverlust beseitigen.
+
+Jede Karte durchläuft dieselben Schritte wie *War Room*: Übersetzung im Generator, Verhalten im Kern, Teststellungen, ein Gleichschritt-Test mit eigenem kleinem Kartenpool samt Gegentest, danach `make lockstep` an unseren Tischen und der Eintrag in `decks/allow.txt`. In Streitfällen dient XMage als dritte Meinung, weil `dirac` und `gorge` denselben Kartencompiler teilen und eine falsche Lesart gemeinsam erben können.
+
+Der formale Nachweis bei Upstream läuft über dessen eigene Automatik und über Partien zu zweit. Fähigkeiten, die es nur in Commander-Partien gibt, kann sie laut Upstream-Design derzeit noch nicht gutschreiben. Deshalb führen wir die Zulassungsliste selbst.
 
 ## Etappe 2 · Mehr Decks, Suche, Durchsatz
 
@@ -41,5 +48,6 @@ Jede Karte wird von zwei Seiten geprüft: gegen die breite Engine über gorge's 
 ## Etappe 4 · Training und Bewertung
 
 - Zuerst die Heuristik imitieren, danach Self-Play gegen ältere Modellstände und feste Bots.
+- Die Suche mit Netzbewertung liefert auf dem Messrechner (Apple M3 Max) andere Prüfsummen als bei Upstream hinterlegt: Zwei Upstream-Tests schlagen dort auch am unveränderten Stand fehl. Vor dem Training klären, woran das liegt und ob Ergebnisse zwischen Rechnern bitgenau vergleichbar sein müssen.
 - Bewertung mit rotierenden Sitzen, unveränderten Gegnern und zurückgehaltenen Decks. Am festen Tisch gewinnt *Keen Engineering* mit der Heuristik nur 28 von 1.000 Partien. Solche Schieflagen sagen etwas über den Piloten, erst in zweiter Linie über das Deck.
 - Für vier Sitze steht der Nachweis aus: Der veröffentlichte Commander-Trainingslauf von Argentum P1 betrifft Partien zu zweit.

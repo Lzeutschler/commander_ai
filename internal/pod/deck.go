@@ -38,7 +38,7 @@ func LoadDeck(root, rel string) (lab.Deck, DeckInfo, error) {
 	return d, info, nil
 }
 
-// LoadTable reads every seat of t.
+// LoadTable reads every seat of t as it is on disk.
 func LoadTable(root string, t Table) ([]lab.Deck, []DeckInfo, error) {
 	decks := make([]lab.Deck, len(t.Seats))
 	infos := make([]DeckInfo, len(t.Seats))
@@ -51,4 +51,24 @@ func LoadTable(root string, t Table) ([]lab.Deck, []DeckInfo, error) {
 		decks[seat], infos[seat] = d, info
 	}
 	return decks, infos, nil
+}
+
+// PlayedTable is the lists a run of t deals: the files themselves for a
+// frozen table, the derived lists and what was substituted for a frontier
+// table. allow names unverified cards to count as playable.
+func PlayedTable(root string, t Table, allow []string) ([]lab.Deck, []DeckInfo, []Substitution, error) {
+	decks, infos, err := LoadTable(root, t)
+	if err != nil || !t.Frontier {
+		return decks, infos, nil, err
+	}
+	subs, err := frontier(decks, allow)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	for seat := range decks {
+		raw := DeckJSON(decks[seat], subs, seat)
+		sum := sha256.Sum256(raw)
+		infos[seat].SHA256 = hex.EncodeToString(sum[:])
+	}
+	return decks, infos, subs, nil
 }

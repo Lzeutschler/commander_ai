@@ -1,0 +1,13 @@
+# Cards the tables play although the engine has no upstream evidence for them yet.
+#
+# The engine plays a card only once clean lockstep games against the reference
+# engine evidence it. A card listed here lowers in the pinned engine and is
+# vouched for by this repository instead: a targeted lockstep test in the engine
+# fork, and `make lockstep` on our own four-seat tables.
+#
+# Remove a line once upstream evidences the card: `podbench cards` then reports
+# it playable without this file.
+
+# Lockstep fixture with a mutation test (dirac/oracle/lifeident_lockstep_test.go
+# in the fork), 300 further four-seat games played to the end without a divergence.
+War Room

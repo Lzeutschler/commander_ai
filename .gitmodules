@@ -1,3 +1,4 @@
 [submodule "third_party/gorge"]
 	path = third_party/gorge
-	url = https://github.com/adams-shaun/gorge.git
+	url = https://github.com/Lzeutschler/gorge.git
+	branch = commander-ai

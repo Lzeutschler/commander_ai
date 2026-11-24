@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"sort"
 	"sync"
 	"time"
 
@@ -26,6 +27,10 @@ type Options struct {
 	Workers   int
 	MaxSteps  int // decisions per game before it counts as truncated
 	Mulligans int
+	// Allow names cards to play although the kernel has no upstream evidence
+	// for them. They must lower, and this repository vouches for them itself
+	// (decks/allow.txt, make lockstep).
+	Allow []string
 }
 
 // DefaultOptions are the settings of the 2026-11-24 baseline.
@@ -35,13 +40,14 @@ func DefaultOptions(t Table) Options {
 
 // RunConfig is the part of Options that decides the games.
 type RunConfig struct {
-	CardSet   string `json:"card_set"`
-	Surface   string `json:"surface"`
-	Pilot     string `json:"pilot"`
-	Mulligans int    `json:"mulligans"`
-	MaxSteps  int    `json:"max_steps"`
-	FirstSeed uint64 `json:"first_seed"`
-	Games     int    `json:"games"`
+	CardSet   string   `json:"card_set"`
+	Surface   string   `json:"surface"`
+	Pilot     string   `json:"pilot"`
+	Mulligans int      `json:"mulligans"`
+	MaxSteps  int      `json:"max_steps"`
+	FirstSeed uint64   `json:"first_seed"`
+	Games     int      `json:"games"`
+	Allow     []string `json:"allow"` // unverified cards played on this repository's own evidence
 }
 
 // Refusal is why the kernel would not deal a table.
@@ -92,10 +98,12 @@ type Report struct {
 	Provenance Provenance `json:"provenance"`
 	Config     RunConfig  `json:"config"`
 	Decks      []DeckInfo `json:"decks"`
-	Status     string     `json:"status"` // played or refused
-	Refusal    *Refusal   `json:"refusal,omitempty"`
-	Summary    *Summary   `json:"summary,omitempty"`
-	Aborts     []GameRow  `json:"aborts,omitempty"`
+	// Substitutions lists what a frontier table replaced; a frozen table has none.
+	Substitutions []Substitution `json:"substitutions,omitempty"`
+	Status        string         `json:"status"` // played or refused
+	Refusal       *Refusal       `json:"refusal,omitempty"`
+	Summary       *Summary       `json:"summary,omitempty"`
+	Aborts        []GameRow      `json:"aborts,omitempty"`
 }
 
 // Timing is the hardware-dependent half of a run.
@@ -116,22 +124,22 @@ type Timing struct {
 // Run plays opts on the frozen lists under root. A table the kernel refuses is
 // a Report with Status "refused" and no error; rows is then nil.
 func Run(root string, opts Options) (rep Report, rows []GameRow, tim Timing, err error) {
-	decks, infos, err := LoadTable(root, opts.Table)
-	if err != nil {
-		return rep, nil, tim, err
-	}
 	prov, err := ReadProvenance(root)
 	if err != nil {
 		return rep, nil, tim, err
 	}
+	decks, infos, subs, err := PlayedTable(root, opts.Table, opts.Allow)
+	if err != nil {
+		return rep, nil, tim, err
+	}
 	rep = Report{
-		Schema: Schema, Table: opts.Table.Name, Provenance: prov, Decks: infos,
+		Schema: Schema, Table: opts.Table.Name, Provenance: prov, Decks: infos, Substitutions: subs,
 		Config: RunConfig{CardSet: CardSet, Surface: "full", Pilot: "hbot", Mulligans: opts.Mulligans,
-			MaxSteps: opts.MaxSteps, FirstSeed: opts.FirstSeed, Games: opts.Games},
+			MaxSteps: opts.MaxSteps, FirstSeed: opts.FirstSeed, Games: opts.Games, Allow: sorted(opts.Allow)},
 	}
 
 	t0 := time.Now()
-	su, err := lab.Open(labConfig(decks, opts.Mulligans))
+	su, err := lab.Open(labConfig(decks, opts.Mulligans, opts.Allow))
 	if err != nil {
 		rep.Status, rep.Refusal = "refused", refusalOf(err)
 		return rep, nil, tim, nil
@@ -187,11 +195,11 @@ func Run(root string, opts Options) (rep Report, rows []GameRow, tim Timing, err
 // Replay plays one seed of a table and reports every decision to trace (which
 // may be nil): the step, the turn, the deciding seat and the chosen action.
 func Replay(root string, opts Options, seed uint64, trace func(step, turn, seat int, action string)) (GameRow, error) {
-	decks, _, err := LoadTable(root, opts.Table)
+	decks, _, _, err := PlayedTable(root, opts.Table, opts.Allow)
 	if err != nil {
 		return GameRow{}, err
 	}
-	su, err := lab.Open(labConfig(decks, opts.Mulligans))
+	su, err := lab.Open(labConfig(decks, opts.Mulligans, opts.Allow))
 	if err != nil {
 		return GameRow{}, err
 	}
@@ -226,8 +234,29 @@ func (t tracing) Start(g *lab.Game, seat int) {
 	}
 }
 
-func labConfig(decks []lab.Deck, mulligans int) lab.Config {
-	return lab.Config{Set: CardSet, Decks: decks, Commander: true, Full: true, Mulligans: mulligans}
+func labConfig(decks []lab.Deck, mulligans int, allow []string) lab.Config {
+	return lab.Config{Set: CardSet, Decks: decks, Commander: true, Full: true, Mulligans: mulligans, Allow: allow}
+}
+
+// allowed is the card set with the named unverified cards playable.
+func allowed(allow []string) (cardset.Set, error) {
+	set, err := cardset.ByName(CardSet)
+	if err != nil || len(allow) == 0 {
+		return set, err
+	}
+	names := make(map[string]bool, len(allow))
+	for _, n := range allow {
+		names[n] = true
+	}
+	return cardset.AllowNamed(set, names), nil
+}
+
+// sorted is a sorted copy of names, never nil, so reports list it the same
+// way whatever order the caller gave.
+func sorted(names []string) []string {
+	out := append([]string{}, names...)
+	sort.Strings(out)
+	return out
 }
 
 func pilots(seats int) []lab.Policy {

@@ -79,6 +79,7 @@ func TestBaselineReproduces(t *testing.T) {
 			opts := DefaultOptions(tab)
 			opts.FirstSeed, opts.Games = want.Config.FirstSeed, want.Config.Games
 			opts.MaxSteps, opts.Mulligans = want.Config.MaxSteps, want.Config.Mulligans
+			opts.Allow = want.Config.Allow
 			got, _, _, err := Run(r, opts)
 			if err != nil {
 				t.Fatal(err)
@@ -90,7 +91,7 @@ func TestBaselineReproduces(t *testing.T) {
 		var want CardReport
 		raw := readBaseline(t, r, "cards-original.json", &want)
 		tab, _ := TableByName("original")
-		got, err := Cards(r, tab)
+		got, err := Cards(r, tab, want.Allow)
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -9,11 +9,11 @@
     "go": "go1.27.4"
   },
   "workers": 14,
-  "setup_seconds": 0.003,
-  "play_seconds": 1.034,
+  "setup_seconds": 0.004,
+  "play_seconds": 1.033,
   "games": 1000,
   "finished": 998,
-  "finished_per_second": 964.946,
-  "decisions_per_second": 292786.749,
-  "measured_at": "2026-11-24T14:45:35Z"
+  "finished_per_second": 965.665,
+  "decisions_per_second": 293004.89,
+  "measured_at": "2026-11-24T15:38:55Z"
 }

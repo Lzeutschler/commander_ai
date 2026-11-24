@@ -15,6 +15,10 @@ type Table struct {
 	Name  string
 	About string
 	Seats []string
+	// Frontier derives the played lists from Seats instead of playing them as
+	// they are: every card slot the running kernel cannot play is replaced by a
+	// basic land (frontier.go). The other tables are frozen.
+	Frontier bool
 }
 
 var tables = map[string]Table{
@@ -37,6 +41,17 @@ var tables = map[string]Table{
 			"decks/adjusted/foundations-reign-of-dragons.json",
 			"decks/adjusted/foundations-wretched-ranks.json",
 		},
+	},
+	"frontier": {
+		Name:  "frontier",
+		About: "the four original precons, less whatever the running kernel cannot play yet",
+		Seats: []string{
+			"decks/original/foundations-calling-all-angels.json",
+			"decks/original/foundations-keen-engineering.json",
+			"decks/original/foundations-reign-of-dragons.json",
+			"decks/original/foundations-wretched-ranks.json",
+		},
+		Frontier: true,
 	},
 	"mirror": {
 		Name:  "mirror",

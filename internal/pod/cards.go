@@ -26,16 +26,19 @@ type CardReport struct {
 	Schema     int        `json:"schema"`
 	Table      string     `json:"table"`
 	Provenance Provenance `json:"provenance"`
-	GapSlots   int        `json:"gap_slots"`
-	Decks      []DeckGaps `json:"decks"`
+	// Allow: unverified cards counted as playable, as a run with the same
+	// setting plays them.
+	Allow    []string   `json:"allow"`
+	GapSlots int        `json:"gap_slots"`
+	Decks    []DeckGaps `json:"decks"`
 	// Interaction is the kernel's first objection to the table once every gap
 	// above is replaced by the deck's most common basic land. Others may hide
 	// behind it. Nil when the reduced table deals.
 	Interaction *Refusal `json:"interaction,omitempty"`
 }
 
-// Cards builds the report for t.
-func Cards(root string, t Table) (CardReport, error) {
+// Cards builds the report for t's lists as they are on disk.
+func Cards(root string, t Table, allow []string) (CardReport, error) {
 	decks, infos, err := LoadTable(root, t)
 	if err != nil {
 		return CardReport{}, err
@@ -44,11 +47,11 @@ func Cards(root string, t Table) (CardReport, error) {
 	if err != nil {
 		return CardReport{}, err
 	}
-	set, err := cardset.ByName(CardSet)
+	set, err := allowed(allow)
 	if err != nil {
 		return CardReport{}, err
 	}
-	rep := CardReport{Schema: Schema, Table: t.Name, Provenance: prov}
+	rep := CardReport{Schema: Schema, Table: t.Name, Provenance: prov, Allow: sorted(allow)}
 	reduced := make([]lab.Deck, len(decks))
 	for seat, d := range decks {
 		dg := DeckGaps{DeckInfo: infos[seat], Gaps: []CardGap{}}
@@ -73,7 +76,7 @@ func Cards(root string, t Table) (CardReport, error) {
 		rep.GapSlots += dg.GapSlots
 		rep.Decks = append(rep.Decks, dg)
 	}
-	su, err := lab.Open(labConfig(reduced, 1))
+	su, err := lab.Open(labConfig(reduced, 1, allow))
 	if err != nil {
 		rep.Interaction = refusalOf(err)
 	} else {

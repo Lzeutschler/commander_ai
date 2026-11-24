@@ -1,0 +1,9 @@
+table	policy	surface	pods	clean	divergent	capacity	unmodelled	hang	implicated
+adjusted	random	full	1000	998	1	1	0	0	Lathliss, Dragon Queen=1
+adjusted	random	autopay	1000	995	4	1	0	0	Lathliss, Dragon Queen=2, Nevinyrral's Disk=1, Sai, Master Thopterist=1
+adjusted	heuristic	full	1000	993	7	0	0	0	Champion of the Perished=2, Lathliss, Dragon Queen=2, Ghoulcaller Gisa=1, Noxious Ghoul=1, Sai, Master Thopterist=1
+adjusted	heuristic	autopay	1000	994	6	0	0	0	Champion of the Perished=2, Ghoulcaller Gisa=1, Lathliss, Dragon Queen=1, Noxious Ghoul=1, Sai, Master Thopterist=1
+frontier	random	full	1000	992	5	3	0	0	Ayara, First of Locthwain=1, Champion of the Perished=1, Josu Vess, Lich Knight=1, Noxious Ghoul=1, Scourge of the Throne=1
+frontier	random	autopay	1000	994	3	3	0	0	Arcane Signet=1, Patchwork Banner=1, Spire Golem=1
+frontier	heuristic	full	1000	995	3	0	2	0	Giada, Font of Hope=2
+frontier	heuristic	autopay	1000	997	3	0	0	0	Sai, Master Thopterist=2, Myr Retriever=1
