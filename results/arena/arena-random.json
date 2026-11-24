@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "table": "adjusted",
+  "provenance": {
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "558c52da7b95fc6d803423a6f30b4ba40b97c6c7",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
+  },
+  "candidate": "random",
+  "opponents": "hbot",
+  "config": {
+    "card_set": "cmd5",
+    "surface": "full",
+    "pilot": "random",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 100001,
+    "games": 1600,
+    "allow": []
+  },
+  "decks": [
+    {
+      "seat": 0,
+      "file": "decks/adjusted/foundations-calling-all-angels.json",
+      "name": "Calling All Angels",
+      "commanders": [
+        "Giada, Font of Hope"
+      ],
+      "cards": 100,
+      "sha256": "295d1e23ac5e2ae5012c99b5a16e469e43cc38fe433a48b7b382d54608222870"
+    },
+    {
+      "seat": 1,
+      "file": "decks/adjusted/foundations-keen-engineering.json",
+      "name": "Keen Engineering",
+      "commanders": [
+        "Sai, Master Thopterist"
+      ],
+      "cards": 100,
+      "sha256": "3861ef49cd1d1b2f04c211edb813f99adfea5b710a9e4242933b25b74b4c8a21"
+    },
+    {
+      "seat": 2,
+      "file": "decks/adjusted/foundations-reign-of-dragons.json",
+      "name": "Reign of Dragons",
+      "commanders": [
+        "Lathliss, Dragon Queen"
+      ],
+      "cards": 100,
+      "sha256": "d1d41a9550bf42419308dbcf8259a4561f80ac241e34129e4d489b0a281783db"
+    },
+    {
+      "seat": 3,
+      "file": "decks/adjusted/foundations-wretched-ranks.json",
+      "name": "Wretched Ranks",
+      "commanders": [
+        "Ghoulcaller Gisa"
+      ],
+      "cards": 100,
+      "sha256": "2110f36e9603dd0a2673f210135bf510953f6dce34754de8c47308936ca2f0ec"
+    }
+  ],
+  "pooled": {
+    "deck": "all",
+    "control": {
+      "games": 1600,
+      "wins": 416,
+      "rate": 0.26,
+      "low": 0.239,
+      "high": 0.282
+    },
+    "candidate": {
+      "games": 1600,
+      "wins": 133,
+      "rate": 0.083,
+      "low": 0.071,
+      "high": 0.098
+    }
+  },
+  "by_deck": [
+    {
+      "deck": "Calling All Angels",
+      "control": {
+        "games": 400,
+        "wins": 205,
+        "rate": 0.513,
+        "low": 0.464,
+        "high": 0.561
+      },
+      "candidate": {
+        "games": 400,
+        "wins": 95,
+        "rate": 0.238,
+        "low": 0.198,
+        "high": 0.282
+      }
+    },
+    {
+      "deck": "Keen Engineering",
+      "control": {
+        "games": 400,
+        "wins": 9,
+        "rate": 0.023,
+        "low": 0.012,
+        "high": 0.042
+      },
+      "candidate": {
+        "games": 400,
+        "wins": 1,
+        "rate": 0.003,
+        "low": 0,
+        "high": 0.014
+      }
+    },
+    {
+      "deck": "Reign of Dragons",
+      "control": {
+        "games": 400,
+        "wins": 157,
+        "rate": 0.393,
+        "low": 0.346,
+        "high": 0.441
+      },
+      "candidate": {
+        "games": 400,
+        "wins": 32,
+        "rate": 0.08,
+        "low": 0.057,
+        "high": 0.111
+      }
+    },
+    {
+      "deck": "Wretched Ranks",
+      "control": {
+        "games": 400,
+        "wins": 45,
+        "rate": 0.113,
+        "low": 0.085,
+        "high": 0.147
+      },
+      "candidate": {
+        "games": 400,
+        "wins": 5,
+        "rate": 0.013,
+        "low": 0.005,
+        "high": 0.029
+      }
+    }
+  ],
+  "gain": -0.176,
+  "gain_low": -0.198,
+  "gain_high": -0.154,
+  "unfinished": 2
+}

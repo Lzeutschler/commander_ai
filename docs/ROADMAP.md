@@ -1,6 +1,30 @@
 # Roadmap
 
-Ziel: ein Agent, der in Viererpartien beliebige Commander-Decks pilotiert und aus sehr vielen simulierten Partien gelernt hat. Der Weg dorthin hat vier Etappen. Jede endet mit einer Messung am selben festen Tisch.
+Ziel: ein Agent, der in Viererpartien beliebige Commander-Decks pilotiert und aus sehr vielen simulierten Partien gelernt hat.
+
+## Zuerst: trägt die Idee?
+
+Bevor wir die Engine weiter ausbauen, klären wir am laufenden Tisch `adjusted`, ob ein Modell dort überhaupt besser spielen lernt als der Heuristik-Bot. Die Kartenarbeit aus Etappe 1 ruht so lange.
+
+**Messlatte.** `podbench arena`: ein Kandidat gegen drei Heuristik-Bots, jedes Deck von jedem Platz, verglichen mit dem Heuristik-Bot auf denselben Partien. Erfolg heißt: deutlich über dessen 26 %.
+
+**Was schon feststeht.**
+
+- Die Engine ist schnell und regeltreu genug: rund 965 Partien pro Sekunde, 99,5 % der Partien verlaufen wie in der Referenz-Engine.
+- Vorausdenken lohnt sich zu viert: Die Baumsuche der Engine gewinnt ohne gelerntes Netz 33 % (25 Simulationen) und 38 % (100 Simulationen).
+- Upstream hat das Lernverfahren für Partien zu zweit mit 40-Karten-Decks bereits durchgespielt: Netze, die aus den Besuchszahlen der eigenen Suche lernen, schlugen dort die Suche ohne Netz mit rund 60 %. Nach einigen Generationen flachte der Zuwachs ab.
+
+**Was die Engine dafür mitbringt.** Eine Codierung der Stellung aus Sicht eines Sitzes (nur was dieser Sitz sehen darf), eine Codierung der angebotenen Aktionen, die Baumsuche für mehr als zwei Sitze und das Laden eines extern trainierten Netzes im Format `.dzgw`. Das Trainingsprogramm selbst ist nicht veröffentlicht.
+
+**Die nächsten Schritte.**
+
+1. ✅ Messlatte bauen und mit Zufall, Heuristik-Bot und Baumsuche prüfen.
+2. **Trainingsdaten erzeugen.** Partien mit Baumsuche spielen und pro Entscheidung festhalten: codierte Stellung, angebotene Aktionen, Besuchszahlen der Suche, Ausgang der Partie. Zu klären ist, ob die vorhandene Aufzeichnung der Engine dafür reicht oder ob wir sie ergänzen.
+3. **Ein kleines Netz trainieren** (außerhalb von Go, in Python) und als `.dzgw` zurückgeben. Erst die Bewertung der Stellung, dann die Auswahl der Aktion.
+4. **Messen.** Baumsuche mit Netz gegen Baumsuche ohne Netz bei gleicher Simulationszahl, und Netz ohne Suche gegen den Heuristik-Bot. Wird die Suche mit Netz stärker, trägt die Idee. Bleibt sie gleich, wissen wir es nach wenigen Tagen.
+5. **Wiederholen.** Mit dem besseren Netz neue Partien erzeugen und prüfen, ob eine zweite Runde noch einmal zulegt.
+
+**Bekannte Risiken.** Die Suche behandelt die drei Gegner bisher als gemeinsamen Gegenspieler, eine eigene Bewertung je Sitz braucht ein dafür trainiertes Netz. Die Stellungscodierung ist auf das Netz von Upstream zugeschnitten. Und vier Decks sind wenig: Ein Netz kann die Decks auswendig lernen, statt allgemein besser zu spielen. Ob es überträgt, zeigt erst ein Deck, das im Training nicht vorkam.
 
 ## Arbeitsweise
 

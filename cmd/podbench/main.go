@@ -4,6 +4,7 @@
 //	podbench cards -table original -out results/baseline
 //	podbench repro -table mirror -seed 17 -trace 30
 //	podbench export -table frontier -allow decks/allow.txt -out /tmp/pool
+//	podbench arena -candidate search:25 -n 1600 -out results/arena
 //
 // Exit status: 0 the table was played (or the report written), 1 an error,
 // 2 bad usage, 3 the kernel refused to deal the table.
@@ -38,6 +39,8 @@ func main() {
 		err = cmdRepro(os.Args[2:])
 	case "export":
 		err = cmdExport(os.Args[2:])
+	case "arena":
+		err = cmdArena(os.Args[2:])
 	default:
 		usage()
 	}
@@ -52,7 +55,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
+	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
 	os.Exit(2)
 }
 
@@ -240,6 +243,51 @@ func cmdRepro(args []string) error {
 		fmt.Printf(" (%s)", row.Error)
 	}
 	fmt.Printf(", turn %d, %d decisions, position %s\n", row.Turns, row.Decisions, row.Hash)
+	return nil
+}
+
+// cmdArena measures a pilot: the candidate in one seat against three heuristic
+// bots, every deck from every seat, against the heuristic bot itself on the
+// same seeds.
+func cmdArena(args []string) error {
+	c := newCommon("arena", "adjusted")
+	def := pod.DefaultOptions(pod.Table{})
+	cand := c.fs.String("candidate", "hbot", "the pilot to measure: hbot, random or search:<simulations>")
+	n := c.fs.Int("n", 1600, "games, rounded up to a multiple of 16")
+	seed := c.fs.Uint64("seed", 100001, "first seed")
+	workers := c.fs.Int("workers", def.Workers, "parallel games")
+	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before a game counts as truncated")
+	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
+	out := c.fs.String("out", "", "directory for arena-<candidate>.json and its timing file")
+	root, t, allow, err := c.open(args)
+	if err != nil {
+		return err
+	}
+	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Candidate: *cand, FirstSeed: *seed, Games: *n,
+		Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow})
+	if err != nil {
+		return err
+	}
+	fmt.Printf("arena on table %s: %s in one seat against three hbot, %d games, seeds from %d\n", t.Name, rep.Candidate, rep.Config.Games, rep.Config.FirstSeed)
+	fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
+	line := func(d pod.DeckArena) {
+		fmt.Printf("  %-22s %8d %6.1f%% [%4.1f, %4.1f] %8.1f%% [%4.1f, %4.1f]\n", d.Deck, d.Candidate.Games,
+			100*d.Control.Rate, 100*d.Control.Low, 100*d.Control.High, 100*d.Candidate.Rate, 100*d.Candidate.Low, 100*d.Candidate.High)
+	}
+	for _, d := range rep.ByDeck {
+		line(d)
+	}
+	line(rep.Pooled)
+	fmt.Printf("gain over hbot on the same games: %+.1f points [%+.1f, %+.1f]; %d candidate games unfinished\n",
+		100*rep.Gain, 100*rep.GainLow, 100*rep.GainHigh, rep.Unfinished)
+	fmt.Printf("timing (%s, %d workers): %.1f candidate games/s\n", tim.Host.CPU, tim.Workers, tim.CandidateGamesPerSec)
+	if *out != "" {
+		name := "arena-" + strings.ReplaceAll(rep.Candidate, ":", "-")
+		if err := writeJSON(filepath.Join(*out, name+".json"), rep); err != nil {
+			return err
+		}
+		return writeJSON(filepath.Join(*out, name+".timing.json"), tim)
+	}
 	return nil
 }
 

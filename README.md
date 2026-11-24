@@ -4,7 +4,24 @@ Schnelle, regelgetreue Simulation von Magic-Commander-Partien zu viert, als Grun
 
 Das Projekt baut auf [gorge](https://github.com/adams-shaun/gorge) auf, einer Magic-Engine in Go. Deren schneller Kern `dirac` spielt die Partien, die breitere Engine `gorge` dient als Referenz. Dieses Repository liefert, was darüber liegt: feste Testtische, einen reproduzierbaren Benchmark und später die Lernumgebung und das Training.
 
-## Stand
+## Worum es gerade geht
+
+Die erste Frage ist, ob die Idee trägt: Lernt ein Modell an diesem Tisch, besser zu spielen als der eingebaute Heuristik-Bot? Dafür gibt es eine Messlatte (`podbench arena`): Der Kandidat spielt einen Sitz, drei Heuristik-Bots die anderen. Die Decks wandern um den Tisch, der Kandidat sitzt auf jedem Platz, und jede Partie wird auf demselben Seed auch mit dem Heuristik-Bot auf dem Kandidatenplatz gespielt.
+
+1.600 Partien je Kandidat am Tisch `adjusted` ([results/arena/](results/arena/)):
+
+| Kandidat | Siegquote | 95-%-Intervall | gegenüber Heuristik-Bot |
+|---|---:|---:|---:|
+| Zufall | 8,3 % | 7,1 bis 9,8 | −17,6 Punkte |
+| Heuristik-Bot (Kontrolle) | 26,0 % | 23,9 bis 28,2 | – |
+| Baumsuche, 25 Simulationen | 33,0 % | 30,7 bis 35,3 | +7,0 Punkte |
+| Baumsuche, 100 Simulationen | 38,4 % | 36,1 bis 40,8 | +12,4 Punkte |
+
+Die Baumsuche bringt die Engine mit, sie bewertet Stellungen bisher mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch messbar aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Offen ist der eigentliche Lernschritt, siehe [docs/ROADMAP.md](docs/ROADMAP.md).
+
+Die Deckstärke überlagert die Spielstärke deutlich: Der Heuristik-Bot gewinnt mit *Calling All Angels* 51 % und mit *Keen Engineering* 2 %. Deshalb der Vergleich auf denselben Partien statt gegen pauschale 25 %.
+
+## Stand der Engine
 
 Gemessen am 24. November 2026 auf einem Apple M3 Max (14 Kerne), vier heuristische Piloten (`hbot`), Seeds 1 bis 1000, ein erlaubter Mulligan. Ohne Modellinferenz und ohne Baumsuche.
 
@@ -58,6 +75,7 @@ bin/podbench run -table frontier -allow decks/allow.txt         # die Originalde
 bin/podbench run -table original                                # zeigt die Ablehnung beim Laden (Exit 3)
 bin/podbench cards -table original -allow decks/allow.txt       # Kartenbericht für die vier Originaldecks
 bin/podbench repro -table mirror -seed 19 -trace 20             # einen abgebrochenen Seed mit den letzten 20 Entscheidungen
+bin/podbench arena -candidate search:25 -n 1600                 # Messlatte: ein Kandidat gegen drei Heuristik-Bots
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
 ```
