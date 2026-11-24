@@ -121,3 +121,52 @@ func compare(t *testing.T, want []byte, got any) {
 		t.Errorf("differs from the committed baseline; got:\n%s", raw)
 	}
 }
+
+// The deck pool loads from the engine checkout: every deck is a 100-card
+// Commander deck of cards the kernel plays, both splits are there, and an
+// arena on drawn tables gives the same report whatever the worker count.
+func TestPoolArena(t *testing.T) {
+	r := root(t)
+	if err := UseCorpus(r); err != nil {
+		t.Skip(err)
+	}
+	if _, err := cardset.ByName(PoolSet); err != nil {
+		t.Skip("no card tables (run `make setup`): ", err)
+	}
+	pool, err := LoadPool(r, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if pool.Info.Train < 20 || pool.Info.Eval < 4 {
+		t.Fatalf("pool has %d train and %d eval decks", pool.Info.Train, pool.Info.Eval)
+	}
+	set, err := cardset.ByName(PoolSet)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, d := range pool.Decks {
+		n := 0
+		for _, c := range d.Deck.Cards {
+			n += c.Count
+			if i, ok := set.Lookup(c.Name); !ok || !set.Supported()[i] {
+				t.Errorf("%s still holds %s, which the kernel does not play", d.Deck.Name, c.Name)
+			}
+		}
+		if n != 100 || len(d.Deck.Commanders) == 0 {
+			t.Errorf("%s: %d cards, commanders %v", d.Deck.Name, n, d.Deck.Commanders)
+		}
+	}
+	tab, _ := TableByName("adjusted")
+	play := func(workers int) []byte {
+		rep, _, err := Arena(r, ArenaOptions{Table: tab, Pool: "eval", Candidate: "random", FirstSeed: 7, Games: 48,
+			Workers: workers, MaxSteps: 20000, Mulligans: 1})
+		if err != nil {
+			t.Fatal(err)
+		}
+		raw, _ := json.Marshal(rep)
+		return raw
+	}
+	if a, b := play(1), play(4); string(a) != string(b) {
+		t.Errorf("arena on drawn tables differs between 1 and 4 workers:\n%s\n%s", a, b)
+	}
+}

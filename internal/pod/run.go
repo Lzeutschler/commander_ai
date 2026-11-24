@@ -238,9 +238,12 @@ func labConfig(decks []lab.Deck, mulligans int, allow []string) lab.Config {
 	return lab.Config{Set: CardSet, Decks: decks, Commander: true, Full: true, Mulligans: mulligans, Allow: allow}
 }
 
-// allowed is the card set with the named unverified cards playable.
-func allowed(allow []string) (cardset.Set, error) {
-	set, err := cardset.ByName(CardSet)
+// allowed is the fixed tables' card set with the named unverified cards playable.
+func allowed(allow []string) (cardset.Set, error) { return allowedIn(CardSet, allow) }
+
+// allowedIn is card set name with the named unverified cards playable.
+func allowedIn(name string, allow []string) (cardset.Set, error) {
+	set, err := cardset.ByName(name)
 	if err != nil || len(allow) == 0 {
 		return set, err
 	}

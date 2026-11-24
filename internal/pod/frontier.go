@@ -33,27 +33,10 @@ func frontier(decks []lab.Deck, allow []string) ([]Substitution, error) {
 	}
 	var subs []Substitution
 	replace := func(seat int, card, reason string) error {
-		d := &decks[seat]
-		basic := commonBasic(d.Cards)
-		if basic < 0 {
-			return fmt.Errorf("%s: no basic land to stand in for %s", d.Name, card)
+		n, name, err := replaceCard(&decks[seat], card)
+		if err != nil {
+			return err
 		}
-		name := d.Cards[basic].Name
-		kept := d.Cards[:0:0]
-		n := 0
-		for _, c := range d.Cards {
-			if c.Name == card {
-				n += c.Count
-				continue
-			}
-			kept = append(kept, c)
-		}
-		for i := range kept {
-			if kept[i].Name == name {
-				kept[i].Count += n
-			}
-		}
-		d.Cards = kept
 		subs = append(subs, Substitution{Seat: seat, Card: card, Count: n, Basic: name, Reason: reason})
 		return nil
 	}

@@ -253,7 +253,8 @@ func cmdArena(args []string) error {
 	c := newCommon("arena", "adjusted")
 	def := pod.DefaultOptions(pod.Table{})
 	cand := c.fs.String("candidate", "hbot", "the pilot to measure: hbot, random or search:<simulations>")
-	n := c.fs.Int("n", 1600, "games, rounded up to a multiple of 16")
+	split := c.fs.String("pool", "", "draw a new table per game from the engine's precon pool; the candidate's deck comes from this split: train, eval or all (default: the fixed -table)")
+	n := c.fs.Int("n", 1600, "games (a fixed table rounds up to a multiple of 16)")
 	seed := c.fs.Uint64("seed", 100001, "first seed")
 	workers := c.fs.Int("workers", def.Workers, "parallel games")
 	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before a game counts as truncated")
@@ -263,26 +264,36 @@ func cmdArena(args []string) error {
 	if err != nil {
 		return err
 	}
-	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Candidate: *cand, FirstSeed: *seed, Games: *n,
+	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Pool: *split, Candidate: *cand, FirstSeed: *seed, Games: *n,
 		Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow})
 	if err != nil {
 		return err
 	}
-	fmt.Printf("arena on table %s: %s in one seat against three hbot, %d games, seeds from %d\n", t.Name, rep.Candidate, rep.Config.Games, rep.Config.FirstSeed)
-	fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
+	name := "arena-" + strings.ReplaceAll(rep.Candidate, ":", "-")
 	line := func(d pod.DeckArena) {
 		fmt.Printf("  %-22s %8d %6.1f%% [%4.1f, %4.1f] %8.1f%% [%4.1f, %4.1f]\n", d.Deck, d.Candidate.Games,
 			100*d.Control.Rate, 100*d.Control.Low, 100*d.Control.High, 100*d.Candidate.Rate, 100*d.Candidate.Low, 100*d.Candidate.High)
 	}
-	for _, d := range rep.ByDeck {
-		line(d)
+	if p := rep.Pool; p != nil {
+		name = "arena-pool-" + rep.CandidateDecks + "-" + strings.ReplaceAll(rep.Candidate, ":", "-")
+		fmt.Printf("arena on drawn tables: %s with a deck of split %q against three hbot with any of %d precons (%d train, %d eval), %d games, seeds from %d\n",
+			rep.Candidate, rep.CandidateDecks, p.Decks, p.Train, p.Eval, rep.Config.Games, rep.Config.FirstSeed)
+		fmt.Printf("pool %s: %d unverified cards (%d slots) replaced by basic lands, %d decks left out for an unverified commander\n",
+			p.Digest[:12], p.ReplacedCards, p.ReplacedSlots, len(p.Excluded))
+		fmt.Printf("%d drawn tables refused and redrawn: %s\n", total(rep.RefusedTables), countsOf(rep.RefusedTables))
+		fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
+	} else {
+		fmt.Printf("arena on table %s: %s in one seat against three hbot, %d games, seeds from %d\n", t.Name, rep.Candidate, rep.Config.Games, rep.Config.FirstSeed)
+		fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
+		for _, d := range rep.ByDeck {
+			line(d)
+		}
 	}
 	line(rep.Pooled)
-	fmt.Printf("gain over hbot on the same games: %+.1f points [%+.1f, %+.1f]; %d candidate games unfinished\n",
-		100*rep.Gain, 100*rep.GainLow, 100*rep.GainHigh, rep.Unfinished)
+	fmt.Printf("gain over hbot on the same games: %+.1f points [%+.1f, %+.1f]; unfinished games: %d candidate, %d control\n",
+		100*rep.Gain, 100*rep.GainLow, 100*rep.GainHigh, rep.Unfinished, rep.ControlUnfinished)
 	fmt.Printf("timing (%s, %d workers): %.1f candidate games/s\n", tim.Host.CPU, tim.Workers, tim.CandidateGamesPerSec)
 	if *out != "" {
-		name := "arena-" + strings.ReplaceAll(rep.Candidate, ":", "-")
 		if err := writeJSON(filepath.Join(*out, name+".json"), rep); err != nil {
 			return err
 		}
@@ -355,6 +366,14 @@ func writeJSON(path string, v any) error {
 		return err
 	}
 	return os.WriteFile(path, append(raw, '\n'), 0o644)
+}
+
+func total(m map[string]int) int {
+	n := 0
+	for _, v := range m {
+		n += v
+	}
+	return n
 }
 
 func countsOf(m map[string]int) string {
