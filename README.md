@@ -27,6 +27,23 @@ Je 1.600 Partien ([results/arena/](results/arena/)), Siegquote des Kandidaten mi
 
 Die Baumsuche bringt die Engine mit. Sie bewertet Stellungen bisher mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch deutlich aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Offen ist der eigentliche Lernschritt, siehe [docs/ROADMAP.md](docs/ROADMAP.md).
 
+### Der erste Lernversuch
+
+Die Lernkette steht von Anfang bis Ende: Partien spielen und Stellungen aufzeichnen (`podbench record`), in Python ein Netz trainieren ([train/train_value.py](train/train_value.py)), es in Go laden und in der Baumsuche einsetzen (`podbench arena -candidate net:<datei>:<simulationen>`). Go berechnet dabei dieselben Werte wie PyTorch, das prüft ein Test.
+
+Der erste Versuch lernt nur, Stellungen zu bewerten: Wie wahrscheinlich gewinnt dieser Sitz? Trainiert wird auf Partien des Heuristik-Bots an den 40 Trainingsdecks. Das Netz ersetzt in der Baumsuche die handgebaute Bewertung, alles andere bleibt gleich. Je 1.600 Partien an gezogenen Tischen, 25 Simulationen:
+
+| Bewertung in der Baumsuche | Trainingspartien | Vorhersagegüte (AUC) | Siegquote |
+|---|---:|---:|---:|
+| keine Suche (Heuristik-Bot) | – | – | 24,8 % |
+| Netz v0 | 20.000 | 0,80 | 33,1 % (30,8 bis 35,4) |
+| Netz v1 | 100.000 | 0,83 | 33,2 % (30,9 bis 35,5) |
+| handgebaute Bewertung der Engine | – | – | 38,8 % (36,5 bis 41,2) |
+
+**Einordnung.** Das Netz hat etwas Brauchbares gelernt: Die Suche wird mit ihm klar stärker als der Heuristik-Bot. Es schlägt aber die handgebaute Bewertung noch nicht, und fünfmal mehr Partien haben daran nichts geändert, obwohl die Vorhersage besser wurde. Der Engpass ist also nicht die Datenmenge. Die PoC-Frage ist damit noch offen. Die nächsten Versuche stehen in [docs/ROADMAP.md](docs/ROADMAP.md).
+
+Das Netz sieht bisher keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
+
 ### Tempo an gezogenen Tischen
 
 Auf einem Apple M3 Max mit 14 Workern:
@@ -106,6 +123,10 @@ bin/podbench cards -table original -allow decks/allow.txt       # Kartenbericht 
 bin/podbench repro -table mirror -seed 19 -trace 20             # einen abgebrochenen Seed mit den letzten 20 Entscheidungen
 bin/podbench arena -pool all -candidate search:25 -n 1600       # Messlatte an gezogenen Tischen aus 45 Precons
 bin/podbench arena -candidate search:25 -n 1600                 # Messlatte am festen Tisch (schneller Kontrolltest)
+make venv                                                       # Python-Umgebung fürs Training
+bin/podbench record -split train -n 20000 -out data/v0          # Stellungen mit Ausgang aufzeichnen
+.venv/bin/python train/train_value.py data/v0 models/v0.caiv    # Bewertungsnetz trainieren
+bin/podbench arena -pool all -candidate net:models/v0.caiv:25   # Baumsuche mit diesem Netz messen
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
 ```

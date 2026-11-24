@@ -5,6 +5,8 @@
 //	podbench repro -table mirror -seed 17 -trace 30
 //	podbench export -table frontier -allow decks/allow.txt -out /tmp/pool
 //	podbench arena -candidate search:25 -n 1600 -out results/arena
+//	podbench arena -pool eval -candidate net:models/v0.caiv:25
+//	podbench record -split train -pilot hbot -n 4000 -out data/v0
 //
 // Exit status: 0 the table was played (or the report written), 1 an error,
 // 2 bad usage, 3 the kernel refused to deal the table.
@@ -18,9 +20,12 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
+	"github.com/Lzeutschler/commander_ai/internal/learn"
 	"github.com/Lzeutschler/commander_ai/internal/pod"
+	"github.com/adams-shaun/gorge/dirac/lab"
 )
 
 const exitRefused = 3
@@ -41,6 +46,8 @@ func main() {
 		err = cmdExport(os.Args[2:])
 	case "arena":
 		err = cmdArena(os.Args[2:])
+	case "record":
+		err = cmdRecord(os.Args[2:])
 	default:
 		usage()
 	}
@@ -55,7 +62,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
+	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena|record [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
 	os.Exit(2)
 }
 
@@ -252,7 +259,7 @@ func cmdRepro(args []string) error {
 func cmdArena(args []string) error {
 	c := newCommon("arena", "adjusted")
 	def := pod.DefaultOptions(pod.Table{})
-	cand := c.fs.String("candidate", "hbot", "the pilot to measure: hbot, random or search:<simulations>")
+	cand := c.fs.String("candidate", "hbot", "the pilot to measure: hbot, random, search:<simulations>, hsearch:<simulations> (the same search through this repository's pilot) or net:<value network file>:<simulations>")
 	split := c.fs.String("pool", "", "draw a new table per game from the engine's precon pool; the candidate's deck comes from this split: train, eval or all (default: the fixed -table)")
 	n := c.fs.Int("n", 1600, "games (a fixed table rounds up to a multiple of 16)")
 	seed := c.fs.Uint64("seed", 100001, "first seed")
@@ -264,18 +271,23 @@ func cmdArena(args []string) error {
 	if err != nil {
 		return err
 	}
-	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Pool: *split, Candidate: *cand, FirstSeed: *seed, Games: *n,
+	mk, err := pilotOf(*cand)
+	if err != nil {
+		return err
+	}
+	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Pool: *split, Candidate: *cand, Make: mk, FirstSeed: *seed, Games: *n,
 		Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow})
 	if err != nil {
 		return err
 	}
-	name := "arena-" + strings.ReplaceAll(rep.Candidate, ":", "-")
+	label := strings.NewReplacer(":", "-", "/", "_", ".", "_").Replace(rep.Candidate)
+	name := "arena-" + label
 	line := func(d pod.DeckArena) {
 		fmt.Printf("  %-22s %8d %6.1f%% [%4.1f, %4.1f] %8.1f%% [%4.1f, %4.1f]\n", d.Deck, d.Candidate.Games,
 			100*d.Control.Rate, 100*d.Control.Low, 100*d.Control.High, 100*d.Candidate.Rate, 100*d.Candidate.Low, 100*d.Candidate.High)
 	}
 	if p := rep.Pool; p != nil {
-		name = "arena-pool-" + rep.CandidateDecks + "-" + strings.ReplaceAll(rep.Candidate, ":", "-")
+		name = "arena-pool-" + rep.CandidateDecks + "-" + label
 		fmt.Printf("arena on drawn tables: %s with a deck of split %q against three hbot with any of %d precons (%d train, %d eval), %d games, seeds from %d\n",
 			rep.Candidate, rep.CandidateDecks, p.Decks, p.Train, p.Eval, rep.Config.Games, rep.Config.FirstSeed)
 		fmt.Printf("pool %s: replaced by basic lands %d unverified cards (%d slots) and %d slow cards (%d slots); %d decks left out for their commander\n",
@@ -299,6 +311,87 @@ func cmdArena(args []string) error {
 		}
 		return writeJSON(filepath.Join(*out, name+".timing.json"), tim)
 	}
+	return nil
+}
+
+// pilotOf builds the pilots this command adds to the arena's own: the tree
+// search through this repository's pilot, over the engine's heuristic leaf
+// (hsearch:<simulations>) or a value network (net:<file>:<simulations>). For
+// any other name it returns nil and the arena resolves the name itself.
+func pilotOf(spec string) (func() lab.Policy, error) {
+	var net *learn.ValueNet
+	var sims string
+	switch {
+	case strings.HasPrefix(spec, "hsearch:"):
+		sims = strings.TrimPrefix(spec, "hsearch:")
+	case strings.HasPrefix(spec, "net:"):
+		i := strings.LastIndex(spec, ":")
+		if i <= len("net:") {
+			return nil, fmt.Errorf("candidate %q: want net:<file>:<simulations>", spec)
+		}
+		var err error
+		if net, err = learn.LoadValueNet(spec[len("net:"):i]); err != nil {
+			return nil, err
+		}
+		sims = spec[i+1:]
+	default:
+		return nil, nil
+	}
+	n, err := strconv.Atoi(sims)
+	if err != nil || n < 1 {
+		return nil, fmt.Errorf("candidate %q: bad simulation count", spec)
+	}
+	reg, err := learn.Registry()
+	if err != nil {
+		return nil, err
+	}
+	if _, err := learn.NewSearchPolicy(n, net, reg); err != nil {
+		return nil, err
+	}
+	return func() lab.Policy {
+		p, _ := learn.NewSearchPolicy(n, net, reg)
+		return p
+	}, nil
+}
+
+// cmdRecord plays games at tables drawn from one split of the deck pool and
+// writes sampled positions with their outcomes: the training data of a value
+// network (train/train_value.py).
+func cmdRecord(args []string) error {
+	c := newCommon("record", "adjusted")
+	def := pod.DefaultOptions(pod.Table{})
+	split := c.fs.String("split", "train", "pool split every deck is drawn from: train, eval or all")
+	pilot := c.fs.String("pilot", "hbot", "who plays all four seats: hbot, hsearch:<simulations> or net:<file>:<simulations>")
+	n := c.fs.Int("n", 4000, "games")
+	seed := c.fs.Uint64("seed", 500001, "first seed (keep it apart from the arena's)")
+	every := c.fs.Int("every", 40, "sample every N-th decision of a game")
+	workers := c.fs.Int("workers", def.Workers, "parallel games")
+	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before a game counts as truncated")
+	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
+	out := c.fs.String("out", "", "directory to write (required)")
+	root, _, allow, err := c.open(args)
+	if err != nil {
+		return err
+	}
+	if *out == "" {
+		return errors.New("record: -out is required")
+	}
+	mk := lab.HBot
+	if *pilot != "hbot" {
+		if mk, err = pilotOf(*pilot); err != nil {
+			return err
+		}
+		if mk == nil {
+			return fmt.Errorf("record: unknown pilot %q", *pilot)
+		}
+	}
+	meta, err := learn.Record(root, learn.RecordOptions{Split: *split, Pilot: mk, PilotName: *pilot, FirstSeed: *seed, Games: *n,
+		Every: *every, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow, Out: *out})
+	if err != nil {
+		return err
+	}
+	fmt.Printf("recorded %d positions from %d of %d games (%s decks, pilot %s) to %s: %d features each, %.1f%% wins\n",
+		meta.Records, meta.Finished, meta.Games, meta.Split, meta.Pilot, *out, meta.Width, 100*float64(meta.Positive)/float64(max(1, meta.Records)))
 	return nil
 }
 

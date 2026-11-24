@@ -4,6 +4,7 @@
 #   make test       frozen deck lists and the committed baseline must reproduce
 #   make baseline   rewrite results/baseline (after a deliberate engine or deck change)
 #   make lockstep   play our tables on both engines and compare every decision (minutes)
+#   make venv       the Python environment for training (train/train_value.py)
 #   make reference  the four original decks on gorge's broad engine (slow, plays everything)
 
 ENGINE  := third_party/gorge
@@ -11,7 +12,7 @@ GAMES   ?= 1000
 ALLOW   := decks/allow.txt
 ORIGINALS := foundations-calling-all-angels,foundations-keen-engineering,foundations-reign-of-dragons,foundations-wretched-ranks
 
-.PHONY: setup engine build test baseline lockstep reference clean
+.PHONY: setup engine build test baseline lockstep venv reference clean
 
 setup: engine build
 
@@ -39,6 +40,11 @@ baseline: build
 
 lockstep: build
 	scripts/lockstep.sh results/baseline/lockstep.tsv
+
+venv:
+	python3 -m venv .venv
+	.venv/bin/python -m pip install -q --upgrade pip
+	.venv/bin/python -m pip install -q -r train/requirements.txt
 
 reference:
 	cd $(ENGINE) && GOMAXPROCS=1 /usr/bin/time -p bin/mtgsim -format commander -seats 4 -mulligans 1 \

@@ -35,7 +35,10 @@ type ArenaOptions struct {
 	// from this split of the deck pool (train, eval or all), its opponents'
 	// from the whole pool. Table is then unused.
 	Pool      string
-	Candidate string // hbot, random or search:<sims>
+	Candidate string // hbot, random or search:<sims>; a label only when Make is set
+	// Make, when set, builds the candidate's policy instead of Candidate: a
+	// fresh one per game.
+	Make      func() lab.Policy
 	FirstSeed uint64
 	Games     int // a fixed table rounds it up to a multiple of 16
 	Workers   int
@@ -201,9 +204,12 @@ func policyOf(spec string) (func() lab.Policy, error) {
 func Arena(root string, opts ArenaOptions) (ArenaReport, ArenaTiming, error) {
 	var rep ArenaReport
 	var tim ArenaTiming
-	mk, err := policyOf(opts.Candidate)
-	if err != nil {
-		return rep, tim, err
+	mk := opts.Make
+	if mk == nil {
+		var err error
+		if mk, err = policyOf(opts.Candidate); err != nil {
+			return rep, tim, err
+		}
 	}
 	prov, err := ReadProvenance(root)
 	if err != nil {

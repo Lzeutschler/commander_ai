@@ -2,3 +2,7 @@
 /results/local/
 *.pprof
 .DS_Store
+/data/
+/models/
+/.venv/
+__pycache__/

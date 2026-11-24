@@ -21,10 +21,17 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 **Die nächsten Schritte.**
 
 1. ✅ Messlatte bauen und mit Zufall, Heuristik-Bot und Baumsuche prüfen, am festen Tisch und an gezogenen Tischen.
-2. **Trainingsdaten erzeugen.** Partien an gezogenen Tischen aus den 40 Trainingsdecks mit Baumsuche spielen und pro Entscheidung festhalten: codierte Stellung, angebotene Aktionen, Besuchszahlen der Suche, Ausgang der Partie. Zu klären ist, ob die vorhandene Aufzeichnung der Engine dafür reicht oder ob wir sie ergänzen.
-3. **Ein kleines Netz trainieren** (außerhalb von Go, in Python) und als `.dzgw` zurückgeben. Erst die Bewertung der Stellung, dann die Auswahl der Aktion.
-4. **Messen.** Baumsuche mit Netz gegen Baumsuche ohne Netz bei gleicher Simulationszahl, und Netz ohne Suche gegen den Heuristik-Bot. Wird die Suche mit Netz stärker, trägt die Idee. Bleibt sie gleich, wissen wir es nach wenigen Tagen.
-5. **Wiederholen.** Mit dem besseren Netz neue Partien erzeugen und prüfen, ob eine zweite Runde noch einmal zulegt.
+2. ✅ Lernkette bauen: Stellungen aufzeichnen, in Python trainieren, Netz in Go laden und in der Baumsuche einsetzen.
+3. ✅ Erster Versuch, Bewertungsnetz aus Partien des Heuristik-Bots. Ergebnis: 33 % Siegquote in der Suche. Das ist besser als der Heuristik-Bot (25 %) und schlechter als die handgebaute Bewertung (39 %). Mehr Partien verbessern die Vorhersage, aber nicht die Spielstärke.
+4. **Herausfinden, warum das Netz in der Suche schwächer ist als die Handbewertung.** Die Suche vergleicht Züge innerhalb eines Zuges, die sich nur wenig unterscheiden. Die Handbewertung steigt verlässlich mit jeder ausgespielten Karte. Ein Netz, das nur den Ausgang ganzer Partien gelernt hat, löst solche kleinen Unterschiede womöglich nicht auf. Versuche, vom billigsten zum teuersten:
+    - dem Netz die Kennzahlen der Handbewertung als zusätzliche Eingaben geben, sodass es auf ihr aufbauen kann statt sie neu lernen zu müssen;
+    - auf Partien trainieren, in denen die Baumsuche selbst spielt, und als Ziel neben dem Ausgang auch die Einschätzung der Suche verwenden;
+    - prüfen, ob das Netz mit mehr Simulationen aufholt;
+    - Kartennamen ins Netz geben. Das wäre der Weg über das Netzformat der Engine, mit dem Upstream zu zweit Erfolg hatte.
+5. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
+6. **Wiederholen.** Mit dem besseren Netz neue Partien erzeugen und prüfen, ob eine zweite Runde noch einmal zulegt.
+
+**Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee. Gelingt das nach den Versuchen aus Schritt 4 und 5 nicht, ist das ebenfalls ein Ergebnis.
 
 **Bekannte Risiken.**
 
