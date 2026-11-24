@@ -89,6 +89,10 @@ type ArenaReport struct {
 	// failed, ControlUnfinished the control's. They count as losses.
 	Unfinished        int `json:"unfinished"`
 	ControlUnfinished int `json:"control_unfinished"`
+	// Outcomes is the candidate's game by game, in seed order: W won, L lost,
+	// U unfinished. Two runs over the same games are compared pair by pair
+	// from it (CompareArena).
+	Outcomes string `json:"outcomes,omitempty"`
 }
 
 // arenaGame is one seed's pair of games, from the candidate's seat.
@@ -128,7 +132,14 @@ func (rep *ArenaReport) tally(res []arenaGame, names []string) {
 	rep.Pooled = DeckArena{Deck: "all"}
 	// b: the candidate won where the control lost; c: the reverse
 	var b, c int
-	for _, r := range res {
+	outcomes := make([]byte, len(res))
+	for g, r := range res {
+		outcomes[g] = 'L'
+		if r.candidate {
+			outcomes[g] = 'W'
+		} else if r.unfinished {
+			outcomes[g] = 'U'
+		}
 		for _, da := range []*DeckArena{&by[r.deck], &rep.Pooled} {
 			da.Control.Games++
 			da.Candidate.Games++
@@ -167,10 +178,69 @@ func (rep *ArenaReport) tally(res []arenaGame, names []string) {
 	}
 	finish(&rep.Pooled.Control)
 	finish(&rep.Pooled.Candidate)
-	n := float64(len(res))
-	diff := float64(b-c) / n
-	se := math.Sqrt(float64(b+c)-float64((b-c)*(b-c))/n) / n
-	rep.Gain, rep.GainLow, rep.GainHigh = round(diff), round(diff-1.96*se), round(diff+1.96*se)
+	rep.Outcomes = string(outcomes)
+	rep.Gain, rep.GainLow, rep.GainHigh = pairedGain(b, c, len(res))
+}
+
+// pairedGain is the difference of two win rates over the same n games, with
+// its 95% interval: b games only the first won, c games only the second.
+func pairedGain(b, c, n int) (gain, low, high float64) {
+	diff := float64(b-c) / float64(n)
+	se := math.Sqrt(float64(b+c)-float64((b-c)*(b-c))/float64(n)) / float64(n)
+	return round(diff), round(diff - 1.96*se), round(diff + 1.96*se)
+}
+
+// ArenaCompare is two candidates over the same games.
+type ArenaCompare struct {
+	A, B            string
+	Games           int
+	RateA, RateB    float64
+	OnlyA, OnlyB    int     // games only the one won
+	Gain, Low, High float64 // A's win rate minus B's, with its 95% interval
+}
+
+// CompareArena sets two arena runs over the same games side by side: the same
+// tables, seeds, engine and settings, the candidate alone differing.
+func CompareArena(a, b ArenaReport) (ArenaCompare, error) {
+	cmp := ArenaCompare{A: a.Candidate, B: b.Candidate, Games: len(a.Outcomes)}
+	same := func(x, y RunConfig) bool {
+		return x.CardSet == y.CardSet && x.Surface == y.Surface && x.Mulligans == y.Mulligans && x.MaxSteps == y.MaxSteps &&
+			x.FirstSeed == y.FirstSeed && x.Games == y.Games && strings.Join(x.Allow, "|") == strings.Join(y.Allow, "|")
+	}
+	digest := func(r ArenaReport) string {
+		if r.Pool == nil {
+			return ""
+		}
+		return r.Pool.Digest
+	}
+	switch {
+	case a.Outcomes == "" || b.Outcomes == "":
+		return cmp, errors.New("a report without the outcomes game by game (written before they were kept); run it again")
+	case a.Table != b.Table || a.CandidateDecks != b.CandidateDecks || digest(a) != digest(b) ||
+		!same(a.Config, b.Config) || len(a.Outcomes) != len(b.Outcomes):
+		return cmp, errors.New("the two runs did not play the same games")
+	case a.Provenance != b.Provenance:
+		return cmp, errors.New("the two runs are from different engine or card revisions")
+	}
+	var wa, wb int
+	for g := range a.Outcomes {
+		x, y := a.Outcomes[g] == 'W', b.Outcomes[g] == 'W'
+		if x {
+			wa++
+		}
+		if y {
+			wb++
+		}
+		if x && !y {
+			cmp.OnlyA++
+		}
+		if y && !x {
+			cmp.OnlyB++
+		}
+	}
+	cmp.RateA, cmp.RateB = round(float64(wa)/float64(cmp.Games)), round(float64(wb)/float64(cmp.Games))
+	cmp.Gain, cmp.Low, cmp.High = pairedGain(cmp.OnlyA, cmp.OnlyB, cmp.Games)
+	return cmp, nil
 }
 
 // ArenaTiming is the hardware-dependent half.

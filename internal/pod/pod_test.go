@@ -166,7 +166,32 @@ func TestPoolArena(t *testing.T) {
 		raw, _ := json.Marshal(rep)
 		return raw
 	}
-	if a, b := play(1), play(4); string(a) != string(b) {
+	a, b := play(1), play(4)
+	if string(a) != string(b) {
 		t.Errorf("arena on drawn tables differs between 1 and 4 workers:\n%s\n%s", a, b)
+	}
+
+	// The same games against themselves: no gain. With one more win on one
+	// side: that game alone.
+	var rep ArenaReport
+	if err := json.Unmarshal(a, &rep); err != nil {
+		t.Fatal(err)
+	}
+	if len(rep.Outcomes) != 48 {
+		t.Fatalf("outcomes of %d games, want 48", len(rep.Outcomes))
+	}
+	if cmp, err := CompareArena(rep, rep); err != nil || cmp.Gain != 0 || cmp.OnlyA != 0 || cmp.OnlyB != 0 {
+		t.Errorf("a run against itself: %+v, %v", cmp, err)
+	}
+	better := rep
+	i := strings.IndexAny(rep.Outcomes, "LU")
+	better.Outcomes = rep.Outcomes[:i] + "W" + rep.Outcomes[i+1:]
+	if cmp, err := CompareArena(better, rep); err != nil || cmp.OnlyA != 1 || cmp.OnlyB != 0 || cmp.Gain <= 0 {
+		t.Errorf("one more win: %+v, %v", cmp, err)
+	}
+	other := rep
+	other.Config.FirstSeed++
+	if _, err := CompareArena(rep, other); err == nil {
+		t.Error("runs from different seeds were compared")
 	}
 }

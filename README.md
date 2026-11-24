@@ -25,11 +25,13 @@ Je 1.600 Partien ([results/arena/](results/arena/)), Siegquote des Kandidaten mi
 | Baumsuche, 25 Simulationen | 38,8 % (36,5 bis 41,2) | 33,0 % (30,7 bis 35,3) |
 | Baumsuche, 100 Simulationen | 43,4 % (41,0 bis 45,8) | 38,4 % (36,1 bis 40,8) |
 
-Die Baumsuche bringt die Engine mit. Sie bewertet Stellungen bisher mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch deutlich aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Offen ist der eigentliche Lernschritt, siehe [docs/ROADMAP.md](docs/ROADMAP.md).
+Die Baumsuche bringt die Engine mit. Sie bewertet Stellungen hier mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch deutlich aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Der Lernschritt folgt im nächsten Abschnitt, der Plan steht in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ### Die Lernversuche
 
 Die Lernkette steht von Anfang bis Ende: Partien spielen und Stellungen aufzeichnen (`podbench record`), in Python ein Netz trainieren ([train/train_value.py](train/train_value.py)), es in Go laden und in der Baumsuche einsetzen (`podbench arena -candidate net:<datei>:<simulationen>`). Go berechnet dabei dieselben Werte wie PyTorch, das prüft ein Test.
+
+**Ergebnis:** Die Baumsuche mit einem gelernten Netz schlägt die Baumsuche mit der handgebauten Bewertung der Engine, an gezogenen Tischen mit 51,4 % gegenüber 43,4 % bei 100 Simulationen.
 
 Das Netz lernt bisher nur, Stellungen zu bewerten: Wie wahrscheinlich gewinnt dieser Sitz? Es ersetzt in der Baumsuche die handgebaute Bewertung, alles andere bleibt gleich. Trainiert wird an den 40 Trainingsdecks. Je 1.600 Partien an gezogenen Tischen, 25 Simulationen, Siegquote mit 95-%-Intervall:
 
@@ -41,12 +43,41 @@ Das Netz lernt bisher nur, Stellungen zu bewerten: Wie wahrscheinlich gewinnt di
 | Netz v2 | wie v1, sieht zusätzlich die Handbewertung | 34,1 % (31,8 bis 36,4) |
 | Netz v3 | 100.000 mit 15 % zufälligen Zügen | 38,7 % (36,3 bis 41,1) |
 | handgebaute Bewertung der Engine | – | 38,8 % (36,5 bis 41,2) |
+| Netz v4 | wie v3, dazu 60.000, in denen die Suche mit Netz v3 selbst spielt | 42,2 % (39,8 bis 44,6) |
+| Netz v5 | wie v4, dazu 60.000, in denen die Suche mit Netz v4 selbst spielt | 45,3 % (42,9 bis 47,8) |
 
-**Was den Unterschied machte.** Mehr Partien (v1) und die Handbewertung als Eingabe (v2) halfen kaum. Den Sprung brachte v3: Trainingspartien, in denen die Piloten in 15 % der Entscheidungen einen zufälligen Zug spielen. Ein Netz, das nur Partien des Heuristik-Bots kennt, hat nie gesehen, was nach einem Zug passiert, den der Bot nicht machen würde. Genau solche Züge muss es in der Suche aber bewerten. Die Netzausgabe für die Suche zu spreizen, half dagegen nicht.
+**Was den Unterschied machte.** Mehr Partien (v1) und die Handbewertung als Eingabe (v2) halfen kaum. Zwei Schritte brachten je einen Sprung:
 
-**An den 5 Prüfdecks**, die im Training nicht vorkamen, liegt das Netz noch zurück: 25,8 % (23,7 bis 27,9) gegenüber 29,1 % (27,0 bis 31,4) für die Handbewertung, bei 13,9 % für den Heuristik-Bot.
+- **v3: zufällige Züge in den Trainingspartien.** Die Piloten spielen in 15 % der Entscheidungen einen zufälligen Zug. Ein Netz, das nur Partien des Heuristik-Bots kennt, hat nie gesehen, was nach einem Zug passiert, den der Bot nicht machen würde. Genau solche Züge muss es in der Suche aber bewerten.
+- **v4 und v5: Partien der eigenen Suche.** Auf einem Sitz spielt die Baumsuche mit dem jeweils letzten Netz, auf den anderen drei der Heuristik-Bot, wie in der Arena. Aufgezeichnet wird aus Sicht des suchenden Sitzes. Das Netz lernt so an den Stellungen, die sein eigenes Spiel erzeugt. Jede der beiden Runden brachte bei 25 Simulationen rund 3 Punkte.
 
-**Einordnung.** Ein aus Partien gelerntes Netz erreicht an den Trainingsdecks die handgebaute Bewertung, ohne dass ihm jemand gesagt hat, was eine gute Stellung ist. Übertroffen hat es sie noch nicht, und auf unbekannte Decks überträgt es sich schlechter. Die PoC-Frage ist damit halb beantwortet.
+Nicht geholfen hat, die Netzausgabe für die Suche zu spreizen, und auch nicht, v4 nur auf den 60.000 neuen Partien zu trainieren (39,4 %).
+
+**Netz gegen Handbewertung.** `podbench compare` stellt zwei Kandidaten auf denselben 1.600 Partien gegenüber. Siegquote, in Klammern der Abstand zur Handbewertung in Punkten mit 95-%-Intervall:
+
+| | 25 Simulationen | 100 Simulationen |
+|---|---:|---:|
+| **gezogene Tische, alle 45 Decks** | | |
+| Handbewertung | 38,8 % | 43,4 % |
+| Netz v3 | 38,7 % (−0,1; −2,8 bis +2,6) | 47,3 % (+3,9; +1,2 bis +6,7) |
+| Netz v4 | 42,2 % (+3,4; +0,6 bis +6,1) | 50,0 % (+6,6; +3,9 bis +9,4) |
+| Netz v5 | 45,3 % (+6,5; +3,7 bis +9,3) | 51,4 % (+8,0; +5,3 bis +10,7) |
+| **die 5 Prüfdecks** | | |
+| Handbewertung | 29,1 % | 33,3 % |
+| Netz v3 | 25,8 % (−3,4; −5,9 bis −0,9) | 35,4 % (+2,1; −0,6 bis +4,8) |
+| Netz v4 | 26,4 % (−2,8; −5,3 bis −0,2) | 35,8 % (+2,5; −0,2 bis +5,2) |
+| Netz v5 | 29,3 % (+0,2; −2,3 bis +2,7) | 39,1 % (+5,8; +3,2 bis +8,5) |
+
+Der Heuristik-Bot gewinnt auf denselben Partien 24,8 % an allen Decks und 13,9 % an den Prüfdecks.
+
+**Einordnung.**
+
+- **Die Suche mit gelerntem Netz schlägt die Suche mit handgebauter Bewertung** bei gleicher Simulationszahl, und der Abstand wächst mit jeder Selbstspiel-Runde. Mit 25 Simulationen ist Netz v5 stärker als die Handbewertung mit 100.
+- **An den Prüfdecks**, die im Training nie vorkamen, liegt Netz v5 mit 100 Simulationen ebenfalls klar vorn. Mit 25 Simulationen ist es dort gleichauf.
+- **Das Netz ist an bekannten Decks stärker als an unbekannten.** An den 40 Trainingsdecks allein beträgt der Vorsprung 7 bis 8 Punkte (47,4 % gegenüber 40,1 % bei 25 Simulationen, 53,0 % gegenüber 44,8 % bei 100). Es hat also zum Teil gelernt, was für diese Decks gilt, und nicht nur, was allgemein gilt.
+- **Die Gegner sind schwach.** Gemessen wird gegen drei Heuristik-Bots. Wie das Netz gegen Gegner abschneidet, die selbst vorausdenken, ist offen.
+
+Niemand hat dem Netz gesagt, was eine gute Stellung ist. Es lernt allein aus dem Ausgang der Partien.
 
 Das Netz sieht keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
 
@@ -132,7 +163,12 @@ bin/podbench arena -candidate search:25 -n 1600                 # Messlatte am f
 make venv                                                       # Python-Umgebung fürs Training
 bin/podbench record -pilot ehbot:0.15 -n 100000 -every 160 -out data/v3   # Stellungen mit Ausgang aufzeichnen
 .venv/bin/python train/train_value.py data/v3 models/v3.caiv              # Bewertungsnetz trainieren
-bin/podbench arena -pool all -candidate net:models/v3.caiv:25             # Baumsuche mit diesem Netz messen
+bin/podbench arena -pool all -candidate net:models/v3.caiv:25 -out results/arena   # Baumsuche mit diesem Netz messen
+# eine Selbstspiel-Runde: die Suche mit dem Netz auf einem Sitz, aufgezeichnet aus dessen Sicht
+bin/podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -keep 0 -n 60000 -out data/v4
+.venv/bin/python train/train_value.py data/v3 data/v4 models/v4b.caiv --mark data/v4
+bin/podbench arena -pool all -candidate net:models/v4b.caiv:25 -out results/arena
+bin/podbench compare results/arena/arena-pool-all-net-models_v4b_caiv-25.json results/arena/arena-pool-all-hsearch-25.json
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
 ```

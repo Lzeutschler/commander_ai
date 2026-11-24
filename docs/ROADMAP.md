@@ -14,6 +14,7 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 
 - Die Engine ist schnell und regeltreu genug: rund 965 Partien pro Sekunde, 99,5 % der Partien verlaufen wie in der Referenz-Engine.
 - Vorausdenken lohnt sich zu viert: Die Baumsuche der Engine gewinnt an gezogenen Tischen ohne gelerntes Netz 39 % (25 Simulationen) und 43 % (100 Simulationen).
+- Ein Netz, das nur aus dem Ausgang von Partien lernt, bewertet Stellungen für die Suche besser als die handgebaute Bewertung der Engine. Jede Runde, in der es an Partien seiner eigenen Suche weiterlernt, hat es bisher stärker gemacht.
 - Upstream hat das Lernverfahren für Partien zu zweit mit 40-Karten-Decks bereits durchgespielt: Netze, die aus den Besuchszahlen der eigenen Suche lernen, schlugen dort die Suche ohne Netz mit rund 60 %. Nach einigen Generationen flachte der Zuwachs ab.
 
 **Was die Engine dafür mitbringt.** Eine Codierung der Stellung aus Sicht eines Sitzes (nur was dieser Sitz sehen darf), eine Codierung der angebotenen Aktionen, die Baumsuche für mehr als zwei Sitze und das Laden eines extern trainierten Netzes im Format `.dzgw`. Das Trainingsprogramm selbst ist nicht veröffentlicht.
@@ -24,14 +25,15 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 2. ✅ Lernkette bauen: Stellungen aufzeichnen, in Python trainieren, Netz in Go laden und in der Baumsuche einsetzen.
 3. ✅ Bewertungsnetz aus Partien des Heuristik-Bots: 33 % Siegquote in der Suche, besser als der Heuristik-Bot (25 %), schlechter als die handgebaute Bewertung (39 %). Mehr Partien und die Handbewertung als Eingabe ändern daran wenig.
 4. ✅ Ursache gefunden: Das Netz kannte nur Stellungen, die der Heuristik-Bot selbst herbeiführt. Mit Trainingspartien, in denen 15 % der Züge zufällig sind, erreicht es 38,7 % und damit die handgebaute Bewertung (38,8 %). An den 5 Prüfdecks liegt es noch zurück (25,8 % gegenüber 29,1 %).
-5. **Über die Handbewertung hinauskommen.** In dieser Reihenfolge:
-    - auf Partien trainieren, in denen die Baumsuche mit dem aktuellen Netz selbst spielt, und das wiederholen. Jede Runde zeigt dem Netz die Stellungen, die sein eigenes Spiel erzeugt;
-    - mehr unterschiedliche Abweichungen in den Trainingspartien (Anteil zufälliger Züge variieren);
-    - Kartennamen ins Netz geben, damit es einzelne Karten unterscheiden lernt. Das sollte auch den Rückstand an unbekannten Decks zeigen oder schließen helfen;
-    - prüfen, wie sich Netz und Handbewertung bei 100 Simulationen verhalten.
-6. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
+5. ✅ Über die Handbewertung hinaus: Partien aufzeichnen, in denen die Suche mit dem aktuellen Netz auf einem Sitz spielt, darauf weitertrainieren, wiederholen. Nach zwei Runden gewinnt Netz v5 an gezogenen Tischen 45,3 % (25 Simulationen) und 51,4 % (100 Simulationen), die Handbewertung 38,8 % und 43,4 %. An den 5 Prüfdecks sind es 29,3 % und 39,1 % gegenüber 29,1 % und 33,3 %.
+6. **Wie weit trägt das Selbstspiel?** Weitere Runden, bis der Zuwachs abflacht. Jede Runde kostet auf dem Laptop rund eine Stunde Rechenzeit.
+7. **Übertragung auf unbekannte Decks.** Das Netz ist an den Trainingsdecks stärker als an den Prüfdecks. Ansätze: Trainingsdecks abwandeln (Karten zwischen Decks tauschen), damit das Netz keine Listen lernen kann; mehr Decks; prüfen, ob Kartennamen als Eingabe helfen oder schaden.
+8. **Stärkere Gegner.** Bisher sitzen drei Heuristik-Bots am Tisch. Der nächste Maßstab ist ein Tisch, an dem auch die Gegner suchen.
+9. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
 
-**Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee. Gelingt das nach den Versuchen aus Schritt 4 und 5 nicht, ist das ebenfalls ein Ergebnis.
+**Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee.
+
+**Stand:** An den Trainingsdecks ist das bei 25 und bei 100 Simulationen erfüllt, an den Prüfdecks bei 100 Simulationen. Bei 25 Simulationen ist das Netz an den Prüfdecks gleichauf. Die Idee trägt, mit der Einschränkung, dass alle Messungen gegen Heuristik-Bots und an ausgedünnten Decks laufen.
 
 **Bekannte Risiken.**
 

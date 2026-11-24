@@ -6,7 +6,9 @@
 //	podbench export -table frontier -allow decks/allow.txt -out /tmp/pool
 //	podbench arena -candidate search:25 -n 1600 -out results/arena
 //	podbench arena -pool eval -candidate net:models/v0.caiv:25
+//	podbench compare results/arena/arena-pool-all-net-models_v3_caiv-100.json results/arena/arena-pool-all-hsearch-100.json
 //	podbench record -split train -pilot hbot -n 4000 -out data/v0
+//	podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -keep 0 -out data/v4
 //
 // Exit status: 0 the table was played (or the report written), 1 an error,
 // 2 bad usage, 3 the kernel refused to deal the table.
@@ -46,6 +48,8 @@ func main() {
 		err = cmdExport(os.Args[2:])
 	case "arena":
 		err = cmdArena(os.Args[2:])
+	case "compare":
+		err = cmdCompare(os.Args[2:])
 	case "record":
 		err = cmdRecord(os.Args[2:])
 	default:
@@ -62,7 +66,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena|record [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
+	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena|compare|record [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
 	os.Exit(2)
 }
 
@@ -314,6 +318,32 @@ func cmdArena(args []string) error {
 	return nil
 }
 
+// cmdCompare sets two arena reports over the same games side by side: the
+// first candidate's win rate minus the second's, pair by pair.
+func cmdCompare(args []string) error {
+	if len(args) != 2 {
+		return errors.New("compare: want two arena reports")
+	}
+	var reps [2]pod.ArenaReport
+	for i, path := range args {
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(raw, &reps[i]); err != nil {
+			return fmt.Errorf("%s: %w", path, err)
+		}
+	}
+	cmp, err := pod.CompareArena(reps[0], reps[1])
+	if err != nil {
+		return fmt.Errorf("compare: %w", err)
+	}
+	fmt.Printf("%d games: %s wins %.1f%%, %s wins %.1f%%\n", cmp.Games, cmp.A, 100*cmp.RateA, cmp.B, 100*cmp.RateB)
+	fmt.Printf("%s over %s on the same games: %+.1f points [%+.1f, %+.1f]; only the first won %d, only the second %d\n",
+		cmp.A, cmp.B, 100*cmp.Gain, 100*cmp.Low, 100*cmp.High, cmp.OnlyA, cmp.OnlyB)
+	return nil
+}
+
 // pilotOf builds the pilots this command adds to the arena's own: the tree
 // search through this repository's pilot, over the engine's heuristic leaf
 // (hsearch:<simulations>) or a value network (net:<file>:<simulations>, or
@@ -370,7 +400,9 @@ func cmdRecord(args []string) error {
 	c := newCommon("record", "adjusted")
 	def := pod.DefaultOptions(pod.Table{})
 	split := c.fs.String("split", "train", "pool split every deck is drawn from: train, eval or all")
-	pilot := c.fs.String("pilot", "hbot", "who plays all four seats: hbot, ehbot:<share of random answers>, hsearch:<simulations> or net:<file>:<simulations>")
+	pilot := c.fs.String("pilot", "hbot", "who plays: one pilot for all four seats, or four with commas between that are dealt to the seats afresh each game. "+
+		"A pilot is hbot, hsearch:<simulations>, net:<file>:<simulations>, or explore:<share>:<pilot> for a pilot that answers that share of its decisions at random (ehbot:<share> is explore:<share>:hbot)")
+	keepArg := c.fs.String("keep", "", "with four pilots: the positions in -pilot (from 0, commas between) whose seats are recorded; empty records every seat")
 	n := c.fs.Int("n", 4000, "games")
 	seed := c.fs.Uint64("seed", 500001, "first seed (keep it apart from the arena's)")
 	every := c.fs.Int("every", 40, "sample every N-th decision of a game")
@@ -385,24 +417,26 @@ func cmdRecord(args []string) error {
 	if *out == "" {
 		return errors.New("record: -out is required")
 	}
-	mk := lab.HBot
-	switch {
-	case *pilot == "hbot":
-	case strings.HasPrefix(*pilot, "ehbot:"):
-		eps, err := strconv.ParseFloat(strings.TrimPrefix(*pilot, "ehbot:"), 64)
-		if err != nil || eps <= 0 || eps >= 1 {
-			return fmt.Errorf("record: pilot %q: want ehbot:<share of random answers>", *pilot)
-		}
-		mk = func() lab.Policy { return &learn.Exploring{Policy: lab.HBot(), Eps: eps} }
-	default:
-		if mk, err = pilotOf(*pilot); err != nil {
+	var pilots []func() lab.Policy
+	for _, spec := range strings.Split(*pilot, ",") {
+		mk, err := recordPilot(spec)
+		if err != nil {
 			return err
 		}
-		if mk == nil {
-			return fmt.Errorf("record: unknown pilot %q", *pilot)
+		pilots = append(pilots, mk)
+	}
+	var keep []bool
+	if *keepArg != "" {
+		keep = make([]bool, len(pilots))
+		for _, k := range strings.Split(*keepArg, ",") {
+			i, err := strconv.Atoi(k)
+			if err != nil || i < 0 || i >= len(pilots) {
+				return fmt.Errorf("record: -keep %q names no pilot of %d", k, len(pilots))
+			}
+			keep[i] = true
 		}
 	}
-	meta, err := learn.Record(root, learn.RecordOptions{Split: *split, Pilot: mk, PilotName: *pilot, FirstSeed: *seed, Games: *n,
+	meta, err := learn.Record(root, learn.RecordOptions{Split: *split, Pilots: pilots, Keep: keep, PilotName: *pilot, FirstSeed: *seed, Games: *n,
 		Every: *every, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow, Out: *out})
 	if err != nil {
 		return err
@@ -410,6 +444,36 @@ func cmdRecord(args []string) error {
 	fmt.Printf("recorded %d positions from %d of %d games (%s decks, pilot %s) to %s: %d features each, %.1f%% wins\n",
 		meta.Records, meta.Finished, meta.Games, meta.Split, meta.Pilot, *out, meta.Width, 100*float64(meta.Positive)/float64(max(1, meta.Records)))
 	return nil
+}
+
+// recordPilot reads one pilot of `podbench record`.
+func recordPilot(spec string) (func() lab.Policy, error) {
+	if eps, ok := strings.CutPrefix(spec, "ehbot:"); ok {
+		spec = "explore:" + eps + ":hbot"
+	}
+	if rest, ok := strings.CutPrefix(spec, "explore:"); ok {
+		share, inner, ok := strings.Cut(rest, ":")
+		eps, err := strconv.ParseFloat(share, 64)
+		if !ok || err != nil || eps <= 0 || eps >= 1 {
+			return nil, fmt.Errorf("record: pilot %q: want explore:<share of random answers>:<pilot>", spec)
+		}
+		mk, err := recordPilot(inner)
+		if err != nil {
+			return nil, err
+		}
+		return func() lab.Policy { return &learn.Exploring{Policy: mk(), Eps: eps} }, nil
+	}
+	if spec == "hbot" {
+		return lab.HBot, nil
+	}
+	mk, err := pilotOf(spec)
+	if err != nil {
+		return nil, err
+	}
+	if mk == nil {
+		return nil, fmt.Errorf("record: unknown pilot %q", spec)
+	}
+	return mk, nil
 }
 
 // cmdExport writes the lists a table deals as a deck pool the engine's own

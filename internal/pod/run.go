@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"runtime"
 	"sort"
 	"sync"
@@ -327,4 +328,4 @@ func refusalOf(err error) *Refusal {
 	return r
 }
 
-func round(v float64) float64 { return float64(int64(v*1000+0.5)) / 1000 }
+func round(v float64) float64 { return math.Round(v*1000) / 1000 }

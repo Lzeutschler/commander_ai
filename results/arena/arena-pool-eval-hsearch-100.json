@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "table": "pool",
+  "provenance": {
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "8cbe2434276afb40971b55594a20d5b75efaf7d2",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
+  },
+  "candidate": "hsearch:100",
+  "opponents": "hbot",
+  "config": {
+    "card_set": "edh",
+    "surface": "full",
+    "pilot": "hsearch:100",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 100001,
+    "games": 1600,
+    "allow": []
+  },
+  "pool": {
+    "source": "third_party/gorge/dirac/oracle/testdata/slices/edh/decks.tar.gz",
+    "card_set": "edh",
+    "decks": 45,
+    "train": 40,
+    "eval": 5,
+    "digest": "c2ff1a819a679ba61d9d54de5ecdf5c2de8c4ec7c47ac2cb988f262f547cd5c3",
+    "replaced_cards": 25,
+    "replaced_slots": 110,
+    "skipped_cards": 19,
+    "skipped_slots": 28,
+    "excluded": [
+      "Arcane Wizardry (C17)",
+      "Cavalry Charge (MOC)",
+      "Federation Fleet (TRC)",
+      "Federation Fleet Collector's Edition (TRC)",
+      "Science! (PIP)",
+      "Vampiric Bloodlust (C17)",
+      "World Shaper (EOC)"
+    ]
+  },
+  "candidate_decks": "eval",
+  "refused_tables": {
+    "interaction atktax": 28,
+    "interaction blktax": 313,
+    "interaction comboanymix": 13,
+    "interaction replplus": 123
+  },
+  "pooled": {
+    "deck": "all",
+    "control": {
+      "games": 1600,
+      "wins": 223,
+      "rate": 0.139,
+      "low": 0.123,
+      "high": 0.157
+    },
+    "candidate": {
+      "games": 1600,
+      "wins": 533,
+      "rate": 0.333,
+      "low": 0.31,
+      "high": 0.357
+    }
+  },
+  "by_deck": [
+    {
+      "deck": "Calling All Angels (FDC)",
+      "control": {
+        "games": 80,
+        "wins": 51,
+        "rate": 0.638,
+        "low": 0.528,
+        "high": 0.734
+      },
+      "candidate": {
+        "games": 80,
+        "wins": 67,
+        "rate": 0.838,
+        "low": 0.742,
+        "high": 0.903
+      }
+    },
+    {
+      "deck": "Growing Threat (MOC)",
+      "control": {
+        "games": 377,
+        "wins": 94,
+        "rate": 0.249,
+        "low": 0.208,
+        "high": 0.295
+      },
+      "candidate": {
+        "games": 377,
+        "wins": 152,
+        "rate": 0.403,
+        "low": 0.355,
+        "high": 0.453
+      }
+    },
+    {
+      "deck": "Living Energy (DRC)",
+      "control": {
+        "games": 386,
+        "wins": 39,
+        "rate": 0.101,
+        "low": 0.075,
+        "high": 0.135
+      },
+      "candidate": {
+        "games": 386,
+        "wins": 112,
+        "rate": 0.29,
+        "low": 0.247,
+        "high": 0.337
+      }
+    },
+    {
+      "deck": "Scrappy Survivors (PIP)",
+      "control": {
+        "games": 404,
+        "wins": 11,
+        "rate": 0.027,
+        "low": 0.015,
+        "high": 0.048
+      },
+      "candidate": {
+        "games": 404,
+        "wins": 59,
+        "rate": 0.146,
+        "low": 0.115,
+        "high": 0.184
+      }
+    },
+    {
+      "deck": "Witherbloom Pestilence (SOC)",
+      "control": {
+        "games": 353,
+        "wins": 28,
+        "rate": 0.079,
+        "low": 0.055,
+        "high": 0.112
+      },
+      "candidate": {
+        "games": 353,
+        "wins": 143,
+        "rate": 0.405,
+        "low": 0.355,
+        "high": 0.457
+      }
+    }
+  ],
+  "gain": 0.194,
+  "gain_low": 0.17,
+  "gain_high": 0.217,
+  "unfinished": 40,
+  "control_unfinished": 60,
+  "outcomes": "ULLWWWLWLLLWWLLWLLLLLLLLLWWWLWWWLLLWLLWLLLLLWULLWWWLLWLLLLLLLLWWLLWLLLULWLLWLWLLWWWLLWLULLLWWLLWLLLLLLLLWLWLLLWWLLWWLLWLLLLWLLWLWLWLWWLWWLWWLLLLWWWWLLLLLLWWLWLWLWLLLLLLLLLLLLLWLWLLLLWWWLLLLLLWLWLLWWWLLLLLWWWWLWLLWLLLWLLWLLWLLLWLLLWLLWWLWLWLUWLLLLLWLWWWLWLLWLLWLWLLLWWLLLLLLLWWWLLLLWWWLLWWLLLWWLLWLLWLLLLLWLLLLLWLLWWLLLLLLLWLLWLLWWLWLWLLLLLLLLLWLLLLLLLLLLLLWLLLWLLLWLWLLLLLWWWLWLWLLLUWWLLLLWLLLUWLLLLLLLLWLLWULLLLLLWLLWLLULLLLLLWLWLLWLWLWLWLLWWWLLWWLWLLLLWLLWWLLWWLWLWLWLWLWLWLLLWWWLWLLLLLWLWWLWLLLLWLLWLWLWLLWWLLWLWLLLLLLLLWWWLLLLLWLLLLWLLWLWLLLLLWULLWWWLLWULLLLLLLLWWWLWWLLWWLWLWLLLLLLLWLWWLWLLWULLLWLLWLWLLWWLWWLLWLWLLLWWWWLLLWLLLLLLULWLWLWLWLWLLWLLWLLLWWLLLLLWLWLLLLWWWLLLLWLLWLWWLLLLLWWLLLWLWLWLLWLLLLLLLLLLLWLLWLLLLWWLLLWLLULWWLLLLLULWLLLWLLWLWWWWWLLWLWLLWLLLULWLLLLLWWWUWWLLWLLLWLLWWWULLLLULWWLLLLWWLLWWLLLLWLWWLLLLWLLWWLLWUUWLWWLLLLLWLWLLLLLWLWWLLWLLLWLWLWWLLWLLWLLWLLLLLWLLWLLLLLLWLLWWWLWWWLWLWLLLWWLLLWLWUWWWLWULWLLWLLLLLLWLWULWWWLULWLLLWWLLLWLLLLWLULWWLWWLUUWWLLLLLLLWLWLWWULWLLWLLLWLLLLLLWLLWLLWLLLWLLLLLWLLLLWWLLLWWLWLLLLLWLLLLLLLWLLLLLLLWLLWLWWLWLLWLLLLLLWWLLULLLLLWLWWLLLLLLWLWLWLLLLWLLWLWWLLWWLLLWWLWLWLLWWWWLLLLLLLLLLWLWLLLLLLLWLLWWLULWWWWLLLWLLLWLLLLLWWLWWLLWLWWLLLLWWWWWULWLLLLWWWLWWWLLLLWLLLWWLLLLLLWWWLUWWWLLWLLWLLLLLLWWWLLWWLLLLUUWLLLLWLLWLLLLLLWLWLLLLWLLLLWWWLLWLWLLLLWLWLWWLLLWWWLLWLLLLWWLLWLLLWLWLWLLLLULWWLWLWWLLLLWWWLULWLLLLLLWLLLLLLLWLLWLLLLLLLWWWLLLLWLWLWLWLLLWLLLWLWLLWLLLLLLLLLWLWLLLWLLLWWLLLWLLWLWWLLLWWLLLWWLWWLLWLLLWWWLWLWLLLLLLWLLLLLLWLULLWWLLLWLLLLWLWLWLWLLLLLLLLWLLLWWLLWLLLLLLLLLLWLWWLLWWLLLLLLLLLLLLLWWUWWWLLLWWLWWLLLLWLLLLLLWLLLWLLWULWLLLLLLWWLLWWLLLLLLLLWLWLLL"
+}
