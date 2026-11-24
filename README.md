@@ -44,7 +44,8 @@ Die Engine bereitet jeden Tisch einmal vor und schaltet dabei allgemeinere, lang
 
 ### Einschränkungen des Deckpools
 
-- Die Engine hat in diesen Listen Karten, die ihr Kern nicht spielt, schon durch Standardländer ersetzt. Zusätzlich ersetzen wir 25 Karten ohne Nachweis (110 Kartenplätze) und die 19 langsamen Karten. 7 Decks fallen weg, weil ihr Commander zu einer der beiden Gruppen gehört.
+- **Die Decks sind stark verdünnt.** Im Mittel sind 15 der 100 Karten eines Decks durch Standardländer ersetzt (zwischen 2 und 22). Rund 12 davon hat schon die Engine ersetzt, weil ihr Kern die Karte nicht spielt, 3 kommen von uns (25 Karten ohne Nachweis und die 19 langsamen Karten). Ein Deck hat dadurch im Mittel 51 Länder statt der gedruckten 36 bis 38. Die Partien sind also manareicher und ärmer an Zaubern als echtes Commander, und es fehlen bevorzugt die komplizierten Karten.
+- 7 Decks fallen ganz weg, weil ihr Commander ohne Nachweis ist oder zu den langsamen Karten gehört.
 - Etwa jeder achte gezogene Tisch enthält eine Kartenkombination, die der Kern ablehnt. Dann wird neu gezogen.
 - Rund 4 % der Partien brechen an einer Grenze des Kerns ab (am festen Tisch 0,2 %). Sie zählen als Niederlage.
 - Die Regeltreue ist geringer als am festen Tisch: In einer Stichprobe von 509 Viererpartien im Gleichschritt mit der Referenz-Engine wichen 13 ab (2,6 % gegenüber 0,4 %).
