@@ -2,6 +2,7 @@ package learn
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/adams-shaun/gorge/dirac"
 	"github.com/adams-shaun/gorge/dirac/kop"
@@ -14,10 +15,18 @@ import (
 // Evaluator values the leaves of the engine's tree search with a ValueNet. It
 // supplies no prior: like the engine's heuristic leaf, the search then treats
 // every candidate alike, so the two differ in the leaf value alone.
+//
+// Spread, when above 1, stretches the network's output around an even chance
+// before the search reads it: v' = sigmoid(Spread * (logit(v) - logit(1/n)))
+// for n seats still in the game. It keeps the order of any two positions and
+// widens the gap between them. A win probability moves little with one
+// action, and the search's exploration term is sized for values that use the
+// whole of [0, 1], as the hand-made leaf's do.
 type Evaluator struct {
-	net *ValueNet
-	f   *Featurizer
-	sc  *Scratch
+	net    *ValueNet
+	f      *Featurizer
+	sc     *Scratch
+	Spread float64
 }
 
 // Value is search.Evaluator: the win probability of seat at s.
@@ -34,7 +43,20 @@ func (e *Evaluator) Value(s *dirac.State, d *dirac.Decision, seat uint8) float32
 	if s.FeatLost(seat) {
 		return 0
 	}
-	return e.net.Value(e.f.Encode(s, d, seat), e.sc)
+	v := e.net.Value(e.f.Encode(s, d, seat), e.sc)
+	if e.Spread <= 1 {
+		return v
+	}
+	alive := 0
+	for p := uint8(0); p < s.NumSeats(); p++ {
+		if !s.FeatLost(p) {
+			alive++
+		}
+	}
+	even := 1 / float64(max(alive, 2))
+	x := min(max(float64(v), 1e-6), 1-1e-6)
+	z := e.Spread * (math.Log(x/(1-x)) - math.Log(even/(1-even)))
+	return float32(1 / (1 + math.Exp(-z)))
 }
 
 // Priors is search.Evaluator. The evaluator is no search.PriorSource, so the
@@ -51,6 +73,8 @@ type SearchPolicy struct {
 	Opts search.Options
 	Net  *ValueNet
 	Reg  *cards.Registry // needed with a Net
+	// Spread is the Evaluator's (1 or less: the network's output as it is).
+	Spread float64
 
 	tbl   *kop.Table
 	sr    *search.Searcher
@@ -86,7 +110,7 @@ func (p *SearchPolicy) Start(g *lab.Game, seat int) {
 		var eval search.Evaluator = search.HeuristicLeaf{}
 		if p.Net != nil {
 			if p.ev == nil {
-				p.ev = &Evaluator{net: p.Net, f: NewFeaturizer(p.Reg), sc: p.Net.NewScratch()}
+				p.ev = &Evaluator{net: p.Net, f: NewFeaturizer(p.Reg), sc: p.Net.NewScratch(), Spread: p.Spread}
 			}
 			if err := p.ev.f.SetTable(tbl); err != nil {
 				panic(fmt.Sprintf("learn: features for the table: %v", err))

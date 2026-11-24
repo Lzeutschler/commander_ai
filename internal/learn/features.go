@@ -4,11 +4,14 @@
 package learn
 
 import (
+	"math"
+
 	"github.com/adams-shaun/gorge/dirac"
 	"github.com/adams-shaun/gorge/dirac/cardset"
 	"github.com/adams-shaun/gorge/dirac/feat"
 	"github.com/adams-shaun/gorge/dirac/kop"
 	"github.com/adams-shaun/gorge/dirac/oracle"
+	"github.com/adams-shaun/gorge/dirac/search"
 	"github.com/adams-shaun/gorge/engine/cards"
 )
 
@@ -21,6 +24,11 @@ import (
 //	         stack, ...): the number of cards, and the scaled sum and the
 //	         maximum of the cards' per-card records
 //
+//	leaf     the engine's hand-made leaf evaluation of the position for the
+//	         viewer and for each other seat in turn order, as a probability
+//	         and as its logit: the network can build on it instead of having
+//	         to rediscover it
+//
 // It carries no card identities, only what each card is and does in general
 // terms, so nothing in it is tied to a particular deck list.
 const (
@@ -28,8 +36,12 @@ const (
 	Groups  = feat.EntityGroupsPod
 	RawW    = feat.EntityRawWidthPod
 	groupW  = 1 + 2*RawW
-	Width   = DenseW + Groups*groupW
+	leafOff = DenseW + Groups*groupW
+	leafW   = 2 * dirac.MaxSeats
+	Width   = leafOff + leafW
 	sumGain = 0.25
+	// leafClamp bounds the leaf logit: a seat out of the game is at -leafClamp
+	leafClamp = 8
 )
 
 // Registry opens the card corpus the encoder reads card facts from. It is
@@ -96,6 +108,16 @@ func (f *Featurizer) Encode(s *dirac.State, d *dirac.Decision, seat uint8) []flo
 				mx[j] = v
 			}
 		}
+	}
+	n := s.NumSeats()
+	for r := uint8(0); r < n; r++ {
+		v := float64(search.HeuristicLeaf{}.Value(s, d, (seat+r)%n))
+		logit := -float64(leafClamp)
+		if v > 0 {
+			logit = max(-leafClamp, min(leafClamp, math.Log(v/(1-v))))
+		}
+		out[leafOff+2*int(r)] = float32(v)
+		out[leafOff+2*int(r)+1] = float32(logit)
 	}
 	return out
 }

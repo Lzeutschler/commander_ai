@@ -27,22 +27,28 @@ Je 1.600 Partien ([results/arena/](results/arena/)), Siegquote des Kandidaten mi
 
 Die Baumsuche bringt die Engine mit. Sie bewertet Stellungen bisher mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch deutlich aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Offen ist der eigentliche Lernschritt, siehe [docs/ROADMAP.md](docs/ROADMAP.md).
 
-### Der erste Lernversuch
+### Die Lernversuche
 
 Die Lernkette steht von Anfang bis Ende: Partien spielen und Stellungen aufzeichnen (`podbench record`), in Python ein Netz trainieren ([train/train_value.py](train/train_value.py)), es in Go laden und in der Baumsuche einsetzen (`podbench arena -candidate net:<datei>:<simulationen>`). Go berechnet dabei dieselben Werte wie PyTorch, das prüft ein Test.
 
-Der erste Versuch lernt nur, Stellungen zu bewerten: Wie wahrscheinlich gewinnt dieser Sitz? Trainiert wird auf Partien des Heuristik-Bots an den 40 Trainingsdecks. Das Netz ersetzt in der Baumsuche die handgebaute Bewertung, alles andere bleibt gleich. Je 1.600 Partien an gezogenen Tischen, 25 Simulationen:
+Das Netz lernt bisher nur, Stellungen zu bewerten: Wie wahrscheinlich gewinnt dieser Sitz? Es ersetzt in der Baumsuche die handgebaute Bewertung, alles andere bleibt gleich. Trainiert wird an den 40 Trainingsdecks. Je 1.600 Partien an gezogenen Tischen, 25 Simulationen, Siegquote mit 95-%-Intervall:
 
-| Bewertung in der Baumsuche | Trainingspartien | Vorhersagegüte (AUC) | Siegquote |
-|---|---:|---:|---:|
-| keine Suche (Heuristik-Bot) | – | – | 24,8 % |
-| Netz v0 | 20.000 | 0,80 | 33,1 % (30,8 bis 35,4) |
-| Netz v1 | 100.000 | 0,83 | 33,2 % (30,9 bis 35,5) |
-| handgebaute Bewertung der Engine | – | – | 38,8 % (36,5 bis 41,2) |
+| Bewertung in der Baumsuche | Trainingspartien | Siegquote |
+|---|---|---:|
+| keine Suche (Heuristik-Bot) | – | 24,8 % |
+| Netz v0 | 20.000 des Heuristik-Bots | 33,1 % (30,8 bis 35,4) |
+| Netz v1 | 100.000 des Heuristik-Bots | 33,2 % (30,9 bis 35,5) |
+| Netz v2 | wie v1, sieht zusätzlich die Handbewertung | 34,1 % (31,8 bis 36,4) |
+| Netz v3 | 100.000 mit 15 % zufälligen Zügen | 38,7 % (36,3 bis 41,1) |
+| handgebaute Bewertung der Engine | – | 38,8 % (36,5 bis 41,2) |
 
-**Einordnung.** Das Netz hat etwas Brauchbares gelernt: Die Suche wird mit ihm klar stärker als der Heuristik-Bot. Es schlägt aber die handgebaute Bewertung noch nicht, und fünfmal mehr Partien haben daran nichts geändert, obwohl die Vorhersage besser wurde. Der Engpass ist also nicht die Datenmenge. Die PoC-Frage ist damit noch offen. Die nächsten Versuche stehen in [docs/ROADMAP.md](docs/ROADMAP.md).
+**Was den Unterschied machte.** Mehr Partien (v1) und die Handbewertung als Eingabe (v2) halfen kaum. Den Sprung brachte v3: Trainingspartien, in denen die Piloten in 15 % der Entscheidungen einen zufälligen Zug spielen. Ein Netz, das nur Partien des Heuristik-Bots kennt, hat nie gesehen, was nach einem Zug passiert, den der Bot nicht machen würde. Genau solche Züge muss es in der Suche aber bewerten. Die Netzausgabe für die Suche zu spreizen, half dagegen nicht.
 
-Das Netz sieht bisher keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
+**An den 5 Prüfdecks**, die im Training nicht vorkamen, liegt das Netz noch zurück: 25,8 % (23,7 bis 27,9) gegenüber 29,1 % (27,0 bis 31,4) für die Handbewertung, bei 13,9 % für den Heuristik-Bot.
+
+**Einordnung.** Ein aus Partien gelerntes Netz erreicht an den Trainingsdecks die handgebaute Bewertung, ohne dass ihm jemand gesagt hat, was eine gute Stellung ist. Übertroffen hat es sie noch nicht, und auf unbekannte Decks überträgt es sich schlechter. Die PoC-Frage ist damit halb beantwortet.
+
+Das Netz sieht keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
 
 ### Tempo an gezogenen Tischen
 
@@ -124,9 +130,9 @@ bin/podbench repro -table mirror -seed 19 -trace 20             # einen abgebroc
 bin/podbench arena -pool all -candidate search:25 -n 1600       # Messlatte an gezogenen Tischen aus 45 Precons
 bin/podbench arena -candidate search:25 -n 1600                 # Messlatte am festen Tisch (schneller Kontrolltest)
 make venv                                                       # Python-Umgebung fürs Training
-bin/podbench record -split train -n 20000 -out data/v0          # Stellungen mit Ausgang aufzeichnen
-.venv/bin/python train/train_value.py data/v0 models/v0.caiv    # Bewertungsnetz trainieren
-bin/podbench arena -pool all -candidate net:models/v0.caiv:25   # Baumsuche mit diesem Netz messen
+bin/podbench record -pilot ehbot:0.15 -n 100000 -every 160 -out data/v3   # Stellungen mit Ausgang aufzeichnen
+.venv/bin/python train/train_value.py data/v3 models/v3.caiv              # Bewertungsnetz trainieren
+bin/podbench arena -pool all -candidate net:models/v3.caiv:25             # Baumsuche mit diesem Netz messen
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
 ```

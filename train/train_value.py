@@ -54,27 +54,59 @@ def logloss(y: np.ndarray, p: np.ndarray) -> float:
     return float(-(y * np.log(p) + (1 - y) * np.log(1 - p)).mean())
 
 
-def export(path: Path, model: nn.Sequential, mean: np.ndarray, scale: np.ndarray, hidden, meta: dict):
-    """Write the network with the standardisation folded into the first layer.
+class Net(nn.Module):
+    """A fully connected network plus a linear skip from the inputs to the output.
 
-    The model computes W0 @ ((x - mean) * scale) + b0. The reader computes
-    W0 @ (x * scale) + b0', so b0' = b0 - W0 @ (mean * scale), and stores W0
-    input-major so a zero input costs nothing.
+    What is linear in the inputs (the engine's own leaf logit above all) goes
+    through the skip; the layers learn what it misses.
     """
-    linears = [m for m in model if isinstance(m, nn.Linear)]
+
+    def __init__(self, width, hidden, dropout, skip):
+        super().__init__()
+        sizes = [width, *hidden]
+        layers = []
+        for a, b in zip(sizes, sizes[1:]):
+            layers += [nn.Linear(a, b), nn.ReLU(), nn.Dropout(dropout)]
+        self.mlp = nn.Sequential(*layers, nn.Linear(sizes[-1], 1))
+        self.skip = nn.Linear(width, 1, bias=False) if skip else None
+        if skip:
+            nn.init.zeros_(self.skip.weight)
+
+    def forward(self, x):
+        out = self.mlp(x)
+        return out + self.skip(x) if self.skip is not None else out
+
+
+def export(path: Path, model: Net, mean: np.ndarray, scale: np.ndarray, hidden, meta: dict):
+    """Write the network with the standardisation folded in.
+
+    The model reads xn = (x - mean) * scale. The reader computes on x * scale,
+    so the constant share of the mean moves into biases: the first layer's
+    b0' = b0 - W0 @ (mean * scale), and with a skip the last layer's
+    b' = b - skip @ (mean * scale). W0 is stored input-major so a zero input
+    costs nothing.
+    """
+    linears = [m for m in model.mlp if isinstance(m, nn.Linear)]
+    shift = mean.astype(np.float64) * scale
     w0 = linears[0].weight.detach().cpu().numpy().astype(np.float64)
-    b0 = linears[0].bias.detach().cpu().numpy().astype(np.float64) - w0 @ (mean.astype(np.float64) * scale)
-    header = json.dumps({"width": int(len(mean)), "hidden": list(hidden), "meta": meta}).encode()
+    b0 = linears[0].bias.detach().cpu().numpy().astype(np.float64) - w0 @ shift
+    skip = model.skip.weight.detach().cpu().numpy().astype(np.float64)[0] if model.skip is not None else None
+    header = json.dumps({"width": int(len(mean)), "hidden": list(hidden), "skip": skip is not None, "meta": meta}).encode()
     with open(path, "wb") as f:
         f.write(b"CAIV0001")
         f.write(struct.pack("<Q", len(header)))
         f.write(header)
         f.write(scale.astype("<f4").tobytes())
+        if skip is not None:
+            f.write(skip.astype("<f4").tobytes())
         f.write(np.ascontiguousarray(w0.T).astype("<f4").tobytes())
         f.write(b0.astype("<f4").tobytes())
-        for lin in linears[1:]:
+        for i, lin in enumerate(linears[1:], start=1):
+            bias = lin.bias.detach().cpu().numpy().astype(np.float64)
+            if skip is not None and i == len(linears) - 1:
+                bias = bias - skip @ shift
             f.write(lin.weight.detach().cpu().numpy().astype("<f4").tobytes())
-            f.write(lin.bias.detach().cpu().numpy().astype("<f4").tobytes())
+            f.write(bias.astype("<f4").tobytes())
 
 
 def main():
@@ -87,6 +119,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--weight-decay", type=float, default=1e-4)
     ap.add_argument("--dropout", type=float, default=0.1)
+    ap.add_argument("--no-skip", action="store_true", help="leave out the linear skip from the inputs to the output")
     ap.add_argument("--val", type=float, default=0.1, help="share of games held out for validation")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--probe", type=Path, help="also write a few validation inputs and outputs here, for the Go reader's test")
@@ -113,11 +146,7 @@ def main():
         return torch.from_numpy(((a - mean) * scale).astype(np.float32))
 
     xt_t, yt_t, xv_t = norm(xt), torch.from_numpy(yt), norm(xv).to(device)
-    sizes = [x.shape[1], *args.hidden]
-    layers = []
-    for a, b in zip(sizes, sizes[1:]):
-        layers += [nn.Linear(a, b), nn.ReLU(), nn.Dropout(args.dropout)]
-    model = nn.Sequential(*layers, nn.Linear(sizes[-1], 1)).to(device)
+    model = Net(x.shape[1], args.hidden, args.dropout, not args.no_skip).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     steps = args.epochs * ((len(xt_t) + args.batch - 1) // args.batch)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=args.lr, total_steps=steps)
@@ -160,7 +189,7 @@ def main():
     export(args.out, model, mean, scale, args.hidden,
            {"data": {k: meta[k] for k in ("split", "pilot", "games", "finished", "every", "records")},
             "engine_rev": meta["provenance"]["engine_rev"], "pool_digest": meta["pool"]["digest"],
-            "hidden": args.hidden, "epochs": args.epochs, **result})
+            "hidden": args.hidden, "skip": not args.no_skip, "epochs": args.epochs, **result})
     print("wrote", args.out)
     if args.probe:
         k = min(args.probe_count, len(xv))

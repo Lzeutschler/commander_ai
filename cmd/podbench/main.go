@@ -316,24 +316,32 @@ func cmdArena(args []string) error {
 
 // pilotOf builds the pilots this command adds to the arena's own: the tree
 // search through this repository's pilot, over the engine's heuristic leaf
-// (hsearch:<simulations>) or a value network (net:<file>:<simulations>). For
-// any other name it returns nil and the arena resolves the name itself.
+// (hsearch:<simulations>) or a value network (net:<file>:<simulations>, or
+// net:<file>:<simulations>:<spread> to stretch the network's output for the
+// search, learn.Evaluator.Spread). For any other name it returns nil and the
+// arena resolves the name itself.
 func pilotOf(spec string) (func() lab.Policy, error) {
 	var net *learn.ValueNet
 	var sims string
+	spread := 1.0
 	switch {
 	case strings.HasPrefix(spec, "hsearch:"):
 		sims = strings.TrimPrefix(spec, "hsearch:")
 	case strings.HasPrefix(spec, "net:"):
-		i := strings.LastIndex(spec, ":")
-		if i <= len("net:") {
-			return nil, fmt.Errorf("candidate %q: want net:<file>:<simulations>", spec)
+		parts := strings.Split(spec, ":")
+		if len(parts) != 3 && len(parts) != 4 {
+			return nil, fmt.Errorf("candidate %q: want net:<file>:<simulations>[:<spread>]", spec)
 		}
 		var err error
-		if net, err = learn.LoadValueNet(spec[len("net:"):i]); err != nil {
+		if net, err = learn.LoadValueNet(parts[1]); err != nil {
 			return nil, err
 		}
-		sims = spec[i+1:]
+		sims = parts[2]
+		if len(parts) == 4 {
+			if spread, err = strconv.ParseFloat(parts[3], 64); err != nil || spread < 1 {
+				return nil, fmt.Errorf("candidate %q: bad spread", spec)
+			}
+		}
 	default:
 		return nil, nil
 	}
@@ -350,6 +358,7 @@ func pilotOf(spec string) (func() lab.Policy, error) {
 	}
 	return func() lab.Policy {
 		p, _ := learn.NewSearchPolicy(n, net, reg)
+		p.Spread = spread
 		return p
 	}, nil
 }
@@ -361,7 +370,7 @@ func cmdRecord(args []string) error {
 	c := newCommon("record", "adjusted")
 	def := pod.DefaultOptions(pod.Table{})
 	split := c.fs.String("split", "train", "pool split every deck is drawn from: train, eval or all")
-	pilot := c.fs.String("pilot", "hbot", "who plays all four seats: hbot, hsearch:<simulations> or net:<file>:<simulations>")
+	pilot := c.fs.String("pilot", "hbot", "who plays all four seats: hbot, ehbot:<share of random answers>, hsearch:<simulations> or net:<file>:<simulations>")
 	n := c.fs.Int("n", 4000, "games")
 	seed := c.fs.Uint64("seed", 500001, "first seed (keep it apart from the arena's)")
 	every := c.fs.Int("every", 40, "sample every N-th decision of a game")
@@ -377,7 +386,15 @@ func cmdRecord(args []string) error {
 		return errors.New("record: -out is required")
 	}
 	mk := lab.HBot
-	if *pilot != "hbot" {
+	switch {
+	case *pilot == "hbot":
+	case strings.HasPrefix(*pilot, "ehbot:"):
+		eps, err := strconv.ParseFloat(strings.TrimPrefix(*pilot, "ehbot:"), 64)
+		if err != nil || eps <= 0 || eps >= 1 {
+			return fmt.Errorf("record: pilot %q: want ehbot:<share of random answers>", *pilot)
+		}
+		mk = func() lab.Policy { return &learn.Exploring{Policy: lab.HBot(), Eps: eps} }
+	default:
 		if mk, err = pilotOf(*pilot); err != nil {
 			return err
 		}

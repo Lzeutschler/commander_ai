@@ -22,14 +22,14 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 
 1. ✅ Messlatte bauen und mit Zufall, Heuristik-Bot und Baumsuche prüfen, am festen Tisch und an gezogenen Tischen.
 2. ✅ Lernkette bauen: Stellungen aufzeichnen, in Python trainieren, Netz in Go laden und in der Baumsuche einsetzen.
-3. ✅ Erster Versuch, Bewertungsnetz aus Partien des Heuristik-Bots. Ergebnis: 33 % Siegquote in der Suche. Das ist besser als der Heuristik-Bot (25 %) und schlechter als die handgebaute Bewertung (39 %). Mehr Partien verbessern die Vorhersage, aber nicht die Spielstärke.
-4. **Herausfinden, warum das Netz in der Suche schwächer ist als die Handbewertung.** Die Suche vergleicht Züge innerhalb eines Zuges, die sich nur wenig unterscheiden. Die Handbewertung steigt verlässlich mit jeder ausgespielten Karte. Ein Netz, das nur den Ausgang ganzer Partien gelernt hat, löst solche kleinen Unterschiede womöglich nicht auf. Versuche, vom billigsten zum teuersten:
-    - dem Netz die Kennzahlen der Handbewertung als zusätzliche Eingaben geben, sodass es auf ihr aufbauen kann statt sie neu lernen zu müssen;
-    - auf Partien trainieren, in denen die Baumsuche selbst spielt, und als Ziel neben dem Ausgang auch die Einschätzung der Suche verwenden;
-    - prüfen, ob das Netz mit mehr Simulationen aufholt;
-    - Kartennamen ins Netz geben. Das wäre der Weg über das Netzformat der Engine, mit dem Upstream zu zweit Erfolg hatte.
-5. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
-6. **Wiederholen.** Mit dem besseren Netz neue Partien erzeugen und prüfen, ob eine zweite Runde noch einmal zulegt.
+3. ✅ Bewertungsnetz aus Partien des Heuristik-Bots: 33 % Siegquote in der Suche, besser als der Heuristik-Bot (25 %), schlechter als die handgebaute Bewertung (39 %). Mehr Partien und die Handbewertung als Eingabe ändern daran wenig.
+4. ✅ Ursache gefunden: Das Netz kannte nur Stellungen, die der Heuristik-Bot selbst herbeiführt. Mit Trainingspartien, in denen 15 % der Züge zufällig sind, erreicht es 38,7 % und damit die handgebaute Bewertung (38,8 %). An den 5 Prüfdecks liegt es noch zurück (25,8 % gegenüber 29,1 %).
+5. **Über die Handbewertung hinauskommen.** In dieser Reihenfolge:
+    - auf Partien trainieren, in denen die Baumsuche mit dem aktuellen Netz selbst spielt, und das wiederholen. Jede Runde zeigt dem Netz die Stellungen, die sein eigenes Spiel erzeugt;
+    - mehr unterschiedliche Abweichungen in den Trainingspartien (Anteil zufälliger Züge variieren);
+    - Kartennamen ins Netz geben, damit es einzelne Karten unterscheiden lernt. Das sollte auch den Rückstand an unbekannten Decks zeigen oder schließen helfen;
+    - prüfen, wie sich Netz und Handbewertung bei 100 Simulationen verhalten.
+6. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
 
 **Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee. Gelingt das nach den Versuchen aus Schritt 4 und 5 nicht, ist das ebenfalls ein Ergebnis.
 

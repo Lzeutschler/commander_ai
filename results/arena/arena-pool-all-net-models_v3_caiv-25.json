@@ -1,0 +1,842 @@
+{
+  "schema": 1,
+  "table": "pool",
+  "provenance": {
+    "engine_repo": "https://github.com/Lzeutschler/gorge.git",
+    "engine_rev": "8cbe2434276afb40971b55594a20d5b75efaf7d2",
+    "engine_dirty": false,
+    "cards_repo": "https://github.com/adams-shaun/forge.git",
+    "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
+    "cards_digest": "0becb9e617c0c71526225cac7e631a186b05735a761978557a94464642ca1310",
+    "table_key": "0becb9e617c0c715-695dd84cf6ac6723"
+  },
+  "candidate": "net:models/v3.caiv:25",
+  "opponents": "hbot",
+  "config": {
+    "card_set": "edh",
+    "surface": "full",
+    "pilot": "net:models/v3.caiv:25",
+    "mulligans": 1,
+    "max_steps": 20000,
+    "first_seed": 100001,
+    "games": 1600,
+    "allow": []
+  },
+  "pool": {
+    "source": "third_party/gorge/dirac/oracle/testdata/slices/edh/decks.tar.gz",
+    "card_set": "edh",
+    "decks": 45,
+    "train": 40,
+    "eval": 5,
+    "digest": "c2ff1a819a679ba61d9d54de5ecdf5c2de8c4ec7c47ac2cb988f262f547cd5c3",
+    "replaced_cards": 25,
+    "replaced_slots": 110,
+    "skipped_cards": 19,
+    "skipped_slots": 28,
+    "excluded": [
+      "Arcane Wizardry (C17)",
+      "Cavalry Charge (MOC)",
+      "Federation Fleet (TRC)",
+      "Federation Fleet Collector's Edition (TRC)",
+      "Science! (PIP)",
+      "Vampiric Bloodlust (C17)",
+      "World Shaper (EOC)"
+    ]
+  },
+  "candidate_decks": "all",
+  "refused_tables": {
+    "interaction atktax": 19,
+    "interaction blktax": 89,
+    "interaction comboanymix": 18,
+    "interaction replplus": 89
+  },
+  "pooled": {
+    "deck": "all",
+    "control": {
+      "games": 1600,
+      "wins": 396,
+      "rate": 0.248,
+      "low": 0.227,
+      "high": 0.269
+    },
+    "candidate": {
+      "games": 1600,
+      "wins": 619,
+      "rate": 0.387,
+      "low": 0.363,
+      "high": 0.411
+    }
+  },
+  "by_deck": [
+    {
+      "deck": "Abzan Armor (TDC)",
+      "control": {
+        "games": 30,
+        "wins": 10,
+        "rate": 0.333,
+        "low": 0.192,
+        "high": 0.512
+      },
+      "candidate": {
+        "games": 30,
+        "wins": 16,
+        "rate": 0.533,
+        "low": 0.361,
+        "high": 0.698
+      }
+    },
+    {
+      "deck": "Aura of Courage (AFC)",
+      "control": {
+        "games": 39,
+        "wins": 0,
+        "rate": 0,
+        "low": 0,
+        "high": 0.09
+      },
+      "candidate": {
+        "games": 39,
+        "wins": 7,
+        "rate": 0.179,
+        "low": 0.09,
+        "high": 0.327
+      }
+    },
+    {
+      "deck": "Avengers Assemble (MSC)",
+      "control": {
+        "games": 31,
+        "wins": 7,
+        "rate": 0.226,
+        "low": 0.114,
+        "high": 0.398
+      },
+      "candidate": {
+        "games": 31,
+        "wins": 10,
+        "rate": 0.323,
+        "low": 0.186,
+        "high": 0.499
+      }
+    },
+    {
+      "deck": "Avengers Assemble Collector's Edition (MSC)",
+      "control": {
+        "games": 32,
+        "wins": 5,
+        "rate": 0.156,
+        "low": 0.069,
+        "high": 0.318
+      },
+      "candidate": {
+        "games": 32,
+        "wins": 11,
+        "rate": 0.344,
+        "low": 0.204,
+        "high": 0.517
+      }
+    },
+    {
+      "deck": "Blood Rites (LCC)",
+      "control": {
+        "games": 36,
+        "wins": 12,
+        "rate": 0.333,
+        "low": 0.202,
+        "high": 0.497
+      },
+      "candidate": {
+        "games": 36,
+        "wins": 13,
+        "rate": 0.361,
+        "low": 0.225,
+        "high": 0.524
+      }
+    },
+    {
+      "deck": "Breed Lethality (C16)",
+      "control": {
+        "games": 47,
+        "wins": 14,
+        "rate": 0.298,
+        "low": 0.187,
+        "high": 0.44
+      },
+      "candidate": {
+        "games": 47,
+        "wins": 30,
+        "rate": 0.638,
+        "low": 0.495,
+        "high": 0.76
+      }
+    },
+    {
+      "deck": "Breed Lethality (CM2)",
+      "control": {
+        "games": 38,
+        "wins": 12,
+        "rate": 0.316,
+        "low": 0.191,
+        "high": 0.475
+      },
+      "candidate": {
+        "games": 38,
+        "wins": 21,
+        "rate": 0.553,
+        "low": 0.397,
+        "high": 0.699
+      }
+    },
+    {
+      "deck": "Call for Backup (MOC)",
+      "control": {
+        "games": 39,
+        "wins": 8,
+        "rate": 0.205,
+        "low": 0.108,
+        "high": 0.355
+      },
+      "candidate": {
+        "games": 39,
+        "wins": 18,
+        "rate": 0.462,
+        "low": 0.316,
+        "high": 0.614
+      }
+    },
+    {
+      "deck": "Calling All Angels (FDC)",
+      "control": {
+        "games": 7,
+        "wins": 4,
+        "rate": 0.571,
+        "low": 0.25,
+        "high": 0.842
+      },
+      "candidate": {
+        "games": 7,
+        "wins": 5,
+        "rate": 0.714,
+        "low": 0.359,
+        "high": 0.918
+      }
+    },
+    {
+      "deck": "Coven Counters (MIC)",
+      "control": {
+        "games": 29,
+        "wins": 6,
+        "rate": 0.207,
+        "low": 0.098,
+        "high": 0.384
+      },
+      "candidate": {
+        "games": 29,
+        "wins": 11,
+        "rate": 0.379,
+        "low": 0.227,
+        "high": 0.56
+      }
+    },
+    {
+      "deck": "Deep Clue Sea (MKC)",
+      "control": {
+        "games": 34,
+        "wins": 12,
+        "rate": 0.353,
+        "low": 0.215,
+        "high": 0.521
+      },
+      "candidate": {
+        "games": 34,
+        "wins": 15,
+        "rate": 0.441,
+        "low": 0.289,
+        "high": 0.605
+      }
+    },
+    {
+      "deck": "Desert Bloom (OTC)",
+      "control": {
+        "games": 38,
+        "wins": 10,
+        "rate": 0.263,
+        "low": 0.15,
+        "high": 0.42
+      },
+      "candidate": {
+        "games": 38,
+        "wins": 18,
+        "rate": 0.474,
+        "low": 0.325,
+        "high": 0.627
+      }
+    },
+    {
+      "deck": "Fae Dominion (WOC)",
+      "control": {
+        "games": 36,
+        "wins": 8,
+        "rate": 0.222,
+        "low": 0.117,
+        "high": 0.381
+      },
+      "candidate": {
+        "games": 36,
+        "wins": 12,
+        "rate": 0.333,
+        "low": 0.202,
+        "high": 0.497
+      }
+    },
+    {
+      "deck": "First Flight (SCD)",
+      "control": {
+        "games": 28,
+        "wins": 8,
+        "rate": 0.286,
+        "low": 0.153,
+        "high": 0.471
+      },
+      "candidate": {
+        "games": 28,
+        "wins": 12,
+        "rate": 0.429,
+        "low": 0.265,
+        "high": 0.609
+      }
+    },
+    {
+      "deck": "Grave Danger (SCD)",
+      "control": {
+        "games": 28,
+        "wins": 8,
+        "rate": 0.286,
+        "low": 0.153,
+        "high": 0.471
+      },
+      "candidate": {
+        "games": 28,
+        "wins": 12,
+        "rate": 0.429,
+        "low": 0.265,
+        "high": 0.609
+      }
+    },
+    {
+      "deck": "Growing Threat (MOC)",
+      "control": {
+        "games": 42,
+        "wins": 7,
+        "rate": 0.167,
+        "low": 0.083,
+        "high": 0.306
+      },
+      "candidate": {
+        "games": 42,
+        "wins": 11,
+        "rate": 0.262,
+        "low": 0.153,
+        "high": 0.411
+      }
+    },
+    {
+      "deck": "Guided By Nature (C14)",
+      "control": {
+        "games": 34,
+        "wins": 9,
+        "rate": 0.265,
+        "low": 0.146,
+        "high": 0.431
+      },
+      "candidate": {
+        "games": 34,
+        "wins": 15,
+        "rate": 0.441,
+        "low": 0.289,
+        "high": 0.605
+      }
+    },
+    {
+      "deck": "Guided by Nature (CMA)",
+      "control": {
+        "games": 50,
+        "wins": 13,
+        "rate": 0.26,
+        "low": 0.159,
+        "high": 0.396
+      },
+      "candidate": {
+        "games": 50,
+        "wins": 24,
+        "rate": 0.48,
+        "low": 0.348,
+        "high": 0.615
+      }
+    },
+    {
+      "deck": "Hatsune Miku (SLD)",
+      "control": {
+        "games": 34,
+        "wins": 16,
+        "rate": 0.471,
+        "low": 0.315,
+        "high": 0.633
+      },
+      "candidate": {
+        "games": 34,
+        "wins": 22,
+        "rate": 0.647,
+        "low": 0.479,
+        "high": 0.785
+      }
+    },
+    {
+      "deck": "Invent Superiority (C16)",
+      "control": {
+        "games": 42,
+        "wins": 3,
+        "rate": 0.071,
+        "low": 0.025,
+        "high": 0.19
+      },
+      "candidate": {
+        "games": 42,
+        "wins": 7,
+        "rate": 0.167,
+        "low": 0.083,
+        "high": 0.306
+      }
+    },
+    {
+      "deck": "Jump Scare! (DSC)",
+      "control": {
+        "games": 50,
+        "wins": 14,
+        "rate": 0.28,
+        "low": 0.175,
+        "high": 0.417
+      },
+      "candidate": {
+        "games": 50,
+        "wins": 23,
+        "rate": 0.46,
+        "low": 0.33,
+        "high": 0.596
+      }
+    },
+    {
+      "deck": "Keen Engineering (FDC)",
+      "control": {
+        "games": 24,
+        "wins": 2,
+        "rate": 0.083,
+        "low": 0.023,
+        "high": 0.258
+      },
+      "candidate": {
+        "games": 24,
+        "wins": 1,
+        "rate": 0.042,
+        "low": 0.007,
+        "high": 0.202
+      }
+    },
+    {
+      "deck": "Klingon Fury (TRC)",
+      "control": {
+        "games": 38,
+        "wins": 14,
+        "rate": 0.368,
+        "low": 0.234,
+        "high": 0.527
+      },
+      "candidate": {
+        "games": 38,
+        "wins": 17,
+        "rate": 0.447,
+        "low": 0.301,
+        "high": 0.603
+      }
+    },
+    {
+      "deck": "Klingon Fury Collector's Edition (TRC)",
+      "control": {
+        "games": 37,
+        "wins": 15,
+        "rate": 0.405,
+        "low": 0.263,
+        "high": 0.565
+      },
+      "candidate": {
+        "games": 37,
+        "wins": 18,
+        "rate": 0.486,
+        "low": 0.334,
+        "high": 0.641
+      }
+    },
+    {
+      "deck": "Land's Wrath (ZNC)",
+      "control": {
+        "games": 48,
+        "wins": 8,
+        "rate": 0.167,
+        "low": 0.087,
+        "high": 0.296
+      },
+      "candidate": {
+        "games": 48,
+        "wins": 12,
+        "rate": 0.25,
+        "low": 0.149,
+        "high": 0.388
+      }
+    },
+    {
+      "deck": "Living Energy (DRC)",
+      "control": {
+        "games": 23,
+        "wins": 3,
+        "rate": 0.13,
+        "low": 0.045,
+        "high": 0.321
+      },
+      "candidate": {
+        "games": 23,
+        "wins": 2,
+        "rate": 0.087,
+        "low": 0.024,
+        "high": 0.268
+      }
+    },
+    {
+      "deck": "Lorehold Spirit (SOC)",
+      "control": {
+        "games": 37,
+        "wins": 14,
+        "rate": 0.378,
+        "low": 0.241,
+        "high": 0.539
+      },
+      "candidate": {
+        "games": 37,
+        "wins": 18,
+        "rate": 0.486,
+        "low": 0.334,
+        "high": 0.641
+      }
+    },
+    {
+      "deck": "Mardu Surge (TDC)",
+      "control": {
+        "games": 39,
+        "wins": 18,
+        "rate": 0.462,
+        "low": 0.316,
+        "high": 0.614
+      },
+      "candidate": {
+        "games": 39,
+        "wins": 16,
+        "rate": 0.41,
+        "low": 0.271,
+        "high": 0.566
+      }
+    },
+    {
+      "deck": "Mirror Mastery (CMD)",
+      "control": {
+        "games": 34,
+        "wins": 2,
+        "rate": 0.059,
+        "low": 0.016,
+        "high": 0.191
+      },
+      "candidate": {
+        "games": 34,
+        "wins": 2,
+        "rate": 0.059,
+        "low": 0.016,
+        "high": 0.191
+      }
+    },
+    {
+      "deck": "Most Wanted (OTC)",
+      "control": {
+        "games": 42,
+        "wins": 11,
+        "rate": 0.262,
+        "low": 0.153,
+        "high": 0.411
+      },
+      "candidate": {
+        "games": 42,
+        "wins": 17,
+        "rate": 0.405,
+        "low": 0.27,
+        "high": 0.555
+      }
+    },
+    {
+      "deck": "Political Puppets (CMD)",
+      "control": {
+        "games": 27,
+        "wins": 3,
+        "rate": 0.111,
+        "low": 0.039,
+        "high": 0.281
+      },
+      "candidate": {
+        "games": 27,
+        "wins": 4,
+        "rate": 0.148,
+        "low": 0.059,
+        "high": 0.325
+      }
+    },
+    {
+      "deck": "Quantum Quandrix (C21)",
+      "control": {
+        "games": 43,
+        "wins": 7,
+        "rate": 0.163,
+        "low": 0.081,
+        "high": 0.3
+      },
+      "candidate": {
+        "games": 43,
+        "wins": 11,
+        "rate": 0.256,
+        "low": 0.149,
+        "high": 0.402
+      }
+    },
+    {
+      "deck": "Reap the Tides (CMR)",
+      "control": {
+        "games": 30,
+        "wins": 3,
+        "rate": 0.1,
+        "low": 0.035,
+        "high": 0.256
+      },
+      "candidate": {
+        "games": 30,
+        "wins": 7,
+        "rate": 0.233,
+        "low": 0.118,
+        "high": 0.409
+      }
+    },
+    {
+      "deck": "Riders of Rohan (LTC)",
+      "control": {
+        "games": 40,
+        "wins": 12,
+        "rate": 0.3,
+        "low": 0.181,
+        "high": 0.454
+      },
+      "candidate": {
+        "games": 40,
+        "wins": 16,
+        "rate": 0.4,
+        "low": 0.263,
+        "high": 0.554
+      }
+    },
+    {
+      "deck": "Scrappy Survivors (PIP)",
+      "control": {
+        "games": 48,
+        "wins": 1,
+        "rate": 0.021,
+        "low": 0.004,
+        "high": 0.109
+      },
+      "candidate": {
+        "games": 48,
+        "wins": 12,
+        "rate": 0.25,
+        "low": 0.149,
+        "high": 0.388
+      }
+    },
+    {
+      "deck": "Tinker Time (MOC)",
+      "control": {
+        "games": 39,
+        "wins": 13,
+        "rate": 0.333,
+        "low": 0.206,
+        "high": 0.49
+      },
+      "candidate": {
+        "games": 39,
+        "wins": 13,
+        "rate": 0.333,
+        "low": 0.206,
+        "high": 0.49
+      }
+    },
+    {
+      "deck": "Tramplesaurus Rex (FDC)",
+      "control": {
+        "games": 43,
+        "wins": 25,
+        "rate": 0.581,
+        "low": 0.433,
+        "high": 0.716
+      },
+      "candidate": {
+        "games": 43,
+        "wins": 27,
+        "rate": 0.628,
+        "low": 0.479,
+        "high": 0.756
+      }
+    },
+    {
+      "deck": "Upgrades Unleashed (NEC)",
+      "control": {
+        "games": 33,
+        "wins": 5,
+        "rate": 0.152,
+        "low": 0.067,
+        "high": 0.309
+      },
+      "candidate": {
+        "games": 33,
+        "wins": 11,
+        "rate": 0.333,
+        "low": 0.198,
+        "high": 0.504
+      }
+    },
+    {
+      "deck": "Urza's Iron Alliance (BRC)",
+      "control": {
+        "games": 25,
+        "wins": 7,
+        "rate": 0.28,
+        "low": 0.143,
+        "high": 0.476
+      },
+      "candidate": {
+        "games": 25,
+        "wins": 12,
+        "rate": 0.48,
+        "low": 0.3,
+        "high": 0.665
+      }
+    },
+    {
+      "deck": "Veloci-Ramp-Tor (LCC)",
+      "control": {
+        "games": 33,
+        "wins": 15,
+        "rate": 0.455,
+        "low": 0.298,
+        "high": 0.62
+      },
+      "candidate": {
+        "games": 33,
+        "wins": 21,
+        "rate": 0.636,
+        "low": 0.466,
+        "high": 0.778
+      }
+    },
+    {
+      "deck": "Virtue and Valor (WOC)",
+      "control": {
+        "games": 39,
+        "wins": 3,
+        "rate": 0.077,
+        "low": 0.027,
+        "high": 0.203
+      },
+      "candidate": {
+        "games": 39,
+        "wins": 18,
+        "rate": 0.462,
+        "low": 0.316,
+        "high": 0.614
+      }
+    },
+    {
+      "deck": "Wakanda Forever (MSC)",
+      "control": {
+        "games": 26,
+        "wins": 1,
+        "rate": 0.038,
+        "low": 0.007,
+        "high": 0.189
+      },
+      "candidate": {
+        "games": 26,
+        "wins": 5,
+        "rate": 0.192,
+        "low": 0.085,
+        "high": 0.379
+      }
+    },
+    {
+      "deck": "Wakanda Forever Collector's Edition (MSC)",
+      "control": {
+        "games": 33,
+        "wins": 5,
+        "rate": 0.152,
+        "low": 0.067,
+        "high": 0.309
+      },
+      "candidate": {
+        "games": 33,
+        "wins": 10,
+        "rate": 0.303,
+        "low": 0.174,
+        "high": 0.473
+      }
+    },
+    {
+      "deck": "Witherbloom Pestilence (SOC)",
+      "control": {
+        "games": 28,
+        "wins": 6,
+        "rate": 0.214,
+        "low": 0.102,
+        "high": 0.395
+      },
+      "candidate": {
+        "games": 28,
+        "wins": 8,
+        "rate": 0.286,
+        "low": 0.153,
+        "high": 0.471
+      }
+    },
+    {
+      "deck": "Wretched Ranks (FDC)",
+      "control": {
+        "games": 47,
+        "wins": 17,
+        "rate": 0.362,
+        "low": 0.24,
+        "high": 0.505
+      },
+      "candidate": {
+        "games": 47,
+        "wins": 28,
+        "rate": 0.596,
+        "low": 0.453,
+        "high": 0.724
+      }
+    }
+  ],
+  "gain": 0.139,
+  "gain_low": 0.114,
+  "gain_high": 0.165,
+  "unfinished": 64,
+  "control_unfinished": 60
+}

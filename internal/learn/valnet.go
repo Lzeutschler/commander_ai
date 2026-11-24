@@ -11,8 +11,12 @@ import (
 // ValueNet is a small fully connected network from a feature vector to the
 // probability that the viewing seat wins. train/train_value.py writes the
 // file: the magic "CAIV0001", a little-endian u64 header length, a JSON
-// header and the float32 tensors: the input scale, the first layer's weights
-// and bias, then each further layer's weights and bias.
+// header and the float32 tensors: the input scale, the skip weights when the
+// header says so, the first layer's weights and bias, then each further
+// layer's weights and bias.
+//
+// With a skip the output logit is the layers' plus a weighted sum of the
+// scaled inputs: what is linear in the inputs needs no hidden unit.
 //
 // The trainer standardises its inputs, (x - mean) * scale. The mean's share
 // is a constant per hidden unit, which the exporter folds into the first
@@ -25,6 +29,7 @@ type ValueNet struct {
 	Meta   map[string]any
 	in     int
 	scale  []float32 // 1/std per input
+	skip   []float32 // per scaled input, straight to the output logit; nil without
 	w0     []float32 // in × h0, input-major
 	b0     []float32
 	layers []dense // the layers after the first
@@ -55,6 +60,7 @@ func LoadValueNet(path string) (*ValueNet, error) {
 	var h struct {
 		Width  int            `json:"width"`
 		Hidden []int          `json:"hidden"`
+		Skip   bool           `json:"skip"`
 		Meta   map[string]any `json:"meta"`
 	}
 	if err := json.Unmarshal(raw[16:16+hl], &h); err != nil {
@@ -88,6 +94,9 @@ func LoadValueNet(path string) (*ValueNet, error) {
 		return v
 	}
 	n.scale = get(h.Width)
+	if h.Skip {
+		n.skip = get(h.Width)
+	}
 	n.w0, n.b0 = get(h.Width*h.Hidden[0]), get(h.Hidden[0])
 	sizes := append(append([]int{}, h.Hidden...), 1)
 	for i := 1; i < len(sizes); i++ {
@@ -120,11 +129,15 @@ func (n *ValueNet) Value(x []float32, sc *Scratch) float32 {
 	h0 := len(n.b0)
 	a := sc.a[:h0]
 	copy(a, n.b0)
+	var lin float32
 	for i, v := range x {
 		if v == 0 {
 			continue
 		}
 		z := v * n.scale[i]
+		if n.skip != nil {
+			lin += z * n.skip[i]
+		}
 		col := n.w0[i*h0 : (i+1)*h0]
 		for j, w := range col {
 			a[j] += z * w
@@ -151,5 +164,5 @@ func (n *ValueNet) Value(x []float32, sc *Scratch) float32 {
 		}
 		cur, nxt = out, cur[:cap(cur)]
 	}
-	return float32(1 / (1 + math.Exp(-float64(cur[0]))))
+	return float32(1 / (1 + math.Exp(-float64(cur[0]+lin))))
 }
