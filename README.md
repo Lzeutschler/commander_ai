@@ -12,27 +12,42 @@ Die erste Frage ist, ob die Idee trägt: Lernt ein Modell, an einem Commander-Ti
 
 `podbench arena` setzt den Kandidaten auf einen Sitz und drei Heuristik-Bots auf die anderen. Jede Partie wird zweimal mit denselben Decks, derselben Sitzordnung und demselben Seed gespielt: einmal mit dem Heuristik-Bot auf dem Kandidatenplatz, einmal mit dem Kandidaten. Gezählt wird der Unterschied. Deckstärke, Sitzplatz und Kartenglück sind in beiden Partien gleich und fallen heraus.
 
-Mit `-pool` zieht jede Partie einen neuen Tisch aus 46 Commander-Precons, die die Engine mitbringt: ein Deck für den Kandidaten, drei andere für die Gegner, zufällige Sitzordnung. Die Decks sind in 41 Trainings- und 5 Prüfdecks geteilt. Ein Modell, das auch mit Prüfdecks gewinnt, die es nie gesehen hat, spielt wirklich besser und hat nicht nur Listen gelernt.
+Mit `-pool` zieht jede Partie einen neuen Tisch aus 45 Commander-Precons, die die Engine mitbringt: ein Deck für den Kandidaten, drei andere für die Gegner, zufällige Sitzordnung. Die Decks sind in 40 Trainings- und 5 Prüfdecks geteilt. Ein Modell, das auch mit Prüfdecks gewinnt, die es nie gesehen hat, spielt wirklich besser und hat nicht nur Listen gelernt.
 
 ### Erste Ergebnisse
 
 Je 1.600 Partien ([results/arena/](results/arena/)), Siegquote des Kandidaten mit 95-%-Intervall:
 
-| Kandidat | gezogene Tische (46 Precons) | fester Tisch `adjusted` |
+| Kandidat | gezogene Tische (45 Precons) | fester Tisch `adjusted` |
 |---|---:|---:|
-| Zufall | 7,4 % (6,2 bis 8,8) | 8,3 % (7,1 bis 9,8) |
-| Heuristik-Bot (Kontrolle) | 23,7 % (21,7 bis 25,8) | 26,0 % (23,9 bis 28,2) |
-| Baumsuche, 25 Simulationen | 40,2 % (37,8 bis 42,6) | 33,0 % (30,7 bis 35,3) |
-| Baumsuche, 100 Simulationen | 43,8 % (41,3 bis 46,2) | 38,4 % (36,1 bis 40,8) |
+| Zufall | 6,3 % (5,2 bis 7,6) | 8,3 % (7,1 bis 9,8) |
+| Heuristik-Bot (Kontrolle) | 24,8 % (22,7 bis 26,9) | 26,0 % (23,9 bis 28,2) |
+| Baumsuche, 25 Simulationen | 38,8 % (36,5 bis 41,2) | 33,0 % (30,7 bis 35,3) |
+| Baumsuche, 100 Simulationen | 43,4 % (41,0 bis 45,8) | 38,4 % (36,1 bis 40,8) |
 
 Die Baumsuche bringt die Engine mit. Sie bewertet Stellungen bisher mit einer Heuristik und ohne gelerntes Netz. Das Ergebnis zeigt zweierlei: Vorausdenken zahlt sich am Vierertisch deutlich aus, und die Messlatte unterscheidet Spielstärke zuverlässig. Offen ist der eigentliche Lernschritt, siehe [docs/ROADMAP.md](docs/ROADMAP.md).
 
+### Tempo an gezogenen Tischen
+
+Auf einem Apple M3 Max mit 14 Workern:
+
+| Kandidat | Partien pro Sekunde |
+|---|---:|
+| Heuristik-Bot (je Partie zusätzlich die Kontrollpartie) | 232 |
+| Baumsuche, 25 Simulationen | 26 |
+| Baumsuche, 100 Simulationen | 4,2 |
+
+Die Engine bereitet jeden Tisch einmal vor und schaltet dabei allgemeinere, langsamere Rechenwege ein, sobald irgendeine Karte der vier Decks sie braucht. Zwei Maßnahmen haben das Tempo an gezogenen Tischen etwa verdreifacht:
+
+- Ein Schalter ging fälschlich an fast jedem Tisch an, weil die Engine die Kartenliste des ganzen Pools prüfte statt der vier Decks. Das ist im Engine-Fork korrigiert und spielt nachweislich dieselben Partien.
+- 19 Karten, die die übrigen teuren Rechenwege einschalten, sind durch Standardländer ersetzt ([decks/pool-skip.txt](decks/pool-skip.txt), 28 von 4.500 Kartenplätzen).
+
 ### Einschränkungen des Deckpools
 
-- Die Engine hat in diesen Listen Karten, die ihr Kern nicht spielt, schon durch Standardländer ersetzt. Zusätzlich ersetzen wir 25 Karten ohne Nachweis (111 Kartenplätze) und lassen 6 Decks weg, deren Commander selbst unbelegt ist.
-- Etwa jeder sechste gezogene Tisch enthält eine Kartenkombination, die der Kern ablehnt. Dann wird neu gezogen.
-- Rund 5 % der Partien brechen an einer Grenze des Kerns ab (am festen Tisch 0,2 %). Sie zählen als Niederlage.
-- An gezogenen Tischen ist die Baumsuche etwa fünfmal langsamer als am festen Tisch (8 statt 48 Partien pro Sekunde bei 25 Simulationen). Die Ursache ist noch nicht untersucht.
+- Die Engine hat in diesen Listen Karten, die ihr Kern nicht spielt, schon durch Standardländer ersetzt. Zusätzlich ersetzen wir 25 Karten ohne Nachweis (110 Kartenplätze) und die 19 langsamen Karten. 7 Decks fallen weg, weil ihr Commander zu einer der beiden Gruppen gehört.
+- Etwa jeder achte gezogene Tisch enthält eine Kartenkombination, die der Kern ablehnt. Dann wird neu gezogen.
+- Rund 4 % der Partien brechen an einer Grenze des Kerns ab (am festen Tisch 0,2 %). Sie zählen als Niederlage.
+- Die Regeltreue ist geringer als am festen Tisch: In einer Stichprobe von 509 Viererpartien im Gleichschritt mit der Referenz-Engine wichen 13 ab (2,6 % gegenüber 0,4 %).
 
 ## Stand der Engine
 
@@ -88,7 +103,7 @@ bin/podbench run -table frontier -allow decks/allow.txt         # die Originalde
 bin/podbench run -table original                                # zeigt die Ablehnung beim Laden (Exit 3)
 bin/podbench cards -table original -allow decks/allow.txt       # Kartenbericht für die vier Originaldecks
 bin/podbench repro -table mirror -seed 19 -trace 20             # einen abgebrochenen Seed mit den letzten 20 Entscheidungen
-bin/podbench arena -pool all -candidate search:25 -n 1600       # Messlatte an gezogenen Tischen aus 46 Precons
+bin/podbench arena -pool all -candidate search:25 -n 1600       # Messlatte an gezogenen Tischen aus 45 Precons
 bin/podbench arena -candidate search:25 -n 1600                 # Messlatte am festen Tisch (schneller Kontrolltest)
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
@@ -124,11 +139,11 @@ Die Referenz liegt unter [results/baseline/](results/baseline/). `make test` spi
 
 Die Engine ist als Submodul unter `third_party/gorge` auf einen festen Commit gepinnt. Ihre Kartentabellen entstehen beim Aufbau im Checkout, deshalb lässt sie sich nicht als gewöhnliches Go-Modul einbinden.
 
-Das Submodul zeigt auf unseren Fork [Lzeutschler/gorge](https://github.com/Lzeutschler/gorge), Zweig `commander-ai`. Er liegt zwei Commits über Upstream `9ee19e8250`: *War Room* im schnellen Kern (Zweig `war-room`, für Upstream bestimmt) und die namentliche Zulassung ungeprüfter Karten in `dirac/lab`.
+Das Submodul zeigt auf unseren Fork [Lzeutschler/gorge](https://github.com/Lzeutschler/gorge), Zweig `commander-ai`. Er liegt drei Commits über Upstream `9ee19e8250`: *War Room* im schnellen Kern (Zweig `war-room`, bei Upstream eingereicht), die namentliche Zulassung ungeprüfter Karten in `dirac/lab` und die Tempokorrektur für Tische ohne Landtyp-Verleiher.
 
 | Bestandteil | Revision | Lizenz |
 |---|---|---|
-| Engine [Lzeutschler/gorge](https://github.com/Lzeutschler/gorge), Fork von [adams-shaun/gorge](https://github.com/adams-shaun/gorge) | `558c52da7b95` | Apache-2.0 |
+| Engine [Lzeutschler/gorge](https://github.com/Lzeutschler/gorge), Fork von [adams-shaun/gorge](https://github.com/adams-shaun/gorge) | `8cbe24342763` | Apache-2.0 |
 | Kartenskripte [adams-shaun/forge](https://github.com/adams-shaun/forge) | `ff076d443284` | GPL-3.0 |
 | Dieses Repository | – | Apache-2.0 |
 

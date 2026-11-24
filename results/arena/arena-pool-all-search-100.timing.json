@@ -7,7 +7,7 @@
     "go": "go1.27.4"
   },
   "workers": 14,
-  "candidate_seconds": 10354.618,
-  "candidate_games_per_second": 2.029,
-  "measured_at": "2026-11-24T16:40:07Z"
+  "candidate_seconds": 3977.069,
+  "candidate_games_per_second": 4.24,
+  "measured_at": "2026-11-24T17:06:39Z"
 }

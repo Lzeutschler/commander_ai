@@ -6,14 +6,14 @@ Ziel: ein Agent, der in Viererpartien beliebige Commander-Decks pilotiert und au
 
 Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt besser spielen lernt als der Heuristik-Bot. Die Kartenarbeit aus Etappe 1 ruht so lange.
 
-**Messlatte.** `podbench arena -pool`: ein Kandidat gegen drei Heuristik-Bots an zufällig gezogenen Tischen aus 46 Precons. Jede Partie wird auf denselben Karten auch mit dem Heuristik-Bot auf dem Kandidatenplatz gespielt, gezählt wird der Unterschied. Erfolg heißt: deutlich über dessen 24 %.
+**Messlatte.** `podbench arena -pool`: ein Kandidat gegen drei Heuristik-Bots an zufällig gezogenen Tischen aus 45 Precons. Jede Partie wird auf denselben Karten auch mit dem Heuristik-Bot auf dem Kandidatenplatz gespielt, gezählt wird der Unterschied. Erfolg heißt: deutlich über dessen 25 %.
 
-**Training und Prüfung getrennt.** 41 Decks dienen dem Training, 5 nur der Prüfung. Die Aufteilung stammt aus der Engine. Der feste Tisch `adjusted` bleibt als schneller Kontrolltest.
+**Training und Prüfung getrennt.** 40 Decks dienen dem Training, 5 nur der Prüfung. Die Aufteilung stammt aus der Engine. Der feste Tisch `adjusted` bleibt als schneller Kontrolltest.
 
 **Was schon feststeht.**
 
 - Die Engine ist schnell und regeltreu genug: rund 965 Partien pro Sekunde, 99,5 % der Partien verlaufen wie in der Referenz-Engine.
-- Vorausdenken lohnt sich zu viert: Die Baumsuche der Engine gewinnt an gezogenen Tischen ohne gelerntes Netz 40 % (25 Simulationen) und 44 % (100 Simulationen).
+- Vorausdenken lohnt sich zu viert: Die Baumsuche der Engine gewinnt an gezogenen Tischen ohne gelerntes Netz 39 % (25 Simulationen) und 43 % (100 Simulationen).
 - Upstream hat das Lernverfahren für Partien zu zweit mit 40-Karten-Decks bereits durchgespielt: Netze, die aus den Besuchszahlen der eigenen Suche lernen, schlugen dort die Suche ohne Netz mit rund 60 %. Nach einigen Generationen flachte der Zuwachs ab.
 
 **Was die Engine dafür mitbringt.** Eine Codierung der Stellung aus Sicht eines Sitzes (nur was dieser Sitz sehen darf), eine Codierung der angebotenen Aktionen, die Baumsuche für mehr als zwei Sitze und das Laden eines extern trainierten Netzes im Format `.dzgw`. Das Trainingsprogramm selbst ist nicht veröffentlicht.
@@ -21,7 +21,7 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 **Die nächsten Schritte.**
 
 1. ✅ Messlatte bauen und mit Zufall, Heuristik-Bot und Baumsuche prüfen, am festen Tisch und an gezogenen Tischen.
-2. **Trainingsdaten erzeugen.** Partien an gezogenen Tischen aus den 41 Trainingsdecks mit Baumsuche spielen und pro Entscheidung festhalten: codierte Stellung, angebotene Aktionen, Besuchszahlen der Suche, Ausgang der Partie. Zu klären ist, ob die vorhandene Aufzeichnung der Engine dafür reicht oder ob wir sie ergänzen.
+2. **Trainingsdaten erzeugen.** Partien an gezogenen Tischen aus den 40 Trainingsdecks mit Baumsuche spielen und pro Entscheidung festhalten: codierte Stellung, angebotene Aktionen, Besuchszahlen der Suche, Ausgang der Partie. Zu klären ist, ob die vorhandene Aufzeichnung der Engine dafür reicht oder ob wir sie ergänzen.
 3. **Ein kleines Netz trainieren** (außerhalb von Go, in Python) und als `.dzgw` zurückgeben. Erst die Bewertung der Stellung, dann die Auswahl der Aktion.
 4. **Messen.** Baumsuche mit Netz gegen Baumsuche ohne Netz bei gleicher Simulationszahl, und Netz ohne Suche gegen den Heuristik-Bot. Wird die Suche mit Netz stärker, trägt die Idee. Bleibt sie gleich, wissen wir es nach wenigen Tagen.
 5. **Wiederholen.** Mit dem besseren Netz neue Partien erzeugen und prüfen, ob eine zweite Runde noch einmal zulegt.
@@ -31,8 +31,9 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 - Die Suche behandelt die drei Gegner bisher als gemeinsamen Gegenspieler. Eine eigene Bewertung je Sitz braucht ein dafür trainiertes Netz.
 - Die Stellungscodierung ist auf das Netz von Upstream zugeschnitten.
 - Fünf Prüfdecks sind wenig. Ein Zuwachs dort ist ein Hinweis auf Übertragbarkeit, kein Beweis.
-- An gezogenen Tischen ist die Baumsuche etwa fünfmal langsamer als am festen Tisch. Für die Erzeugung von Trainingsdaten ist das der erste Engpass und vor Schritt 2 zu untersuchen.
-- Rund 5 % der Partien im Deckpool brechen an einer Grenze des Kerns ab. Ein Modell könnte lernen, solche Abbrüche herbeizuführen oder zu vermeiden. Die Quote gehört bei jeder Messung dazu.
+- Tempo: An gezogenen Tischen schafft die Baumsuche mit 25 Simulationen 26 Partien pro Sekunde auf einem Laptop, mit 100 Simulationen 4. Für eine Trainingsrunde in der Größe, die Upstream nutzte (rund 30.000 Partien), sind das Stunden, keine Tage. Reicht das nicht, liegt der nächste Hebel im Kern selbst: Er berechnet die Manaquellen jeder bleibenden Karte bei jeder Anfrage neu.
+- Regeltreue: Am Deckpool wichen in einer Stichprobe 2,6 % der Viererpartien von der Referenz-Engine ab, am festen Tisch 0,4 %. Für den PoC ist das hinnehmbar, für ein ernsthaftes Training nicht.
+- Rund 4 % der Partien im Deckpool brechen an einer Grenze des Kerns ab. Ein Modell könnte lernen, solche Abbrüche herbeizuführen oder zu vermeiden. Die Quote gehört bei jeder Messung dazu.
 
 ## Arbeitsweise
 

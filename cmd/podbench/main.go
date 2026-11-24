@@ -278,8 +278,8 @@ func cmdArena(args []string) error {
 		name = "arena-pool-" + rep.CandidateDecks + "-" + strings.ReplaceAll(rep.Candidate, ":", "-")
 		fmt.Printf("arena on drawn tables: %s with a deck of split %q against three hbot with any of %d precons (%d train, %d eval), %d games, seeds from %d\n",
 			rep.Candidate, rep.CandidateDecks, p.Decks, p.Train, p.Eval, rep.Config.Games, rep.Config.FirstSeed)
-		fmt.Printf("pool %s: %d unverified cards (%d slots) replaced by basic lands, %d decks left out for an unverified commander\n",
-			p.Digest[:12], p.ReplacedCards, p.ReplacedSlots, len(p.Excluded))
+		fmt.Printf("pool %s: replaced by basic lands %d unverified cards (%d slots) and %d slow cards (%d slots); %d decks left out for their commander\n",
+			p.Digest[:12], p.ReplacedCards, p.ReplacedSlots, p.SkippedCards, p.SkippedSlots, len(p.Excluded))
 		fmt.Printf("%d drawn tables refused and redrawn: %s\n", total(rep.RefusedTables), countsOf(rep.RefusedTables))
 		fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
 	} else {
@@ -308,12 +308,35 @@ func cmdArena(args []string) error {
 func cmdExport(args []string) error {
 	c := newCommon("export", "frontier")
 	out := c.fs.String("out", "", "directory to write (required)")
+	asPool := c.fs.Bool("pool", false, "export the precon pool as the arena plays it instead of a table")
 	root, t, allow, err := c.open(args)
 	if err != nil {
 		return err
 	}
 	if *out == "" {
 		return errors.New("export: -out is required")
+	}
+	if *asPool {
+		pool, err := pod.LoadPool(root, allow)
+		if err != nil {
+			return err
+		}
+		if err := os.MkdirAll(filepath.Join(*out, "decks"), 0o755); err != nil {
+			return err
+		}
+		var tsv strings.Builder
+		tsv.WriteString("deck\tsplit\tcolors\tmain_colors\tcards\n")
+		for _, d := range pool.Decks {
+			if err := os.WriteFile(filepath.Join(*out, "decks", d.Deck.Name+".json"), pod.DeckJSON(d.Deck, nil, 0), 0o644); err != nil {
+				return err
+			}
+			fmt.Fprintf(&tsv, "%s\t%s\tC\tC\t100\n", d.Deck.Name, d.Split)
+		}
+		if err := os.WriteFile(filepath.Join(*out, "pool.tsv"), []byte(tsv.String()), 0o644); err != nil {
+			return err
+		}
+		fmt.Printf("precon pool: %d decks written to %s\n", len(pool.Decks), *out)
+		return nil
 	}
 	decks, infos, subs, err := pod.PlayedTable(root, t, allow)
 	if err != nil {

@@ -1,0 +1,41 @@
+# Cards of the precon pool that are replaced by basic lands because they make
+# the kernel slow for the whole table, whether or not they are ever drawn.
+#
+# The kernel prepares each table once and switches on general code paths when
+# any card of the four decks needs them. Three of those paths cost two to four
+# times the usual time per decision. The cards below are the only ones in the
+# pool that switch them on: 20 cards in 29 of 4,600 card slots. Without them a
+# drawn table plays about as fast as the fixed one.
+#
+# Measured 2026-11-24 (heuristic pilots, microseconds per decision):
+# none of the paths 55, granted mana abilities 109, global ability grants 79,
+# both 199, granted basic land types 88 to 189.
+#
+# Delete a line to play the card again. `podbench arena -pool` reports how
+# many cards and slots this file replaced.
+
+# grant a mana ability to other permanents
+Abundant Growth
+Careful Cultivation
+Chromatic Lantern
+Citanul Hierophants
+Imprisoned in the Moon
+Orochi Merge-Keeper
+Preston Garvey, Minuteman
+Rishkar, Peema Renegade
+Song of Freyalise
+Weirding Wood
+
+# grant an ability to every permanent of a kind
+Bootleggers' Stash
+Glory to the Empire!
+Hearthhull, the Worldseed
+Kazandu Tuskcaller
+Legion Loyalty
+Merchant of Truth
+Order of Sacred Dusk
+
+# grant a basic land type
+Ashaya, Soul of the Wild
+Metallic Mimic
+Stormtide Leviathan

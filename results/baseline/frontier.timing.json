@@ -10,10 +10,10 @@
   },
   "workers": 14,
   "setup_seconds": 0.002,
-  "play_seconds": 1.076,
+  "play_seconds": 1.084,
   "games": 1000,
   "finished": 1000,
-  "finished_per_second": 929.224,
-  "decisions_per_second": 292294.772,
-  "measured_at": "2026-11-24T15:38:57Z"
+  "finished_per_second": 922.732,
+  "decisions_per_second": 290252.888,
+  "measured_at": "2026-11-24T17:00:09Z"
 }

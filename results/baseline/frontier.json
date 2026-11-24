@@ -3,7 +3,7 @@
   "table": "frontier",
   "provenance": {
     "engine_repo": "https://github.com/Lzeutschler/gorge.git",
-    "engine_rev": "558c52da7b95fc6d803423a6f30b4ba40b97c6c7",
+    "engine_rev": "8cbe2434276afb40971b55594a20d5b75efaf7d2",
     "engine_dirty": false,
     "cards_repo": "https://github.com/adams-shaun/forge.git",
     "cards_rev": "ff076d4432844aaab45693a971ce84bfb95841fd",
