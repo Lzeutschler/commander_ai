@@ -137,6 +137,7 @@ Die Baumsuche der Engine sucht auch die Entscheidungen der Gegner mit und nimmt 
 
 - **Ohne die Koalitionsannahme spielt v5 deutlich stärker**, auch gegen Netz-Gegner. Das ist der erste Schritt, der gegen Kopien von v5 etwas bringt.
 - **Es kostet Rechenzeit.** Jede Simulation läuft dann über mehr Züge. Gegen Heuristik-Bots sind es 5,4 statt 19,7 Partien pro Sekunde. Die Standardsuche mit 100 Simulationen erreicht dieselben 51,4 % bei 4,4 Partien pro Sekunde. Gegen Heuristik-Bots ist es bei gleicher Rechenzeit also etwa ein Gleichstand.
+- **Das Netz profitiert davon viel mehr als die Handbewertung.** Die Suche mit Handbewertung gewinnt in diesem Modus 41,1 % statt 38,8 % (+2,3 [−0,5; +5,0]). Der Abstand von v5 zur Handbewertung wächst damit auf 10,3 Punkte [+7,6; +13,0], der größte bisher gemessene.
 - **Offen:** der Vergleich bei gleicher Rechenzeit gegen Netz-Gegner und mit 100 Simulationen.
 
 ### Tempo an gezogenen Tischen
