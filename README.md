@@ -81,6 +81,8 @@ Niemand hat dem Netz gesagt, was eine gute Stellung ist. Es lernt allein aus dem
 
 **Wie das Netz spielt** untersucht [docs/ANALYSE.md](docs/ANALYSE.md). Der Vorsprung zeigt sich als seltenes Ausscheiden in langen Partien. Das Netz lässt Angriffe öfter aus, meidet das größte Brett und behält mehr Karten und Leben. Diesen Stil hatte schon v3, das nur gleichauf lag. Die Siege kamen erst, als das Selbstspiel das Tempo zurückbrachte. An unbekannten Decks fehlt der Vorsprung bei 25 Simulationen noch. Dort stehen auch die daraus abgeleiteten nächsten Schritte.
 
+**Was das über Commander zu viert verrät**, steht in [docs/SPIELTHEORIE.md](docs/SPIELTHEORIE.md): die Spielmuster des Netzes, spieltheoretisch gedeutet und mit den Faustregeln der Commander-Community verglichen.
+
 Das Netz sieht keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
 
 ### Gegen stärkere Gegner

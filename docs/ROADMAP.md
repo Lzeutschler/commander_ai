@@ -33,10 +33,12 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 7. ✅ **Gegen stärkere Gegner gemessen.** Gegen drei Suchen mit Handbewertung hält der Vorsprung von v5 voll (+6,9 Punkte). Gegen drei Kopien von sich selbst ist er nicht messbar (+1,2 [−1,4; +3,8]). Details in der README unter „Gegen stärkere Gegner".
 8. **Die nächste Selbstspiel-Runde gegen gemischte Gegner** (Heuristik-Bots, `hsearch`, frühere Netze und das aktuelle), nach jeder Runde mit Messung an den Prüfdecks und gegen Netz-Gegner. Nach Schritt 7 ist das der wichtigste Schritt.
 9. **Übertragung auf neue Decks:** Trainingsdecks abwandeln, mehr Decks, ungenutzte Merkmale der Engine prüfen.
+    Dazu gehören Gegner mit eigenem Charakter (greift immer das größte Brett an, rächt sich), siehe [SPIELTHEORIE.md](SPIELTHEORIE.md).
 10. **Gegenproben, was den Vorsprung trägt:** erste Angriffsentscheidung, Spielstein-Fähigkeiten und Ziele auf eigene Karten jeweils von `hsearch` oder einer Regel entscheiden lassen.
-11. **Werkzeug erweitern:** Angriffsziel, Quelle und Optionen bei Zielen, Werte je Option an der Wurzel, Proben mit anderem Seed.
-12. **Einschätzungen geraderücken:** prüfen, ob die Trainingsmarkierung wirkt, nur Plätze ohne Zufallszüge als Ziel.
-13. **Zugauswahl lernen**, danach **Bewertung pro Sitz**, falls die Werte je Option einen Mangel der einen Zahl zeigen.
+11. **Sitzverzerrung des Heuristik-Bots beseitigen:** Bei Gleichstand greift er den Spieler an, der in der Sitzreihenfolge zuerst kommt. Der erste Sitz scheidet deshalb in 35 % der Partien als Erster aus, der letzte in 16 %. Gleichstände zufällig auflösen und neu messen.
+12. **Werkzeug erweitern:** Angriffsziel, Quelle und Optionen bei Zielen, Werte je Option an der Wurzel, Proben mit anderem Seed.
+13. **Einschätzungen geraderücken:** prüfen, ob die Trainingsmarkierung wirkt, nur Plätze ohne Zufallszüge als Ziel.
+14. **Zugauswahl lernen**, danach **Bewertung pro Sitz**, falls die Werte je Option einen Mangel der einen Zahl zeigen.
 
 **Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee.
 
