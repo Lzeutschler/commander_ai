@@ -3,6 +3,7 @@ package learn
 import (
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"math/rand/v2"
@@ -19,11 +20,9 @@ import (
 // RecordOptions says which games to record positions from.
 type RecordOptions struct {
 	Split string // the pool split every deck of a table is drawn from
-	// Pilots is one pilot for all four seats, or four that are dealt to the
-	// seats afresh each game. Keep, when set, says per pilot whether the seats
-	// it plays are recorded; nil records every seat.
-	Pilots    []func() lab.Policy
-	Keep      []bool
+	// Tables are the line-ups games are played with; each game draws one, by
+	// weight.
+	Tables    []RecordTable
 	PilotName string
 	FirstSeed uint64
 	Games     int
@@ -35,12 +34,23 @@ type RecordOptions struct {
 	Out       string // directory for the shards and meta.json
 }
 
+// RecordTable is one line-up: one pilot for all four seats, or four that are
+// dealt to the seats afresh each game. Keep, when set, says per pilot whether
+// the seats it plays are recorded; nil records every seat. Weight (at least
+// 1) is the line-up's share among RecordOptions.Tables.
+type RecordTable struct {
+	Pilots []func() lab.Policy
+	Keep   []bool
+	Weight int
+}
+
 // RecordMeta describes a recorded data set (meta.json).
 type RecordMeta struct {
 	Width      int            `json:"width"`
 	Split      string         `json:"split"`
 	Pilot      string         `json:"pilot"`
-	Keep       []bool         `json:"keep,omitempty"`
+	Keep       [][]bool       `json:"keep,omitempty"` // per line-up, per pilot
+	TableGames []int          `json:"table_games"`    // finished games per line-up
 	MetaCols   int            `json:"meta_cols"`
 	FirstSeed  uint64         `json:"first_seed"`
 	Games      int            `json:"games"`
@@ -52,6 +62,10 @@ type RecordMeta struct {
 	Provenance pod.Provenance `json:"provenance"`
 	Pool       pod.PoolInfo   `json:"pool"`
 	Format     string         `json:"format"`
+	// Complete is false in the meta.json written before the first game: a
+	// run the engine brought down leaves that one, and its shards hold the
+	// games finished until then. Readers count records from the files.
+	Complete bool `json:"complete"`
 }
 
 // Record plays opts.Games games at tables drawn from one split of the deck
@@ -60,15 +74,25 @@ type RecordMeta struct {
 // whether that seat went on to win. Games that do not finish are left out.
 //
 // Shard k holds <k>.x.f32 (records × Width float32), <k>.y.u8 (1 for a win)
-// and <k>.m.i32 (game, seat, turn, decision number, and which of
-// opts.Pilots played the seat, per record).
+// and <k>.m.i32 (game, seat, turn, decision number, and who played the seat:
+// 4 * the line-up's index + the pilot's place in it, per record).
 func Record(root string, opts RecordOptions) (RecordMeta, error) {
 	var meta RecordMeta
-	if n := len(opts.Pilots); n != 1 && n != 4 {
-		return meta, fmt.Errorf("record: %d pilots, want one or four", n)
+	if len(opts.Tables) == 0 {
+		return meta, errors.New("record: no line-up")
 	}
-	if opts.Keep != nil && len(opts.Keep) != len(opts.Pilots) {
-		return meta, fmt.Errorf("record: keep names %d pilots of %d", len(opts.Keep), len(opts.Pilots))
+	weight := 0
+	for _, t := range opts.Tables {
+		if n := len(t.Pilots); n != 1 && n != 4 {
+			return meta, fmt.Errorf("record: %d pilots in a line-up, want one or four", n)
+		}
+		if t.Keep != nil && len(t.Keep) != len(t.Pilots) {
+			return meta, fmt.Errorf("record: keep names %d pilots of %d", len(t.Keep), len(t.Pilots))
+		}
+		if t.Weight < 1 {
+			return meta, errors.New("record: a line-up's weight is at least 1")
+		}
+		weight += t.Weight
 	}
 	prov, err := pod.ReadProvenance(root)
 	if err != nil {
@@ -93,16 +117,42 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 		return meta, err
 	}
 	workers := max(1, min(opts.Workers, opts.Games))
+	meta.Width, meta.Split, meta.Pilot, meta.FirstSeed = Width, opts.Split, opts.PilotName, opts.FirstSeed
+	meta.Games, meta.Every, meta.Provenance, meta.Pool = opts.Games, opts.Every, prov, pool.Info
+	meta.MetaCols, meta.TableGames = metaCols, make([]int, len(opts.Tables))
+	meta.Format = "per shard: .x.f32 records*width float32 LE, .y.u8 win, .m.i32 game seat turn decision pilot"
+	for _, t := range opts.Tables {
+		if t.Keep != nil {
+			meta.Keep = make([][]bool, len(opts.Tables))
+		}
+	}
+	for i, t := range opts.Tables {
+		if meta.Keep != nil {
+			meta.Keep[i] = t.Keep
+		}
+	}
+	for w := 0; w < workers; w++ {
+		meta.Shards = append(meta.Shards, fmt.Sprintf("%03d", w))
+	}
+	writeMeta := func() error {
+		raw, _ := json.MarshalIndent(meta, "", "  ")
+		return os.WriteFile(filepath.Join(opts.Out, "meta.json"), append(raw, '\n'), 0o644)
+	}
+	if err := writeMeta(); err != nil {
+		return meta, err
+	}
 	prev := runtime.GOMAXPROCS(workers)
 	defer runtime.GOMAXPROCS(prev)
 
-	type tally struct{ finished, records, positive int }
+	type tally struct {
+		finished, records, positive int
+		tables                      []int
+	}
 	tallies := make([]tally, workers)
 	errs := make([]error, workers)
 	next := make(chan int)
 	var wg sync.WaitGroup
 	for w := 0; w < workers; w++ {
-		meta.Shards = append(meta.Shards, fmt.Sprintf("%03d", w))
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -115,6 +165,7 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 			}
 			f := NewFeaturizer(reg)
 			rec := &recorder{f: f, every: opts.Every}
+			tallies[w].tables = make([]int, len(opts.Tables))
 			for g := range next {
 				rng := rand.New(rand.NewPCG(opts.FirstSeed, uint64(g)))
 				var su *lab.Setup
@@ -140,8 +191,17 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 				}
 				rec.reset(g, rng.IntN(opts.Every))
 				pols := make([]lab.Policy, 4)
+				ti := 0
+				if len(opts.Tables) > 1 {
+					pick := rng.IntN(weight)
+					for pick >= opts.Tables[ti].Weight {
+						pick -= opts.Tables[ti].Weight
+						ti++
+					}
+				}
+				lineup := &opts.Tables[ti]
 				var order []int
-				if len(opts.Pilots) == 4 {
+				if len(lineup.Pilots) == 4 {
 					order = rng.Perm(4)
 				}
 				for i := range pols {
@@ -149,8 +209,8 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 					if order != nil {
 						role = order[i]
 					}
-					rec.role[i], rec.keep[i] = int32(role), opts.Keep == nil || opts.Keep[role]
-					pols[i] = &recording{Policy: opts.Pilots[role](), rec: rec}
+					rec.role[i], rec.keep[i] = int32(4*ti+role), lineup.Keep == nil || lineup.Keep[role]
+					pols[i] = &recording{Policy: lineup.Pilots[role](), rec: rec}
 				}
 				res := lab.Play(su.Game(opts.FirstSeed+uint64(g)), pols, opts.MaxSteps)
 				su.Close()
@@ -158,6 +218,7 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 					continue
 				}
 				tallies[w].finished++
+				tallies[w].tables[ti]++
 				for i := range rec.seat {
 					win := byte(0)
 					if int(rec.seat[i]) == res.Winner {
@@ -183,17 +244,16 @@ func Record(root string, opts RecordOptions) (RecordMeta, error) {
 			return meta, e
 		}
 	}
-	meta.Width, meta.Split, meta.Pilot, meta.FirstSeed = Width, opts.Split, opts.PilotName, opts.FirstSeed
-	meta.Games, meta.Every, meta.Provenance, meta.Pool = opts.Games, opts.Every, prov, pool.Info
-	meta.Keep, meta.MetaCols = opts.Keep, metaCols
-	meta.Format = "per shard: .x.f32 records*width float32 LE, .y.u8 win, .m.i32 game seat turn decision pilot"
 	for _, t := range tallies {
 		meta.Finished += t.finished
 		meta.Records += t.records
 		meta.Positive += t.positive
+		for i, n := range t.tables {
+			meta.TableGames[i] += n
+		}
 	}
-	raw, _ := json.MarshalIndent(meta, "", "  ")
-	return meta, os.WriteFile(filepath.Join(opts.Out, "meta.json"), append(raw, '\n'), 0o644)
+	meta.Complete = true
+	return meta, writeMeta()
 }
 
 // metaCols is the number of int32 a record carries in .m.i32.

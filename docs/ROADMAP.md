@@ -31,7 +31,8 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 **Die nächsten Schritte**, abgeleitet aus der Analyse (Begründung dort):
 
 7. ✅ **Gegen stärkere Gegner gemessen.** Gegen drei Suchen mit Handbewertung hält der Vorsprung von v5 voll (+6,9 Punkte). Gegen drei Kopien von sich selbst ist er nicht messbar (+1,2 [−1,4; +3,8]). Details in der README unter „Gegen stärkere Gegner".
-8. **Die nächste Selbstspiel-Runde gegen gemischte Gegner** (Heuristik-Bots, `hsearch`, frühere Netze und das aktuelle), nach jeder Runde mit Messung an den Prüfdecks und gegen Netz-Gegner. Nach Schritt 7 ist das der wichtigste Schritt.
+8. ✅ **Selbstspiel-Runde gegen gemischte Gegner: kein Fortschritt.** Netz v6 (rund 40.000 Partien mit Heuristik-Bots, `hsearch` und Kopien von v5 auf den Gegnerplätzen) ist nirgends besser als v5 und gegen Heuristik-Bots rund 3 Punkte schwächer. Gegen Netz-Gegner brachte es nichts (−1,3 [−3,9; +1,3]). v5 bleibt das Referenznetz, sein Vorsprung bestätigt sich auf frischen Seeds. Details in der README unter „Dritte Runde".
+   **Was daraus folgt:** Eine einzige Zahl für alle Tische reicht nicht, und in der Suche spielt die Gegner immer der Heuristik-Bot. Die Schritte 14 (Zugauswahl, Bewertung pro Sitz) rücken damit nach vorn, zusammen mit einem Gegnermodell in der Suche: die Gegner im Suchbaum vom Netz oder von einer gelernten Zugauswahl spielen lassen.
     Dazu gehören Gegner mit eigenem Charakter (greift immer das größte Brett an, rächt sich), siehe [SPIELTHEORIE.md](SPIELTHEORIE.md).
 9. **Übertragung auf neue Decks:** Trainingsdecks abwandeln, mehr Decks, ungenutzte Merkmale der Engine prüfen.
 10. **Gegenproben, was den Vorsprung trägt:** erste Angriffsentscheidung, Spielstein-Fähigkeiten und Ziele auf eigene Karten jeweils von `hsearch` oder einer Regel entscheiden lassen.

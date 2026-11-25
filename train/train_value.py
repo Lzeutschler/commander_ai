@@ -40,29 +40,35 @@ def load_all(dirs, marked):
     for d, meta in zip(dirs, metas):
         if meta["width"] != width:
             raise SystemExit(f"{d}: {meta['width']} features, {dirs[0]} has {width}")
-    total = sum(meta["records"] for meta in metas)
+    # Records are counted from the files: a run the engine brought down has
+    # no counts in its meta.json, and its last record may be torn.
+    counts = []
+    for d, meta in zip(dirs, metas):
+        cols = meta.get("meta_cols", 4)
+        counts.append([min((d / f"{s}.y.u8").stat().st_size, (d / f"{s}.x.f32").stat().st_size // (4 * width),
+                           (d / f"{s}.m.i32").stat().st_size // (4 * cols)) for s in meta["shards"]])
+    total = sum(map(sum, counts))
     x = np.zeros((total, width + bool(marked)), dtype=np.float32)
     y = np.zeros(total, dtype=np.float32)
     game = np.zeros(total, dtype=np.int64)
     mark = np.zeros(total, dtype=bool)
     at, base = 0, 0
-    for d, meta in zip(dirs, metas):
+    for d, meta, ns in zip(dirs, metas, counts):
         cols, first = meta.get("meta_cols", 4), at
-        for shard in meta["shards"]:
-            ys = np.fromfile(d / f"{shard}.y.u8", dtype=np.uint8)
-            n = len(ys)
+        for shard, n in zip(meta["shards"], ns):
             if n == 0:
                 continue
-            x[at : at + n, :width] = np.fromfile(d / f"{shard}.x.f32", dtype="<f4").reshape(n, width)
-            y[at : at + n] = ys
-            game[at : at + n] = np.fromfile(d / f"{shard}.m.i32", dtype="<i4").reshape(n, cols)[:, 0] + base
+            x[at : at + n, :width] = np.fromfile(d / f"{shard}.x.f32", dtype="<f4", count=n * width).reshape(n, width)
+            y[at : at + n] = np.fromfile(d / f"{shard}.y.u8", dtype=np.uint8, count=n)
+            game[at : at + n] = np.fromfile(d / f"{shard}.m.i32", dtype="<i4", count=n * cols).reshape(n, cols)[:, 0] + base
             at += n
         if d in marked:
             x[first:at, width] = 1
             mark[first:at] = True
+        if not meta.get("complete", True):
+            meta["records"], meta["finished"] = at - first, int(len(np.unique(game[first:at])))
+            print(f"{d}: an unfinished run, {at - first} records of {meta['finished']} games")
         base = int(game[first:at].max()) + 1 if at > first else base
-    if at != total:
-        raise SystemExit(f"the shards hold {at} records, the meta files name {total}")
     return metas, x, y, game, mark
 
 

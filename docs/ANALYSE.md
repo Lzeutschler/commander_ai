@@ -269,6 +269,10 @@ Schritt 1 der folgenden Liste ist erledigt (Zahlen und Einordnung in der [README
 
 Damit ist die Frage aus der Kurzfassung beantwortet: Ein Teil des Gelernten ist gut gegen Gegner der Heuristik-Bot-Familie, nicht allgemein. Schritt 2, Selbstspiel mit Netzen auch auf den Gegnerplätzen, ist damit der nächste.
 
+## Nachtrag: Selbstspiel gegen gemischte Gegner
+
+Auch Schritt 2 ist erledigt, mit negativem Ergebnis (Zahlen in der [README](../README.md#dritte-runde-gemischte-gegner-kein-fortschritt)): Netz v6 ist gegen Netz-Gegner nicht besser als v5 und gegen Heuristik-Bots schwächer. Der wahrscheinliche Grund: Die Bewertung ist eine Zahl ohne Wissen über die Gegner, und im Suchbaum spielt die Gegner immer der Heuristik-Bot. Die Schritte 5, 7 und 8 der folgenden Liste rücken damit nach vorn, ergänzt um ein Gegnermodell in der Suche.
+
 ## Nächste Schritte
 
 Die Reihenfolge folgt aus den Befunden:

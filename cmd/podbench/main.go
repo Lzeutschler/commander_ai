@@ -334,7 +334,10 @@ func cmdArena(args []string) error {
 // cmdCompare sets two arena reports over the same games side by side: the
 // first candidate's win rate minus the second's, pair by pair.
 func cmdCompare(args []string) error {
-	if len(args) != 2 {
+	fs := flag.NewFlagSet("compare", flag.ExitOnError)
+	across := fs.Bool("across-engines", false, "compare runs from different engine revisions: right only when the revisions play the same games, apart from games one of them could not finish")
+	fs.Parse(args)
+	if args = fs.Args(); len(args) != 2 {
 		return errors.New("compare: want two arena reports")
 	}
 	var reps [2]pod.ArenaReport
@@ -346,6 +349,10 @@ func cmdCompare(args []string) error {
 		if err := json.Unmarshal(raw, &reps[i]); err != nil {
 			return fmt.Errorf("%s: %w", path, err)
 		}
+	}
+	if *across && reps[0].Provenance != reps[1].Provenance {
+		fmt.Printf("across engine revisions %.10s and %.10s\n", reps[0].Provenance.EngineRev, reps[1].Provenance.EngineRev)
+		reps[1].Provenance = reps[0].Provenance
 	}
 	cmp, err := pod.CompareArena(reps[0], reps[1])
 	if err != nil {
@@ -376,8 +383,11 @@ func pilotOf(spec string) (func() lab.Policy, error) {
 			return nil, fmt.Errorf("candidate %q: want net:<file>:<simulations>[:<spread>]", spec)
 		}
 		var err error
-		if net, err = learn.LoadValueNet(parts[1]); err != nil {
-			return nil, err
+		if net = netCache[parts[1]]; net == nil {
+			if net, err = learn.LoadValueNet(parts[1]); err != nil {
+				return nil, err
+			}
+			netCache[parts[1]] = net
 		}
 		sims = parts[2]
 		if len(parts) == 4 {
@@ -414,6 +424,7 @@ func cmdRecord(args []string) error {
 	def := pod.DefaultOptions(pod.Table{})
 	split := c.fs.String("split", "train", "pool split every deck is drawn from: train, eval or all")
 	pilot := c.fs.String("pilot", "hbot", "who plays: one pilot for all four seats, or four with commas between that are dealt to the seats afresh each game. "+
+		"Several such line-ups with | between are drawn from game by game; N* before a line-up gives it N shares, + before a pilot records its seats (and no others of that line-up). "+
 		"A pilot is hbot, hsearch:<simulations>, net:<file>:<simulations>, or explore:<share>:<pilot> for a pilot that answers that share of its decisions at random (ehbot:<share> is explore:<share>:hbot)")
 	keepArg := c.fs.String("keep", "", "with four pilots: the positions in -pilot (from 0, commas between) whose seats are recorded; empty records every seat")
 	n := c.fs.Int("n", 4000, "games")
@@ -430,26 +441,11 @@ func cmdRecord(args []string) error {
 	if *out == "" {
 		return errors.New("record: -out is required")
 	}
-	var pilots []func() lab.Policy
-	for _, spec := range strings.Split(*pilot, ",") {
-		mk, err := recordPilot(spec)
-		if err != nil {
-			return err
-		}
-		pilots = append(pilots, mk)
+	tables, err := recordTables(*pilot, *keepArg)
+	if err != nil {
+		return err
 	}
-	var keep []bool
-	if *keepArg != "" {
-		keep = make([]bool, len(pilots))
-		for _, k := range strings.Split(*keepArg, ",") {
-			i, err := strconv.Atoi(k)
-			if err != nil || i < 0 || i >= len(pilots) {
-				return fmt.Errorf("record: -keep %q names no pilot of %d", k, len(pilots))
-			}
-			keep[i] = true
-		}
-	}
-	meta, err := learn.Record(root, learn.RecordOptions{Split: *split, Pilots: pilots, Keep: keep, PilotName: *pilot, FirstSeed: *seed, Games: *n,
+	meta, err := learn.Record(root, learn.RecordOptions{Split: *split, Tables: tables, PilotName: *pilot, FirstSeed: *seed, Games: *n,
 		Every: *every, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow, Out: *out})
 	if err != nil {
 		return err
@@ -541,6 +537,59 @@ func cmdStudy(args []string) error {
 	fmt.Printf("wrote %s: %d tables x %d pilots\n", *out, *n, len(opts.Pilots))
 	return nil
 }
+
+// recordTables reads -pilot and -keep of `podbench record`: line-ups with |
+// between, each "[N*]pilot" or "[N*]pilot,pilot,pilot,pilot"; a pilot with a
+// leading + is recorded, and then only those of its line-up are. -keep names
+// recorded places instead and goes with a single line-up.
+func recordTables(pilotArg, keepArg string) ([]learn.RecordTable, error) {
+	var tables []learn.RecordTable
+	for _, lineup := range strings.Split(pilotArg, "|") {
+		t := learn.RecordTable{Weight: 1}
+		if w, rest, ok := strings.Cut(lineup, "*"); ok {
+			n, err := strconv.Atoi(w)
+			if err != nil || n < 1 {
+				return nil, fmt.Errorf("record: line-up %q: bad share", lineup)
+			}
+			t.Weight, lineup = n, rest
+		}
+		marked := false
+		specs := strings.Split(lineup, ",")
+		keep := make([]bool, len(specs))
+		for i, spec := range specs {
+			if rest, ok := strings.CutPrefix(spec, "+"); ok {
+				keep[i], marked, spec = true, true, rest
+			}
+			mk, err := recordPilot(spec)
+			if err != nil {
+				return nil, err
+			}
+			t.Pilots = append(t.Pilots, mk)
+		}
+		if marked {
+			t.Keep = keep
+		}
+		tables = append(tables, t)
+	}
+	if keepArg != "" {
+		if len(tables) != 1 || tables[0].Keep != nil {
+			return nil, errors.New("record: -keep goes with a single line-up without + marks")
+		}
+		keep := make([]bool, len(tables[0].Pilots))
+		for _, k := range strings.Split(keepArg, ",") {
+			i, err := strconv.Atoi(k)
+			if err != nil || i < 0 || i >= len(keep) {
+				return nil, fmt.Errorf("record: -keep %q names no pilot of %d", k, len(keep))
+			}
+			keep[i] = true
+		}
+		tables[0].Keep = keep
+	}
+	return tables, nil
+}
+
+// netCache keeps one copy of each value network file a command names.
+var netCache = map[string]*learn.ValueNet{}
 
 // recordPilot reads one pilot of `podbench record`.
 func recordPilot(spec string) (func() lab.Policy, error) {

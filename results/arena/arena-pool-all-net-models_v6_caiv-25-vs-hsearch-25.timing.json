@@ -1,0 +1,13 @@
+{
+  "host": {
+    "os": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M3 Max",
+    "num_cpu": 14,
+    "go": "go1.27.4"
+  },
+  "workers": 14,
+  "candidate_seconds": 3107.865,
+  "candidate_games_per_second": 4.468,
+  "measured_at": "2026-11-25T16:01:20Z"
+}

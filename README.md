@@ -103,6 +103,29 @@ Bisher saßen drei Heuristik-Bots am Tisch. `podbench arena -opponents` setzt an
 
 **Einordnung.** Ein Teil dessen, was v5 gelernt hat, ist gut gegen Gegner, die so spielen wie der Heuristik-Bot. Das gilt auch für die Suche mit Handbewertung, die den Heuristik-Bot als Zuggenerator nutzt. Gegen einen Tisch voller Netze hilft dieses Wissen nicht. Kein Wunder: Trainiert wurde bisher nur gegen Heuristik-Bots. Das ist kein Rückschlag für den PoC, aber ein klarer Auftrag für die nächste Runde: Selbstspiel, in dem auch die Gegner Netze sind.
 
+### Dritte Runde: gemischte Gegner (kein Fortschritt)
+
+Die dritte Selbstspiel-Runde sollte die Lücke gegen Netz-Gegner schließen. In rund 40.000 Trainingspartien saßen deshalb neben Heuristik-Bots auch Kopien von v5 und Suchen mit Handbewertung auf den Gegnerplätzen. Netz v6 lernt aus allen Plätzen, auf denen v5 suchte. Je 1.600 Partien, Abstand zu v5 auf denselben Partien:
+
+| Messung | v5 | v6 | v6 minus v5 |
+|---|---:|---:|---:|
+| gegen drei Heuristik-Bots, 25 Simulationen | 45,3 % | 41,4 % | −3,9 [−6,4; −1,3] |
+| dasselbe auf frischen Seeds | 41,8 % | 39,9 % | −1,9 [−4,5; +0,7] |
+| gegen drei Suchen mit Handbewertung | 30,6 % | 29,9 % | −0,6 [−3,3; +2,1] |
+| gegen drei Kopien von v5 | 23,7 % | 22,4 % | −1,3 [−3,9; +1,3] |
+| Prüfdecks, 25 Simulationen | 29,3 % | 27,2 % | −2,1 [−4,5; +0,3] |
+| gegen drei Heuristik-Bots, 100 Simulationen | 51,4 % | 51,4 % | 0,0 [−2,6; +2,6] |
+| Prüfdecks, 100 Simulationen | 39,1 % | 35,4 % | −3,7 [−6,3; −1,1] |
+
+- **v6 ist nirgends besser als v5** und gegen Heuristik-Bots bei 25 Simulationen schwächer. Über beide Seed-Sätze zusammen sind es rund 3 Punkte.
+- **Gegen Netz-Gegner hat das Training gegen Netz-Gegner nichts gebracht.** Genau dafür war die Runde gedacht.
+- **Als reines Zusatzmaterial schaden die neuen Daten nicht, helfen aber auch nicht.** Die Variante v6u nutzt sie ohne Lernziel für die Suche. Sie liegt 2,6 und 0,2 Punkte hinter v5 (42,7 % und 41,6 % auf den beiden Seed-Sätzen), beides nicht gesichert.
+- **Der Vorsprung von v5 bestätigt sich auf frischen Seeds:** 41,8 % gegenüber 35,8 % für die Handbewertung (+5,9 [+3,2; +8,7]). Die bisherigen Ergebnisse hängen also nicht an den immer gleichen 1.600 Tischen.
+
+**Einordnung.** Das Netz gibt eine einzige Zahl aus und sieht nicht, wer am Tisch sitzt. Lernt es aus Tischen mit verschiedenen Gegnern, lernt es einen Mittelwert, der für keinen Tisch genau stimmt. Dazu kommt: Innerhalb der Suche spielt die Gegner weiterhin der Heuristik-Bot, egal wer wirklich dort sitzt. Gegen Netz-Gegner liegt der Hebel deshalb vermutlich nicht in der Bewertung, sondern darin, wie die Suche ihre Gegner annimmt. v5 bleibt das Referenznetz.
+
+Bei der Aufzeichnung trat ein Fehler im Kern zutage, der den ganzen Prozess beendet ([#5](https://github.com/Lzeutschler/commander_ai/issues/5)). Die Aufzeichnung läuft seitdem in Abschnitten, und abgebrochene Läufe bleiben verwertbar.
+
 ### Tempo an gezogenen Tischen
 
 Auf einem Apple M3 Max mit 14 Workern:
@@ -192,6 +215,8 @@ bin/podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -ke
 bin/podbench arena -pool all -candidate net:models/v4b.caiv:25 -out results/arena
 bin/podbench compare results/arena/arena-pool-all-net-models_v4b_caiv-25.json results/arena/arena-pool-all-hsearch-25.json
 bin/podbench arena -pool all -candidate net:models/v5.caiv:25 -opponents hsearch:25 -out results/arena   # gegen drei suchende Gegner
+# gemischte Tische: | trennt Aufstellungen, N* gewichtet sie, + markiert die aufgezeichneten Piloten
+bin/podbench record -pilot "3*+explore:0.15:net:models/v5.caiv:25,hbot,hbot,hbot|+explore:0.15:net:models/v5.caiv:25,hsearch:25,hsearch:25,hsearch:25" -n 3000 -out data/v6/c01
 # beobachten, wie Piloten spielen: dieselben Tische wie die Arena, Aufzeichnung je Partie (docs/ANALYSE.md)
 bin/podbench study -pilots hsearch:25,net:models/v5.caiv:25 -probe net:models/v5.caiv:25 -value models/v5.caiv -n 400 -out data/study/s.jsonl
 .venv/bin/python analysis/study.py data/study/s.jsonl --out results/local/s.json
