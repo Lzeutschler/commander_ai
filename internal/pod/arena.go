@@ -38,13 +38,17 @@ type ArenaOptions struct {
 	Candidate string // hbot, random or search:<sims>; a label only when Make is set
 	// Make, when set, builds the candidate's policy instead of Candidate: a
 	// fresh one per game.
-	Make      func() lab.Policy
-	FirstSeed uint64
-	Games     int // a fixed table rounds it up to a multiple of 16
-	Workers   int
-	MaxSteps  int
-	Mulligans int
-	Allow     []string
+	Make func() lab.Policy
+	// Opponent names the pilot of the other seats (default hbot), and
+	// MakeOpponent builds one per seat and game; nil plays hbot.
+	Opponent     string
+	MakeOpponent func() lab.Policy
+	FirstSeed    uint64
+	Games        int // a fixed table rounds it up to a multiple of 16
+	Workers      int
+	MaxSteps     int
+	Mulligans    int
+	Allow        []string
 }
 
 // Tally counts one seat's wins over a set of games.
@@ -103,10 +107,14 @@ type arenaGame struct {
 }
 
 // playPair plays seed on su twice, the heuristic bot and then the candidate
-// in seat c, and reports the time the candidate's game took.
-func playPair(su *lab.Setup, seats, c int, seed uint64, mk func() lab.Policy, maxSteps int) (arenaGame, time.Duration) {
+// in seat c, with opp's pilots in the other seats, and reports the time the
+// candidate's game took.
+func playPair(su *lab.Setup, seats, c int, seed uint64, mk, opp func() lab.Policy, maxSteps int) (arenaGame, time.Duration) {
 	play := func(cand lab.Policy) lab.Result {
-		pols := pilots(seats)
+		pols := make([]lab.Policy, seats)
+		for i := range pols {
+			pols[i] = opp()
+		}
 		pols[c] = cand
 		return lab.Play(su.Game(seed), pols, maxSteps)
 	}
@@ -216,6 +224,8 @@ func CompareArena(a, b ArenaReport) (ArenaCompare, error) {
 	switch {
 	case a.Outcomes == "" || b.Outcomes == "":
 		return cmp, errors.New("a report without the outcomes game by game (written before they were kept); run it again")
+	case a.Opponents != b.Opponents:
+		return cmp, fmt.Errorf("the two runs played against different opponents (%s, %s)", a.Opponents, b.Opponents)
 	case a.Table != b.Table || a.CandidateDecks != b.CandidateDecks || digest(a) != digest(b) ||
 		!same(a.Config, b.Config) || len(a.Outcomes) != len(b.Outcomes):
 		return cmp, errors.New("the two runs did not play the same games")
@@ -281,6 +291,12 @@ func Arena(root string, opts ArenaOptions) (ArenaReport, ArenaTiming, error) {
 			return rep, tim, err
 		}
 	}
+	if opts.MakeOpponent == nil {
+		if opts.Opponent != "" && opts.Opponent != "hbot" {
+			return rep, tim, fmt.Errorf("arena: opponent %q needs MakeOpponent", opts.Opponent)
+		}
+		opts.Opponent, opts.MakeOpponent = "hbot", lab.HBot
+	}
 	prov, err := ReadProvenance(root)
 	if err != nil {
 		return rep, tim, err
@@ -327,7 +343,7 @@ func Arena(root string, opts ArenaOptions) (ArenaReport, ArenaTiming, error) {
 			for g := range next {
 				r, c := g%seats, (g/seats)%seats
 				var d time.Duration
-				res[g], d = playPair(setups[r], seats, c, opts.FirstSeed+uint64(g), mk, opts.MaxSteps)
+				res[g], d = playPair(setups[r], seats, c, opts.FirstSeed+uint64(g), mk, opts.MakeOpponent, opts.MaxSteps)
 				res[g].deck = (c + r) % seats
 				spent += d
 			}
@@ -345,7 +361,7 @@ func Arena(root string, opts ArenaOptions) (ArenaReport, ArenaTiming, error) {
 	wall := time.Since(t0)
 
 	rep = ArenaReport{
-		Schema: Schema, Table: opts.Table.Name, Provenance: prov, Candidate: opts.Candidate, Opponents: "hbot", Decks: infos,
+		Schema: Schema, Table: opts.Table.Name, Provenance: prov, Candidate: opts.Candidate, Opponents: opts.Opponent, Decks: infos,
 		Config: RunConfig{CardSet: CardSet, Surface: "full", Pilot: opts.Candidate, Mulligans: opts.Mulligans,
 			MaxSteps: opts.MaxSteps, FirstSeed: opts.FirstSeed, Games: games, Allow: sorted(opts.Allow)},
 	}
@@ -436,7 +452,7 @@ func arenaPool(root string, opts ArenaOptions, prov Provenance, mk func() lab.Po
 					continue
 				}
 				var d time.Duration
-				res[g], d = playPair(su, len(table), seat, opts.FirstSeed+uint64(g), mk, opts.MaxSteps)
+				res[g], d = playPair(su, len(table), seat, opts.FirstSeed+uint64(g), mk, opts.MakeOpponent, opts.MaxSteps)
 				res[g].deck = table[seat]
 				su.Close()
 				spent += d
@@ -464,7 +480,7 @@ func arenaPool(root string, opts ArenaOptions, prov Provenance, mk func() lab.Po
 	}
 
 	rep = ArenaReport{
-		Schema: Schema, Table: "pool", Provenance: prov, Candidate: opts.Candidate, Opponents: "hbot",
+		Schema: Schema, Table: "pool", Provenance: prov, Candidate: opts.Candidate, Opponents: opts.Opponent,
 		Pool: &pool.Info, CandidateDecks: opts.Pool, RefusedTables: refused,
 		Config: RunConfig{CardSet: PoolSet, Surface: "full", Pilot: opts.Candidate, Mulligans: opts.Mulligans,
 			MaxSteps: opts.MaxSteps, FirstSeed: opts.FirstSeed, Games: games, Allow: sorted(opts.Allow)},

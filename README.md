@@ -83,6 +83,24 @@ Niemand hat dem Netz gesagt, was eine gute Stellung ist. Es lernt allein aus dem
 
 Das Netz sieht keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
 
+### Gegen stärkere Gegner
+
+Bisher saßen drei Heuristik-Bots am Tisch. `podbench arena -opponents` setzt andere Gegner ein. Je 1.600 Partien an gezogenen Tischen, 25 Simulationen, Siegquote auf dem Kandidatenplatz. In Klammern steht der Abstand von v5 zur Handbewertung auf denselben Partien:
+
+| drei Gegner | Handbewertung auf dem Platz | v5 auf dem Platz | v5 minus Handbewertung |
+|---|---:|---:|---:|
+| Heuristik-Bot | 38,8 % | 45,3 % | +6,5 [+3,7; +9,3] |
+| Suche mit Handbewertung | 23,7 % | 30,6 % | +6,9 [+4,2; +9,6] |
+| Suche mit Netz v5 | 22,5 % | 23,7 % | +1,2 [−1,4; +3,8] |
+
+- **Gegen Gegner, die mit der Handbewertung vorausdenken, hält der Vorsprung voll.** Er ist so groß wie gegen Heuristik-Bots.
+- **Gegen Kopien von sich selbst verschwindet er.** Hier ist v5 nicht messbar besser als die Handbewertung. Der Unterschied zu den beiden anderen Gegnerarten ist gesichert (5,7 ± 1,9 Punkte).
+- **Die Spiegeltische liegen wie erwartet bei einem Viertel** der beendeten Partien (24,3 % und 24,9 %), die Messung ist also unverzerrt.
+- **Netz-Gegner sind die stärksten.** Der Heuristik-Bot gewinnt gegen sie 12,9 %, gegen Gegner mit Handbewertung 17,6 %.
+- **Abbrüche:** Mit Netz-Piloten am Tisch brechen mehr Partien ab (4,6 % gegenüber 2,6 % bei vier Handbewertungs-Suchen). Sie zählen für den Kandidaten als Niederlage.
+
+**Einordnung.** Ein Teil dessen, was v5 gelernt hat, ist gut gegen Gegner, die so spielen wie der Heuristik-Bot. Das gilt auch für die Suche mit Handbewertung, die den Heuristik-Bot als Zuggenerator nutzt. Gegen einen Tisch voller Netze hilft dieses Wissen nicht. Kein Wunder: Trainiert wurde bisher nur gegen Heuristik-Bots. Das ist kein Rückschlag für den PoC, aber ein klarer Auftrag für die nächste Runde: Selbstspiel, in dem auch die Gegner Netze sind.
+
 ### Tempo an gezogenen Tischen
 
 Auf einem Apple M3 Max mit 14 Workern:
@@ -171,6 +189,7 @@ bin/podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -ke
 .venv/bin/python train/train_value.py data/v3 data/v4 models/v4b.caiv --mark data/v4
 bin/podbench arena -pool all -candidate net:models/v4b.caiv:25 -out results/arena
 bin/podbench compare results/arena/arena-pool-all-net-models_v4b_caiv-25.json results/arena/arena-pool-all-hsearch-25.json
+bin/podbench arena -pool all -candidate net:models/v5.caiv:25 -opponents hsearch:25 -out results/arena   # gegen drei suchende Gegner
 # beobachten, wie Piloten spielen: dieselben Tische wie die Arena, Aufzeichnung je Partie (docs/ANALYSE.md)
 bin/podbench study -pilots hsearch:25,net:models/v5.caiv:25 -probe net:models/v5.caiv:25 -value models/v5.caiv -n 400 -out data/study/s.jsonl
 .venv/bin/python analysis/study.py data/study/s.jsonl --out results/local/s.json

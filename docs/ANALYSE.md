@@ -260,6 +260,15 @@ Gemessen, indem die Spalten einer Merkmalsgruppe zwischen Stellungen vertauscht 
   - Mit diesen Angaben ließen sich die Befunde zu Kampf und Zielwahl direkt statt über Umwege belegen.
 - **Gegner:** Alle Befunde gelten gegen drei Heuristik-Bots.
 
+## Nachtrag: gegen stärkere Gegner
+
+Schritt 1 der folgenden Liste ist erledigt (Zahlen und Einordnung in der [README](../README.md#gegen-stärkere-gegner)):
+
+- **Gegen drei Suchen mit Handbewertung** gewinnt v5 30,6 %, die Handbewertung auf demselben Platz 23,7 % (+6,9 [+4,2; +9,6]). Der Vorsprung hält dort voll.
+- **Gegen drei Kopien von v5** sind es 23,7 % gegenüber 22,5 % (+1,2 [−1,4; +3,8]). Dort ist kein Vorsprung messbar.
+
+Damit ist die Frage aus der Kurzfassung beantwortet: Ein Teil des Gelernten ist gut gegen Gegner der Heuristik-Bot-Familie, nicht allgemein. Schritt 2, Selbstspiel mit Netzen auch auf den Gegnerplätzen, ist damit der nächste.
+
 ## Nächste Schritte
 
 Die Reihenfolge folgt aus den Befunden:

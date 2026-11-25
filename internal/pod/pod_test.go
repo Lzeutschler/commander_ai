@@ -3,6 +3,7 @@ package pod
 import (
 	"bufio"
 	"encoding/json"
+	"github.com/adams-shaun/gorge/dirac/lab"
 	"os"
 	"path/filepath"
 	"strings"
@@ -193,5 +194,32 @@ func TestPoolArena(t *testing.T) {
 	other.Config.FirstSeed++
 	if _, err := CompareArena(rep, other); err == nil {
 		t.Error("runs from different seeds were compared")
+	}
+	other = rep
+	other.Opponents = "hsearch:25"
+	if _, err := CompareArena(rep, other); err == nil {
+		t.Error("runs against different opponents were compared")
+	}
+
+	// Naming hbot as the opponent is the default arena; random opponents
+	// play other games.
+	same, _, err := Arena(r, ArenaOptions{Table: tab, Pool: "eval", Candidate: "random", FirstSeed: 7, Games: 48,
+		Workers: 4, MaxSteps: 20000, Mulligans: 1, Opponent: "hbot", MakeOpponent: lab.HBot})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if same.Outcomes != rep.Outcomes || same.Opponents != "hbot" {
+		t.Errorf("explicit hbot opponents: %s, default %s", same.Outcomes, rep.Outcomes)
+	}
+	rnd, _, err := Arena(r, ArenaOptions{Table: tab, Pool: "eval", Candidate: "random", FirstSeed: 7, Games: 48,
+		Workers: 4, MaxSteps: 20000, Mulligans: 1, Opponent: "random", MakeOpponent: func() lab.Policy { return lab.Random(2) }})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rnd.Opponents != "random" || rnd.Outcomes == rep.Outcomes {
+		t.Errorf("random opponents: %q, outcomes %s", rnd.Opponents, rnd.Outcomes)
+	}
+	if _, _, err := Arena(r, ArenaOptions{Table: tab, Pool: "eval", Candidate: "random", Games: 4, Opponent: "hsearch:25"}); err == nil {
+		t.Error("an opponent name without a maker was accepted")
 	}
 }

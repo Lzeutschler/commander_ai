@@ -30,8 +30,8 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 
 **Die nächsten Schritte**, abgeleitet aus der Analyse (Begründung dort):
 
-7. **Gegen stärkere Gegner messen:** Tische, an denen die Gegner selbst suchen, und das Netz auf mehreren Plätzen.
-8. **Die nächste Selbstspiel-Runde gegen gemischte Gegner** (Heuristik-Bots, `hsearch`, frühere Netze), nach jeder Runde mit Messung an den Prüfdecks.
+7. ✅ **Gegen stärkere Gegner gemessen.** Gegen drei Suchen mit Handbewertung hält der Vorsprung von v5 voll (+6,9 Punkte). Gegen drei Kopien von sich selbst ist er nicht messbar (+1,2 [−1,4; +3,8]). Details in der README unter „Gegen stärkere Gegner".
+8. **Die nächste Selbstspiel-Runde gegen gemischte Gegner** (Heuristik-Bots, `hsearch`, frühere Netze und das aktuelle), nach jeder Runde mit Messung an den Prüfdecks und gegen Netz-Gegner. Nach Schritt 7 ist das der wichtigste Schritt.
 9. **Übertragung auf neue Decks:** Trainingsdecks abwandeln, mehr Decks, ungenutzte Merkmale der Engine prüfen.
 10. **Gegenproben, was den Vorsprung trägt:** erste Angriffsentscheidung, Spielstein-Fähigkeiten und Ziele auf eigene Karten jeweils von `hsearch` oder einer Regel entscheiden lassen.
 11. **Werkzeug erweitern:** Angriffsziel, Quelle und Optionen bei Zielen, Werte je Option an der Wurzel, Proben mit anderem Seed.

@@ -274,6 +274,7 @@ func cmdArena(args []string) error {
 	workers := c.fs.Int("workers", def.Workers, "parallel games")
 	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before a game counts as truncated")
 	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
+	opponents := c.fs.String("opponents", "hbot", "the pilot of the three other seats: hbot, hsearch:<simulations> or net:<file>:<simulations>")
 	out := c.fs.String("out", "", "directory for arena-<candidate>.json and its timing file")
 	root, t, allow, err := c.open(args)
 	if err != nil {
@@ -283,12 +284,20 @@ func cmdArena(args []string) error {
 	if err != nil {
 		return err
 	}
-	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Pool: *split, Candidate: *cand, Make: mk, FirstSeed: *seed, Games: *n,
-		Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow})
+	opp, err := recordPilot(*opponents)
 	if err != nil {
 		return err
 	}
-	label := strings.NewReplacer(":", "-", "/", "_", ".", "_").Replace(rep.Candidate)
+	rep, tim, err := pod.Arena(root, pod.ArenaOptions{Table: t, Pool: *split, Candidate: *cand, Make: mk, FirstSeed: *seed, Games: *n,
+		Opponent: *opponents, MakeOpponent: opp, Workers: *workers, MaxSteps: *maxSteps, Mulligans: *mull, Allow: allow})
+	if err != nil {
+		return err
+	}
+	clean := strings.NewReplacer(":", "-", "/", "_", ".", "_").Replace
+	label := clean(rep.Candidate)
+	if rep.Opponents != "hbot" {
+		label += "-vs-" + clean(rep.Opponents)
+	}
 	name := "arena-" + label
 	line := func(d pod.DeckArena) {
 		fmt.Printf("  %-22s %8d %6.1f%% [%4.1f, %4.1f] %8.1f%% [%4.1f, %4.1f]\n", d.Deck, d.Candidate.Games,
@@ -296,14 +305,14 @@ func cmdArena(args []string) error {
 	}
 	if p := rep.Pool; p != nil {
 		name = "arena-pool-" + rep.CandidateDecks + "-" + label
-		fmt.Printf("arena on drawn tables: %s with a deck of split %q against three hbot with any of %d precons (%d train, %d eval), %d games, seeds from %d\n",
-			rep.Candidate, rep.CandidateDecks, p.Decks, p.Train, p.Eval, rep.Config.Games, rep.Config.FirstSeed)
+		fmt.Printf("arena on drawn tables: %s with a deck of split %q against three %s with any of %d precons (%d train, %d eval), %d games, seeds from %d\n",
+			rep.Candidate, rep.CandidateDecks, rep.Opponents, p.Decks, p.Train, p.Eval, rep.Config.Games, rep.Config.FirstSeed)
 		fmt.Printf("pool %s: replaced by basic lands %d unverified cards (%d slots) and %d slow cards (%d slots); %d decks left out for their commander\n",
 			p.Digest[:12], p.ReplacedCards, p.ReplacedSlots, p.SkippedCards, p.SkippedSlots, len(p.Excluded))
 		fmt.Printf("%d drawn tables refused and redrawn: %s\n", total(rep.RefusedTables), countsOf(rep.RefusedTables))
 		fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
 	} else {
-		fmt.Printf("arena on table %s: %s in one seat against three hbot, %d games, seeds from %d\n", t.Name, rep.Candidate, rep.Config.Games, rep.Config.FirstSeed)
+		fmt.Printf("arena on table %s: %s in one seat against three %s, %d games, seeds from %d\n", t.Name, rep.Candidate, rep.Opponents, rep.Config.Games, rep.Config.FirstSeed)
 		fmt.Printf("  %-22s %8s %22s %22s\n", "candidate pilots", "games", "hbot in that seat", rep.Candidate)
 		for _, d := range rep.ByDeck {
 			line(d)
