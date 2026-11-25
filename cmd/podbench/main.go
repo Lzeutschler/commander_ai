@@ -7,6 +7,7 @@
 //	podbench arena -candidate search:25 -n 1600 -out results/arena
 //	podbench arena -pool eval -candidate net:models/v0.caiv:25
 //	podbench compare results/arena/arena-pool-all-net-models_v3_caiv-100.json results/arena/arena-pool-all-hsearch-100.json
+//	podbench study -pilots hbot,hsearch:25,net:models/v5.caiv:25 -probe net:models/v5.caiv:25 -n 400 -out data/study/v5.jsonl
 //	podbench record -split train -pilot hbot -n 4000 -out data/v0
 //	podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -keep 0 -out data/v4
 //
@@ -27,6 +28,7 @@ import (
 
 	"github.com/Lzeutschler/commander_ai/internal/learn"
 	"github.com/Lzeutschler/commander_ai/internal/pod"
+	"github.com/Lzeutschler/commander_ai/internal/study"
 	"github.com/adams-shaun/gorge/dirac/lab"
 )
 
@@ -52,6 +54,8 @@ func main() {
 		err = cmdCompare(os.Args[2:])
 	case "record":
 		err = cmdRecord(os.Args[2:])
+	case "study":
+		err = cmdStudy(os.Args[2:])
 	default:
 		usage()
 	}
@@ -66,7 +70,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena|compare|record [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
+	fmt.Fprintf(os.Stderr, "usage: podbench run|cards|repro|export|arena|compare|record|study [flags]   (tables: %s)\n", strings.Join(pod.TableNames(), ", "))
 	os.Exit(2)
 }
 
@@ -443,6 +447,89 @@ func cmdRecord(args []string) error {
 	}
 	fmt.Printf("recorded %d positions from %d of %d games (%s decks, pilot %s) to %s: %d features each, %.1f%% wins\n",
 		meta.Records, meta.Finished, meta.Games, meta.Split, meta.Pilot, *out, meta.Width, 100*float64(meta.Positive)/float64(max(1, meta.Records)))
+	return nil
+}
+
+// cmdStudy plays the arena's tables with several pilots in the candidate's
+// seat and writes how each played, game by game (internal/study).
+func cmdStudy(args []string) error {
+	c := newCommon("study", "adjusted")
+	def := pod.DefaultOptions(pod.Table{})
+	split := c.fs.String("pool", "all", "pool split the candidate's deck is drawn from: train, eval or all")
+	pilotsArg := c.fs.String("pilots", "hbot,hsearch:25", "pilots for the candidate's seat, commas between; each plays every table")
+	probe := c.fs.String("probe", "", "one of -pilots: at its decisions, ask -alts what they would play")
+	altsArg := c.fs.String("alts", "hbot,hsearch:25", "pilots asked at the probed decisions; \"self\" is a fresh copy of the probed pilot")
+	every := c.fs.Int("every", 3, "probe every N-th decision that offers a choice")
+	value := c.fs.String("value", "", "value network file: values the turn snapshots and probed positions next to the hand-made leaf")
+	n := c.fs.Int("n", 400, "tables")
+	seed := c.fs.Uint64("seed", 100001, "first seed (the arena's: the same tables)")
+	workers := c.fs.Int("workers", def.Workers, "parallel tables")
+	maxSteps := c.fs.Int("max-steps", def.MaxSteps, "decisions before a game counts as truncated")
+	mull := c.fs.Int("mulligans", def.Mulligans, "London mulligans allowed per player")
+	out := c.fs.String("out", "", "JSON lines file to write (required)")
+	only := c.fs.String("only", "", "play only these games of the -n (numbers from 0, commas between)")
+	root, _, allow, err := c.open(args)
+	if err != nil {
+		return err
+	}
+	if *out == "" {
+		return errors.New("study: -out is required")
+	}
+	var onlyGames []int
+	if *only != "" {
+		for _, f := range strings.Split(*only, ",") {
+			g, err := strconv.Atoi(f)
+			if err != nil || g < 0 || g >= *n {
+				return fmt.Errorf("study: -only %q is no game of %d", f, *n)
+			}
+			onlyGames = append(onlyGames, g)
+		}
+	}
+	mk := func(spec string) (study.Pilot, error) {
+		m, err := recordPilot(spec)
+		return study.Pilot{Name: spec, Make: m}, err
+	}
+	opts := study.Options{Split: *split, FirstSeed: *seed, Games: *n, Workers: *workers, MaxSteps: *maxSteps,
+		Mulligans: *mull, Allow: allow, Out: *out, Only: onlyGames}
+	for _, spec := range strings.Split(*pilotsArg, ",") {
+		p, err := mk(spec)
+		if err != nil {
+			return err
+		}
+		opts.Pilots = append(opts.Pilots, p)
+	}
+	if *probe != "" || *value != "" {
+		opts.Probe = &study.Probe{Of: *probe, Every: max(1, *every)}
+		if *probe != "" {
+			for _, spec := range strings.Split(*altsArg, ",") {
+				name := spec
+				if spec == "self" {
+					spec = *probe
+				}
+				p, err := mk(spec)
+				if err != nil {
+					return err
+				}
+				p.Name = name
+				opts.Probe.Alts = append(opts.Probe.Alts, p)
+			}
+		}
+		if *value != "" {
+			if opts.Probe.Net, err = learn.LoadValueNet(*value); err != nil {
+				return err
+			}
+			if opts.Probe.Reg, err = learn.Registry(); err != nil {
+				return err
+			}
+		}
+	}
+	if err := os.MkdirAll(filepath.Dir(*out), 0o755); err != nil {
+		return err
+	}
+	if err := study.Run(root, opts); err != nil {
+		return err
+	}
+	fmt.Printf("wrote %s: %d tables x %d pilots\n", *out, *n, len(opts.Pilots))
 	return nil
 }
 

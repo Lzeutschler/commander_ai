@@ -29,6 +29,15 @@ type Evaluator struct {
 	Spread float64
 }
 
+// NewEvaluator values positions with net. Call SetTable before the first
+// position of a table.
+func NewEvaluator(net *ValueNet, reg *cards.Registry) *Evaluator {
+	return &Evaluator{net: net, f: NewFeaturizer(reg), sc: net.NewScratch()}
+}
+
+// SetTable readies the evaluator for positions of tbl.
+func (e *Evaluator) SetTable(tbl *kop.Table) error { return e.f.SetTable(tbl) }
+
 // Value is search.Evaluator: the win probability of seat at s.
 func (e *Evaluator) Value(s *dirac.State, d *dirac.Decision, seat uint8) float32 {
 	if over, winner := s.Terminal(); over {

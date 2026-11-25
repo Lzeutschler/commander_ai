@@ -1,0 +1,1405 @@
+{
+ "arena_check": {
+  "hbot": {
+   "games": 1600,
+   "same": 0
+  },
+  "hsearch:25": {
+   "games": 1600,
+   "same": 1600
+  },
+  "net:models/v3.caiv:25": {
+   "games": 1600,
+   "same": 1600
+  },
+  "net:models/v4b.caiv:25": {
+   "games": 1600,
+   "same": 1600
+  },
+  "net:models/v5.caiv:25": {
+   "games": 1600,
+   "same": 1600
+  }
+ },
+ "pilots": {
+  "hbot": {
+   "games": 1600,
+   "win_rate": 0.2475,
+   "outcomes": {
+    "won": 1540,
+    "stalled": 60
+   },
+   "stalls": {
+    "look": 25,
+    "tappick": 8,
+    "board": 6,
+    "prolif": 3,
+    "entered": 3,
+    "pending": 3,
+    "lowering": 3,
+    "tapextra": 2
+   },
+   "turns_all": 42.314,
+   "turns_when_won": 41.78,
+   "own_exit_cause": {
+    "life": 1085,
+    "commander": 73
+   },
+   "own_exit_turn": 37.154,
+   "opp_exits_per_game": 2.205,
+   "opp_exit_cause": {
+    "life": 3310,
+    "commander": 210,
+    "deck": 8
+   },
+   "opp_exits_on_own_turn_per_game": 0.754,
+   "win_cause": {
+    "life": 698,
+    "commander": 57
+   },
+   "own_turns_per_game": 10.56,
+   "per_own_turn": {
+    "lands": 0.917,
+    "casts": 1.056,
+    "creatures": 0.597,
+    "permanents": 0.259,
+    "spells": 0.199,
+    "commander": 0.109,
+    "activations": 0.81,
+    "attackers": 1.108
+   },
+   "mulligans_per_game": 0.0,
+   "pass_with_cast_share": 0.348,
+   "attack_turn_share": 0.444,
+   "attackers_of_offered": 0.775,
+   "attack_target_by_life": [
+    0.424,
+    0.285,
+    0.291
+   ],
+   "attack_target_by_power": [
+    0.468,
+    0.308,
+    0.223
+   ],
+   "attacks_at_permanents": 0.012,
+   "blocks_per_block_step": 0.714,
+   "opp_life_lost_per_own_turn": 3.39,
+   "life_lost_per_opp_turn": 1.1,
+   "at_own_turn": {
+    "1": {
+     "n": 1600,
+     "life": [
+      40.0,
+      40.01
+     ],
+     "lands": [
+      0.0,
+      0.48
+     ],
+     "hand": [
+      8.0,
+      6.91
+     ],
+     "creatures": [
+      0.0,
+      0.02
+     ],
+     "power": [
+      0.0,
+      0.02
+     ]
+    },
+    "3": {
+     "n": 1600,
+     "life": [
+      39.84,
+      39.9
+     ],
+     "lands": [
+      1.98,
+      2.47
+     ],
+     "hand": [
+      7.02,
+      5.93
+     ],
+     "creatures": [
+      0.28,
+      0.52
+     ],
+     "power": [
+      0.43,
+      0.97
+     ]
+    },
+    "5": {
+     "n": 1594,
+     "life": [
+      37.68,
+      37.87
+     ],
+     "lands": [
+      4.0,
+      4.44
+     ],
+     "hand": [
+      5.41,
+      4.53
+     ],
+     "creatures": [
+      1.27,
+      1.58
+     ],
+     "power": [
+      3.08,
+      4.12
+     ]
+    },
+    "7": {
+     "n": 1474,
+     "life": [
+      33.3,
+      33.84
+     ],
+     "lands": [
+      5.9,
+      6.3
+     ],
+     "hand": [
+      4.17,
+      3.41
+     ],
+     "creatures": [
+      2.33,
+      2.69
+     ],
+     "power": [
+      7.03,
+      8.69
+     ]
+    },
+    "9": {
+     "n": 1103,
+     "life": [
+      30.09,
+      32.28
+     ],
+     "lands": [
+      7.76,
+      8.13
+     ],
+     "hand": [
+      3.35,
+      2.74
+     ],
+     "creatures": [
+      3.44,
+      3.82
+     ],
+     "power": [
+      11.41,
+      13.4
+     ]
+    },
+    "12": {
+     "n": 512,
+     "life": [
+      28.66,
+      30.44
+     ],
+     "lands": [
+      10.6,
+      10.78
+     ],
+     "hand": [
+      2.93,
+      2.45
+     ],
+     "creatures": [
+      4.23,
+      4.68
+     ],
+     "power": [
+      14.85,
+      18.63
+     ]
+    }
+   },
+   "values": {
+    "n": 16900,
+    "corr_net_leaf": 0.624,
+    "calibration_net": [
+     [
+      0.056,
+      0.062
+     ],
+     [
+      0.184,
+      0.175
+     ],
+     [
+      0.282,
+      0.25
+     ],
+     [
+      0.404,
+      0.345
+     ],
+     [
+      0.715,
+      0.664
+     ]
+    ],
+    "calibration_leaf": [
+     [
+      0.006,
+      0.159
+     ],
+     [
+      0.09,
+      0.227
+     ],
+     [
+      0.279,
+      0.28
+     ],
+     [
+      0.46,
+      0.276
+     ],
+     [
+      0.782,
+      0.556
+     ]
+    ]
+   }
+  },
+  "hsearch:25": {
+   "games": 1600,
+   "win_rate": 0.3881,
+   "outcomes": {
+    "won": 1549,
+    "stalled": 51
+   },
+   "stalls": {
+    "look": 24,
+    "entered": 5,
+    "lowering": 4,
+    "tapextra": 3,
+    "tables": 2,
+    "stack": 2,
+    "pending": 2,
+    "prolif": 2
+   },
+   "turns_all": 41.528,
+   "turns_when_won": 40.407,
+   "own_exit_cause": {
+    "life": 887,
+    "commander": 49,
+    "deck": 2
+   },
+   "own_exit_turn": 36.828,
+   "opp_exits_per_game": 2.346,
+   "opp_exit_cause": {
+    "life": 3511,
+    "commander": 232,
+    "deck": 10
+   },
+   "opp_exits_on_own_turn_per_game": 1.044,
+   "win_cause": {
+    "life": 1208,
+    "commander": 77
+   },
+   "own_turns_per_game": 10.52,
+   "per_own_turn": {
+    "lands": 0.925,
+    "casts": 1.018,
+    "creatures": 0.581,
+    "permanents": 0.256,
+    "spells": 0.181,
+    "commander": 0.123,
+    "activations": 0.786,
+    "attackers": 1.495
+   },
+   "mulligans_per_game": 0.0,
+   "pass_with_cast_share": 0.175,
+   "attack_turn_share": 0.518,
+   "attackers_of_offered": 0.83,
+   "attack_target_by_life": [
+    0.515,
+    0.275,
+    0.21
+   ],
+   "attack_target_by_power": [
+    0.6,
+    0.242,
+    0.158
+   ],
+   "attacks_at_permanents": 0.023,
+   "blocks_per_block_step": 0.671,
+   "opp_life_lost_per_own_turn": 4.49,
+   "life_lost_per_opp_turn": 1.02,
+   "at_own_turn": {
+    "1": {
+     "n": 1600,
+     "life": [
+      40.0,
+      40.01
+     ],
+     "lands": [
+      0.0,
+      0.48
+     ],
+     "hand": [
+      8.0,
+      6.91
+     ],
+     "creatures": [
+      0.0,
+      0.02
+     ],
+     "power": [
+      0.0,
+      0.02
+     ]
+    },
+    "3": {
+     "n": 1600,
+     "life": [
+      39.87,
+      39.9
+     ],
+     "lands": [
+      1.98,
+      2.47
+     ],
+     "hand": [
+      7.01,
+      5.92
+     ],
+     "creatures": [
+      0.3,
+      0.52
+     ],
+     "power": [
+      0.47,
+      0.97
+     ]
+    },
+    "5": {
+     "n": 1595,
+     "life": [
+      37.9,
+      37.74
+     ],
+     "lands": [
+      3.92,
+      4.43
+     ],
+     "hand": [
+      5.68,
+      4.53
+     ],
+     "creatures": [
+      1.5,
+      1.57
+     ],
+     "power": [
+      3.85,
+      4.06
+     ]
+    },
+    "7": {
+     "n": 1490,
+     "life": [
+      34.34,
+      32.5
+     ],
+     "lands": [
+      5.8,
+      6.29
+     ],
+     "hand": [
+      4.73,
+      3.44
+     ],
+     "creatures": [
+      2.89,
+      2.68
+     ],
+     "power": [
+      9.29,
+      8.51
+     ]
+    },
+    "9": {
+     "n": 1142,
+     "life": [
+      33.6,
+      28.84
+     ],
+     "lands": [
+      7.72,
+      8.13
+     ],
+     "hand": [
+      4.07,
+      2.79
+     ],
+     "creatures": [
+      4.11,
+      3.72
+     ],
+     "power": [
+      14.66,
+      12.69
+     ]
+    },
+    "12": {
+     "n": 526,
+     "life": [
+      31.39,
+      26.09
+     ],
+     "lands": [
+      10.36,
+      10.73
+     ],
+     "hand": [
+      3.68,
+      2.37
+     ],
+     "creatures": [
+      5.17,
+      4.4
+     ],
+     "power": [
+      19.18,
+      16.07
+     ]
+    }
+   },
+   "values": {
+    "n": 16839,
+    "corr_net_leaf": 0.637,
+    "calibration_net": [
+     [
+      0.078,
+      0.136
+     ],
+     [
+      0.217,
+      0.31
+     ],
+     [
+      0.319,
+      0.398
+     ],
+     [
+      0.462,
+      0.548
+     ],
+     [
+      0.789,
+      0.824
+     ]
+    ],
+    "calibration_leaf": [
+     [
+      0.018,
+      0.256
+     ],
+     [
+      0.167,
+      0.339
+     ],
+     [
+      0.367,
+      0.409
+     ],
+     [
+      0.531,
+      0.461
+     ],
+     [
+      0.908,
+      0.751
+     ]
+    ]
+   }
+  },
+  "net:models/v3.caiv:25": {
+   "games": 1600,
+   "win_rate": 0.3869,
+   "outcomes": {
+    "won": 1536,
+    "stalled": 57,
+    "failed": 7
+   },
+   "stalls": {
+    "look": 20,
+    "board": 6,
+    "lowering": 6,
+    "replctr": 5,
+    "entered": 3,
+    "tappick": 3,
+    "lki": 3,
+    "options": 2
+   },
+   "turns_all": 42.581,
+   "turns_when_won": 42.068,
+   "own_exit_cause": {
+    "life": 878,
+    "commander": 48,
+    "deck": 2
+   },
+   "own_exit_turn": 37.575,
+   "opp_exits_per_game": 2.336,
+   "opp_exit_cause": {
+    "life": 3490,
+    "commander": 239,
+    "deck": 9
+   },
+   "opp_exits_on_own_turn_per_game": 1.045,
+   "win_cause": {
+    "life": 1193,
+    "commander": 102
+   },
+   "own_turns_per_game": 10.84,
+   "per_own_turn": {
+    "lands": 0.915,
+    "casts": 0.97,
+    "creatures": 0.551,
+    "permanents": 0.235,
+    "spells": 0.184,
+    "commander": 0.124,
+    "activations": 0.745,
+    "attackers": 1.237
+   },
+   "mulligans_per_game": 0.0,
+   "pass_with_cast_share": 0.311,
+   "attack_turn_share": 0.421,
+   "attackers_of_offered": 0.867,
+   "attack_target_by_life": [
+    0.572,
+    0.262,
+    0.166
+   ],
+   "attack_target_by_power": [
+    0.617,
+    0.251,
+    0.132
+   ],
+   "attacks_at_permanents": 0.015,
+   "blocks_per_block_step": 0.798,
+   "opp_life_lost_per_own_turn": 3.5,
+   "life_lost_per_opp_turn": 0.98,
+   "at_own_turn": {
+    "1": {
+     "n": 1600,
+     "life": [
+      40.0,
+      40.01
+     ],
+     "lands": [
+      0.0,
+      0.48
+     ],
+     "hand": [
+      8.0,
+      6.91
+     ],
+     "creatures": [
+      0.0,
+      0.02
+     ],
+     "power": [
+      0.0,
+      0.02
+     ]
+    },
+    "3": {
+     "n": 1600,
+     "life": [
+      39.84,
+      39.91
+     ],
+     "lands": [
+      1.98,
+      2.47
+     ],
+     "hand": [
+      7.09,
+      5.93
+     ],
+     "creatures": [
+      0.2,
+      0.52
+     ],
+     "power": [
+      0.31,
+      0.97
+     ]
+    },
+    "5": {
+     "n": 1595,
+     "life": [
+      37.66,
+      38.12
+     ],
+     "lands": [
+      3.96,
+      4.43
+     ],
+     "hand": [
+      5.82,
+      4.54
+     ],
+     "creatures": [
+      1.14,
+      1.58
+     ],
+     "power": [
+      2.85,
+      4.08
+     ]
+    },
+    "7": {
+     "n": 1481,
+     "life": [
+      34.92,
+      33.44
+     ],
+     "lands": [
+      5.87,
+      6.29
+     ],
+     "hand": [
+      4.91,
+      3.46
+     ],
+     "creatures": [
+      2.3,
+      2.63
+     ],
+     "power": [
+      7.09,
+      8.41
+     ]
+    },
+    "9": {
+     "n": 1182,
+     "life": [
+      34.27,
+      29.7
+     ],
+     "lands": [
+      7.72,
+      8.12
+     ],
+     "hand": [
+      4.17,
+      2.77
+     ],
+     "creatures": [
+      3.66,
+      3.92
+     ],
+     "power": [
+      12.73,
+      13.39
+     ]
+    },
+    "12": {
+     "n": 569,
+     "life": [
+      32.89,
+      25.69
+     ],
+     "lands": [
+      10.24,
+      10.63
+     ],
+     "hand": [
+      3.6,
+      2.52
+     ],
+     "creatures": [
+      4.17,
+      4.42
+     ],
+     "power": [
+      14.63,
+      16.19
+     ]
+    }
+   },
+   "values": {
+    "n": 17348,
+    "corr_net_leaf": 0.612,
+    "calibration_net": [
+     [
+      0.082,
+      0.136
+     ],
+     [
+      0.223,
+      0.297
+     ],
+     [
+      0.33,
+      0.397
+     ],
+     [
+      0.486,
+      0.564
+     ],
+     [
+      0.813,
+      0.826
+     ]
+    ],
+    "calibration_leaf": [
+     [
+      0.008,
+      0.241
+     ],
+     [
+      0.108,
+      0.368
+     ],
+     [
+      0.302,
+      0.421
+     ],
+     [
+      0.476,
+      0.451
+     ],
+     [
+      0.829,
+      0.739
+     ]
+    ]
+   }
+  },
+  "net:models/v4b.caiv:25": {
+   "games": 1600,
+   "win_rate": 0.4219,
+   "outcomes": {
+    "won": 1546,
+    "stalled": 47,
+    "failed": 7
+   },
+   "stalls": {
+    "look": 24,
+    "board": 4,
+    "tappick": 3,
+    "entered": 2,
+    "lki": 2,
+    "tapextra": 2,
+    "loop": 2,
+    "xtgt": 1
+   },
+   "turns_all": 42.792,
+   "turns_when_won": 42.538,
+   "own_exit_cause": {
+    "life": 816,
+    "commander": 64
+   },
+   "own_exit_turn": 37.775,
+   "opp_exits_per_game": 2.38,
+   "opp_exit_cause": {
+    "life": 3562,
+    "commander": 237,
+    "deck": 9
+   },
+   "opp_exits_on_own_turn_per_game": 1.069,
+   "win_cause": {
+    "life": 1262,
+    "commander": 116,
+    "deck": 1
+   },
+   "own_turns_per_game": 11.04,
+   "per_own_turn": {
+    "lands": 0.923,
+    "casts": 0.996,
+    "creatures": 0.581,
+    "permanents": 0.228,
+    "spells": 0.186,
+    "commander": 0.141,
+    "activations": 0.792,
+    "attackers": 1.264
+   },
+   "mulligans_per_game": 0.0,
+   "pass_with_cast_share": 0.289,
+   "attack_turn_share": 0.409,
+   "attackers_of_offered": 0.868,
+   "attack_target_by_life": [
+    0.591,
+    0.254,
+    0.155
+   ],
+   "attack_target_by_power": [
+    0.636,
+    0.235,
+    0.129
+   ],
+   "attacks_at_permanents": 0.021,
+   "blocks_per_block_step": 0.739,
+   "opp_life_lost_per_own_turn": 3.74,
+   "life_lost_per_opp_turn": 0.99,
+   "at_own_turn": {
+    "1": {
+     "n": 1600,
+     "life": [
+      40.0,
+      40.01
+     ],
+     "lands": [
+      0.0,
+      0.48
+     ],
+     "hand": [
+      8.0,
+      6.91
+     ],
+     "creatures": [
+      0.0,
+      0.02
+     ],
+     "power": [
+      0.0,
+      0.02
+     ]
+    },
+    "3": {
+     "n": 1600,
+     "life": [
+      39.84,
+      39.91
+     ],
+     "lands": [
+      1.98,
+      2.47
+     ],
+     "hand": [
+      7.08,
+      5.92
+     ],
+     "creatures": [
+      0.21,
+      0.52
+     ],
+     "power": [
+      0.33,
+      0.97
+     ]
+    },
+    "5": {
+     "n": 1594,
+     "life": [
+      37.91,
+      38.03
+     ],
+     "lands": [
+      3.97,
+      4.43
+     ],
+     "hand": [
+      5.84,
+      4.54
+     ],
+     "creatures": [
+      1.24,
+      1.57
+     ],
+     "power": [
+      3.1,
+      4.08
+     ]
+    },
+    "7": {
+     "n": 1500,
+     "life": [
+      35.17,
+      33.36
+     ],
+     "lands": [
+      5.85,
+      6.29
+     ],
+     "hand": [
+      4.93,
+      3.45
+     ],
+     "creatures": [
+      2.45,
+      2.7
+     ],
+     "power": [
+      7.67,
+      8.63
+     ]
+    },
+    "9": {
+     "n": 1240,
+     "life": [
+      33.69,
+      30.24
+     ],
+     "lands": [
+      7.72,
+      8.13
+     ],
+     "hand": [
+      4.37,
+      2.82
+     ],
+     "creatures": [
+      3.63,
+      3.98
+     ],
+     "power": [
+      12.96,
+      13.92
+     ]
+    },
+    "12": {
+     "n": 638,
+     "life": [
+      33.53,
+      26.84
+     ],
+     "lands": [
+      10.37,
+      10.67
+     ],
+     "hand": [
+      3.94,
+      2.45
+     ],
+     "creatures": [
+      4.63,
+      4.71
+     ],
+     "power": [
+      16.81,
+      17.67
+     ]
+    }
+   },
+   "values": {
+    "n": 17664,
+    "corr_net_leaf": 0.594,
+    "calibration_net": [
+     [
+      0.088,
+      0.156
+     ],
+     [
+      0.232,
+      0.346
+     ],
+     [
+      0.342,
+      0.446
+     ],
+     [
+      0.505,
+      0.6
+     ],
+     [
+      0.824,
+      0.861
+     ]
+    ],
+    "calibration_leaf": [
+     [
+      0.009,
+      0.297
+     ],
+     [
+      0.115,
+      0.411
+     ],
+     [
+      0.309,
+      0.448
+     ],
+     [
+      0.485,
+      0.484
+     ],
+     [
+      0.851,
+      0.769
+     ]
+    ]
+   }
+  },
+  "net:models/v5.caiv:25": {
+   "games": 1600,
+   "win_rate": 0.4531,
+   "outcomes": {
+    "won": 1539,
+    "stalled": 60,
+    "failed": 1
+   },
+   "stalls": {
+    "look": 26,
+    "board": 8,
+    "entered": 6,
+    "lowering": 5,
+    "tappick": 3,
+    "tapextra": 3,
+    "lki": 2,
+    "castring": 2
+   },
+   "turns_all": 42.45,
+   "turns_when_won": 42.181,
+   "own_exit_cause": {
+    "life": 775,
+    "commander": 46
+   },
+   "own_exit_turn": 37.725,
+   "opp_exits_per_game": 2.404,
+   "opp_exit_cause": {
+    "life": 3598,
+    "commander": 239,
+    "deck": 10
+   },
+   "opp_exits_on_own_turn_per_game": 1.143,
+   "win_cause": {
+    "life": 1346,
+    "commander": 121
+   },
+   "own_turns_per_game": 11.09,
+   "per_own_turn": {
+    "lands": 0.926,
+    "casts": 1.023,
+    "creatures": 0.591,
+    "permanents": 0.241,
+    "spells": 0.191,
+    "commander": 0.142,
+    "activations": 0.844,
+    "attackers": 1.326
+   },
+   "mulligans_per_game": 0.0,
+   "pass_with_cast_share": 0.232,
+   "attack_turn_share": 0.423,
+   "attackers_of_offered": 0.868,
+   "attack_target_by_life": [
+    0.592,
+    0.247,
+    0.161
+   ],
+   "attack_target_by_power": [
+    0.623,
+    0.245,
+    0.132
+   ],
+   "attacks_at_permanents": 0.02,
+   "blocks_per_block_step": 0.734,
+   "opp_life_lost_per_own_turn": 3.96,
+   "life_lost_per_opp_turn": 0.96,
+   "at_own_turn": {
+    "1": {
+     "n": 1600,
+     "life": [
+      40.0,
+      40.01
+     ],
+     "lands": [
+      0.0,
+      0.48
+     ],
+     "hand": [
+      8.0,
+      6.91
+     ],
+     "creatures": [
+      0.0,
+      0.02
+     ],
+     "power": [
+      0.0,
+      0.02
+     ]
+    },
+    "3": {
+     "n": 1600,
+     "life": [
+      39.85,
+      39.9
+     ],
+     "lands": [
+      1.99,
+      2.47
+     ],
+     "hand": [
+      7.05,
+      5.92
+     ],
+     "creatures": [
+      0.26,
+      0.52
+     ],
+     "power": [
+      0.39,
+      0.97
+     ]
+    },
+    "5": {
+     "n": 1594,
+     "life": [
+      38.01,
+      37.92
+     ],
+     "lands": [
+      3.98,
+      4.43
+     ],
+     "hand": [
+      5.77,
+      4.53
+     ],
+     "creatures": [
+      1.34,
+      1.58
+     ],
+     "power": [
+      3.36,
+      4.11
+     ]
+    },
+    "7": {
+     "n": 1505,
+     "life": [
+      35.25,
+      33.06
+     ],
+     "lands": [
+      5.89,
+      6.31
+     ],
+     "hand": [
+      4.94,
+      3.42
+     ],
+     "creatures": [
+      2.58,
+      2.71
+     ],
+     "power": [
+      8.09,
+      8.67
+     ]
+    },
+    "9": {
+     "n": 1241,
+     "life": [
+      34.06,
+      29.78
+     ],
+     "lands": [
+      7.76,
+      8.16
+     ],
+     "hand": [
+      4.33,
+      2.82
+     ],
+     "creatures": [
+      3.87,
+      4.03
+     ],
+     "power": [
+      13.88,
+      14.45
+     ]
+    },
+    "12": {
+     "n": 634,
+     "life": [
+      31.5,
+      25.95
+     ],
+     "lands": [
+      10.46,
+      10.7
+     ],
+     "hand": [
+      3.79,
+      2.38
+     ],
+     "creatures": [
+      4.54,
+      4.54
+     ],
+     "power": [
+      16.97,
+      16.6
+     ]
+    }
+   },
+   "probes": {
+    "probed": 55706,
+    "agree": [
+     0.969,
+     0.659,
+     0.688
+    ],
+    "agree_by_kind": {
+     "priority": {
+      "n": 30867,
+      "agree": [
+       1.0,
+       0.622,
+       0.679
+      ]
+     },
+     "attackers": {
+      "n": 9632,
+      "agree": [
+       0.851,
+       0.678,
+       0.628
+      ]
+     },
+     "choose": {
+      "n": 6932,
+      "agree": [
+       0.996,
+       0.834,
+       0.856
+      ]
+     },
+     "target": {
+      "n": 3840,
+      "agree": [
+       0.999,
+       0.425,
+       0.467
+      ]
+     },
+     "trigger_order": {
+      "n": 2179,
+      "agree": [
+       1.0,
+       1.0,
+       1.0
+      ]
+     },
+     "blockers": {
+      "n": 1873,
+      "agree": [
+       0.859,
+       0.656,
+       0.626
+      ]
+     },
+     "modes": {
+      "n": 383,
+      "agree": [
+       0.995,
+       0.426,
+       0.569
+      ]
+     }
+    },
+    "differ_as": [
+     {
+      "attack vs attack": 722,
+      "attack vs done": 496,
+      "done vs attack": 216,
+      "done vs block": 187,
+      "block vs block": 46,
+      "block vs done": 31,
+      "done vs choose": 31,
+      "done vs target": 4,
+      "done vs mode": 2,
+      "target vs target": 1
+     },
+     {
+      "pass vs activate": 3520,
+      "activate vs pass": 2188,
+      "target vs target": 2179,
+      "cast vs cast": 2178,
+      "pass vs cast": 2127,
+      "attack vs attack": 1391,
+      "done vs attack": 887,
+      "attack vs done": 820,
+      "choose vs choose": 809,
+      "activate vs cast": 768,
+      "cast vs pass": 503,
+      "activate vs activate": 354
+     },
+     {
+      "pass vs activate": 2744,
+      "target vs target": 2001,
+      "activate vs pass": 1937,
+      "pass vs cast": 1933,
+      "cast vs cast": 1716,
+      "attack vs attack": 1368,
+      "done vs attack": 1107,
+      "attack vs done": 1106,
+      "choose vs choose": 727,
+      "activate vs cast": 594,
+      "cast vs pass": 469,
+      "activate vs activate": 390
+     }
+    ]
+   },
+   "values": {
+    "n": 17745,
+    "corr_net_leaf": 0.595,
+    "calibration_net": [
+     [
+      0.098,
+      0.188
+     ],
+     [
+      0.242,
+      0.393
+     ],
+     [
+      0.354,
+      0.493
+     ],
+     [
+      0.525,
+      0.618
+     ],
+     [
+      0.84,
+      0.871
+     ]
+    ],
+    "calibration_leaf": [
+     [
+      0.01,
+      0.318
+     ],
+     [
+      0.123,
+      0.451
+     ],
+     [
+      0.324,
+      0.482
+     ],
+     [
+      0.499,
+      0.52
+     ],
+     [
+      0.871,
+      0.792
+     ]
+    ]
+   }
+  }
+ }
+}

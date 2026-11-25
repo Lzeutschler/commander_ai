@@ -26,10 +26,17 @@ Bevor wir die Engine weiter ausbauen, klären wir, ob ein Modell überhaupt bess
 3. ✅ Bewertungsnetz aus Partien des Heuristik-Bots: 33 % Siegquote in der Suche, besser als der Heuristik-Bot (25 %), schlechter als die handgebaute Bewertung (39 %). Mehr Partien und die Handbewertung als Eingabe ändern daran wenig.
 4. ✅ Ursache gefunden: Das Netz kannte nur Stellungen, die der Heuristik-Bot selbst herbeiführt. Mit Trainingspartien, in denen 15 % der Züge zufällig sind, erreicht es 38,7 % und damit die handgebaute Bewertung (38,8 %). An den 5 Prüfdecks liegt es noch zurück (25,8 % gegenüber 29,1 %).
 5. ✅ Über die Handbewertung hinaus: Partien aufzeichnen, in denen die Suche mit dem aktuellen Netz auf einem Sitz spielt, darauf weitertrainieren, wiederholen. Nach zwei Runden gewinnt Netz v5 an gezogenen Tischen 45,3 % (25 Simulationen) und 51,4 % (100 Simulationen), die Handbewertung 38,8 % und 43,4 %. An den 5 Prüfdecks sind es 29,3 % und 39,1 % gegenüber 29,1 % und 33,3 %.
-6. **Wie weit trägt das Selbstspiel?** Weitere Runden, bis der Zuwachs abflacht. Jede Runde kostet auf dem Laptop rund eine Stunde Rechenzeit.
-7. **Übertragung auf unbekannte Decks.** Das Netz ist an den Trainingsdecks stärker als an den Prüfdecks. Ansätze: Trainingsdecks abwandeln (Karten zwischen Decks tauschen), damit das Netz keine Listen lernen kann; mehr Decks; prüfen, ob Kartennamen als Eingabe helfen oder schaden.
-8. **Stärkere Gegner.** Bisher sitzen drei Heuristik-Bots am Tisch. Der nächste Maßstab ist ein Tisch, an dem auch die Gegner suchen.
-9. **Zugauswahl lernen.** Das Netz schlägt der Suche vor, welche Züge sie zuerst prüft. Bisher behandelt die Suche alle Kandidaten gleich.
+6. ✅ Analyse, wie das Netz spielt: [docs/ANALYSE.md](ANALYSE.md). Der Vorsprung zeigt sich als seltenes Ausscheiden in langen Partien. Das Netz bewertet Stellungen viel besser als die Handbewertung, an den 5 Prüfdecks fehlt der Vorsprung bei 25 Simulationen aber noch. Dabei wurde ein Absturz in der Merkmalscodierung der Engine gefunden und behoben (Upstream-PR [#4855](https://github.com/adams-shaun/gorge/pull/4855)).
+
+**Die nächsten Schritte**, abgeleitet aus der Analyse (Begründung dort):
+
+7. **Gegen stärkere Gegner messen:** Tische, an denen die Gegner selbst suchen, und das Netz auf mehreren Plätzen.
+8. **Die nächste Selbstspiel-Runde gegen gemischte Gegner** (Heuristik-Bots, `hsearch`, frühere Netze), nach jeder Runde mit Messung an den Prüfdecks.
+9. **Übertragung auf neue Decks:** Trainingsdecks abwandeln, mehr Decks, ungenutzte Merkmale der Engine prüfen.
+10. **Gegenproben, was den Vorsprung trägt:** erste Angriffsentscheidung, Spielstein-Fähigkeiten und Ziele auf eigene Karten jeweils von `hsearch` oder einer Regel entscheiden lassen.
+11. **Werkzeug erweitern:** Angriffsziel, Quelle und Optionen bei Zielen, Werte je Option an der Wurzel, Proben mit anderem Seed.
+12. **Einschätzungen geraderücken:** prüfen, ob die Trainingsmarkierung wirkt, nur Plätze ohne Zufallszüge als Ziel.
+13. **Zugauswahl lernen**, danach **Bewertung pro Sitz**, falls die Werte je Option einen Mangel der einen Zahl zeigen.
 
 **Woran der PoC entschieden wird.** Schlägt die Suche mit Netz die Suche mit Handbewertung bei gleicher Simulationszahl, an den Trainingsdecks und an den 5 Prüfdecks, dann trägt die Idee.
 

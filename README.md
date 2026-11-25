@@ -79,6 +79,8 @@ Der Heuristik-Bot gewinnt auf denselben Partien 24,8 % an allen Decks und 13,9 %
 
 Niemand hat dem Netz gesagt, was eine gute Stellung ist. Es lernt allein aus dem Ausgang der Partien.
 
+**Wie das Netz spielt** untersucht [docs/ANALYSE.md](docs/ANALYSE.md). Der Vorsprung zeigt sich als seltenes Ausscheiden in langen Partien. Das Netz lässt Angriffe öfter aus, meidet das größte Brett und behält mehr Karten und Leben. Diesen Stil hatte schon v3, das nur gleichauf lag. Die Siege kamen erst, als das Selbstspiel das Tempo zurückbrachte. An unbekannten Decks fehlt der Vorsprung bei 25 Simulationen noch. Dort stehen auch die daraus abgeleiteten nächsten Schritte.
+
 Das Netz sieht keine Kartennamen, nur zusammengefasste Eigenschaften der Karten je Zone und Spieler, so wie ein Sitz sie sehen darf. Dafür nutzt es die Stellungscodierung der Engine für Vierertische.
 
 ### Tempo an gezogenen Tischen
@@ -169,6 +171,9 @@ bin/podbench record -pilot explore:0.15:net:models/v3.caiv:25,hbot,hbot,hbot -ke
 .venv/bin/python train/train_value.py data/v3 data/v4 models/v4b.caiv --mark data/v4
 bin/podbench arena -pool all -candidate net:models/v4b.caiv:25 -out results/arena
 bin/podbench compare results/arena/arena-pool-all-net-models_v4b_caiv-25.json results/arena/arena-pool-all-hsearch-25.json
+# beobachten, wie Piloten spielen: dieselben Tische wie die Arena, Aufzeichnung je Partie (docs/ANALYSE.md)
+bin/podbench study -pilots hsearch:25,net:models/v5.caiv:25 -probe net:models/v5.caiv:25 -value models/v5.caiv -n 400 -out data/study/s.jsonl
+.venv/bin/python analysis/study.py data/study/s.jsonl --out results/local/s.json
 make lockstep                                                   # beide Engines im Gleichschritt, 8.000 Partien (etwa 7 Minuten)
 make reference                                                  # Originaltisch auf der breiten Engine, 100 Partien
 ```

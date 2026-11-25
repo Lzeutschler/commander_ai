@@ -1,0 +1,1631 @@
+{
+ "sets": {
+  "hbot-train": {
+   "pilot": "hbot",
+   "split": "train",
+   "positions": 40000,
+   "games": 3807,
+   "by": {
+    "hand-made leaf": {
+     "log_loss": 0.8969,
+     "auc": 0.7324,
+     "mean_p": 0.353,
+     "mean_y": 0.31
+    },
+    "v2": {
+     "log_loss": 0.4537,
+     "auc": 0.8288,
+     "mean_p": 0.313,
+     "mean_y": 0.31
+    },
+    "v3": {
+     "log_loss": 0.4539,
+     "auc": 0.8284,
+     "mean_p": 0.306,
+     "mean_y": 0.31
+    },
+    "v4b": {
+     "log_loss": 0.4683,
+     "auc": 0.823,
+     "mean_p": 0.359,
+     "mean_y": 0.31
+    },
+    "v5": {
+     "log_loss": 0.4644,
+     "auc": 0.8246,
+     "mean_p": 0.348,
+     "mean_y": 0.31
+    }
+   },
+   "phases": {
+    "hand-made leaf": {
+     "1-8": {
+      "log_loss": 0.6491,
+      "auc": 0.5685,
+      "mean_p": 0.447,
+      "mean_y": 0.258,
+      "n": 1976
+     },
+     "9-16": {
+      "log_loss": 0.6389,
+      "auc": 0.6025,
+      "mean_p": 0.356,
+      "mean_y": 0.255,
+      "n": 4722
+     },
+     "17-28": {
+      "log_loss": 0.7371,
+      "auc": 0.7038,
+      "mean_p": 0.302,
+      "mean_y": 0.265,
+      "n": 13704
+     },
+     "29-": {
+      "log_loss": 1.109,
+      "auc": 0.7833,
+      "mean_p": 0.374,
+      "mean_y": 0.364,
+      "n": 18975
+     }
+    },
+    "v2": {
+     "1-8": {
+      "log_loss": 0.5375,
+      "auc": 0.6593,
+      "mean_p": 0.265,
+      "mean_y": 0.258,
+      "n": 1976
+     },
+     "9-16": {
+      "log_loss": 0.514,
+      "auc": 0.705,
+      "mean_p": 0.262,
+      "mean_y": 0.255,
+      "n": 4722
+     },
+     "17-28": {
+      "log_loss": 0.4546,
+      "auc": 0.8012,
+      "mean_p": 0.268,
+      "mean_y": 0.265,
+      "n": 13704
+     },
+     "29-": {
+      "log_loss": 0.4264,
+      "auc": 0.8722,
+      "mean_p": 0.364,
+      "mean_y": 0.364,
+      "n": 18975
+     }
+    },
+    "v3": {
+     "1-8": {
+      "log_loss": 0.5414,
+      "auc": 0.6483,
+      "mean_p": 0.257,
+      "mean_y": 0.258,
+      "n": 1976
+     },
+     "9-16": {
+      "log_loss": 0.5143,
+      "auc": 0.7063,
+      "mean_p": 0.253,
+      "mean_y": 0.255,
+      "n": 4722
+     },
+     "17-28": {
+      "log_loss": 0.4543,
+      "auc": 0.8013,
+      "mean_p": 0.261,
+      "mean_y": 0.265,
+      "n": 13704
+     },
+     "29-": {
+      "log_loss": 0.4263,
+      "auc": 0.8719,
+      "mean_p": 0.359,
+      "mean_y": 0.364,
+      "n": 18975
+     }
+    },
+    "v4b": {
+     "1-8": {
+      "log_loss": 0.5634,
+      "auc": 0.6458,
+      "mean_p": 0.35,
+      "mean_y": 0.258,
+      "n": 1976
+     },
+     "9-16": {
+      "log_loss": 0.5303,
+      "auc": 0.7053,
+      "mean_p": 0.333,
+      "mean_y": 0.255,
+      "n": 4722
+     },
+     "17-28": {
+      "log_loss": 0.4748,
+      "auc": 0.7914,
+      "mean_p": 0.322,
+      "mean_y": 0.265,
+      "n": 13704
+     },
+     "29-": {
+      "log_loss": 0.4347,
+      "auc": 0.87,
+      "mean_p": 0.394,
+      "mean_y": 0.364,
+      "n": 18975
+     }
+    },
+    "v5": {
+     "1-8": {
+      "log_loss": 0.5462,
+      "auc": 0.6484,
+      "mean_p": 0.299,
+      "mean_y": 0.258,
+      "n": 1976
+     },
+     "9-16": {
+      "log_loss": 0.5228,
+      "auc": 0.7079,
+      "mean_p": 0.314,
+      "mean_y": 0.255,
+      "n": 4722
+     },
+     "17-28": {
+      "log_loss": 0.4707,
+      "auc": 0.7945,
+      "mean_p": 0.32,
+      "mean_y": 0.265,
+      "n": 13704
+     },
+     "29-": {
+      "log_loss": 0.4339,
+      "auc": 0.8703,
+      "mean_p": 0.385,
+      "mean_y": 0.364,
+      "n": 18975
+     }
+    }
+   },
+   "calibration": {
+    "hand-made leaf": [
+     [
+      0.0,
+      0.108,
+      4000
+     ],
+     [
+      0.003,
+      0.13,
+      4000
+     ],
+     [
+      0.021,
+      0.175,
+      4000
+     ],
+     [
+      0.074,
+      0.217,
+      4000
+     ],
+     [
+      0.172,
+      0.252,
+      4000
+     ],
+     [
+      0.307,
+      0.27,
+      4000
+     ],
+     [
+      0.454,
+      0.298,
+      4000
+     ],
+     [
+      0.613,
+      0.373,
+      4000
+     ],
+     [
+      0.884,
+      0.523,
+      4000
+     ],
+     [
+      0.997,
+      0.756,
+      4000
+     ]
+    ],
+    "v2": [
+     [
+      0.006,
+      0.012,
+      4000
+     ],
+     [
+      0.038,
+      0.047,
+      4000
+     ],
+     [
+      0.093,
+      0.111,
+      4000
+     ],
+     [
+      0.155,
+      0.163,
+      4000
+     ],
+     [
+      0.218,
+      0.211,
+      4000
+     ],
+     [
+      0.284,
+      0.287,
+      4000
+     ],
+     [
+      0.36,
+      0.344,
+      4000
+     ],
+     [
+      0.462,
+      0.463,
+      4000
+     ],
+     [
+      0.626,
+      0.606,
+      4000
+     ],
+     [
+      0.885,
+      0.858,
+      4000
+     ]
+    ],
+    "v3": [
+     [
+      0.007,
+      0.009,
+      4000
+     ],
+     [
+      0.04,
+      0.051,
+      4000
+     ],
+     [
+      0.093,
+      0.105,
+      4000
+     ],
+     [
+      0.152,
+      0.165,
+      4000
+     ],
+     [
+      0.213,
+      0.215,
+      4000
+     ],
+     [
+      0.276,
+      0.284,
+      4000
+     ],
+     [
+      0.348,
+      0.358,
+      4000
+     ],
+     [
+      0.447,
+      0.459,
+      4000
+     ],
+     [
+      0.608,
+      0.596,
+      4000
+     ],
+     [
+      0.879,
+      0.86,
+      4000
+     ]
+    ],
+    "v4b": [
+     [
+      0.009,
+      0.014,
+      4000
+     ],
+     [
+      0.052,
+      0.055,
+      4000
+     ],
+     [
+      0.123,
+      0.106,
+      4000
+     ],
+     [
+      0.201,
+      0.176,
+      4000
+     ],
+     [
+      0.275,
+      0.22,
+      4000
+     ],
+     [
+      0.35,
+      0.279,
+      4000
+     ],
+     [
+      0.431,
+      0.353,
+      4000
+     ],
+     [
+      0.539,
+      0.447,
+      4000
+     ],
+     [
+      0.699,
+      0.595,
+      4000
+     ],
+     [
+      0.915,
+      0.857,
+      4000
+     ]
+    ],
+    "v5": [
+     [
+      0.008,
+      0.014,
+      4000
+     ],
+     [
+      0.048,
+      0.05,
+      4000
+     ],
+     [
+      0.115,
+      0.117,
+      4000
+     ],
+     [
+      0.187,
+      0.153,
+      4000
+     ],
+     [
+      0.258,
+      0.222,
+      4000
+     ],
+     [
+      0.331,
+      0.292,
+      4000
+     ],
+     [
+      0.416,
+      0.349,
+      4000
+     ],
+     [
+      0.527,
+      0.46,
+      4000
+     ],
+     [
+      0.687,
+      0.586,
+      4000
+     ],
+     [
+      0.908,
+      0.86,
+      4000
+     ]
+    ]
+   },
+   "correlation": {
+    "hand-made leaf": {
+     "hand-made leaf": 1.0,
+     "v2": 0.666,
+     "v3": 0.663,
+     "v4b": 0.675,
+     "v5": 0.659
+    },
+    "v2": {
+     "hand-made leaf": 0.666,
+     "v2": 1.0,
+     "v3": 0.945,
+     "v4b": 0.926,
+     "v5": 0.924
+    },
+    "v3": {
+     "hand-made leaf": 0.663,
+     "v2": 0.945,
+     "v3": 1.0,
+     "v4b": 0.944,
+     "v5": 0.936
+    },
+    "v4b": {
+     "hand-made leaf": 0.675,
+     "v2": 0.926,
+     "v3": 0.944,
+     "v4b": 1.0,
+     "v5": 0.953
+    },
+    "v5": {
+     "hand-made leaf": 0.659,
+     "v2": 0.924,
+     "v3": 0.936,
+     "v4b": 0.953,
+     "v5": 1.0
+    }
+   },
+   "spread": {
+    "hand-made leaf": 0.355,
+    "v2": 0.267,
+    "v3": 0.264,
+    "v4b": 0.279,
+    "v5": 0.278
+   }
+  },
+  "v5-train": {
+   "pilot": "net:models/v5.caiv:25,hbot,hbot,hbot",
+   "split": "train",
+   "positions": 40000,
+   "games": 2884,
+   "by": {
+    "hand-made leaf": {
+     "log_loss": 1.0059,
+     "auc": 0.7417,
+     "mean_p": 0.403,
+     "mean_y": 0.497
+    },
+    "v2": {
+     "log_loss": 0.5491,
+     "auc": 0.8231,
+     "mean_p": 0.389,
+     "mean_y": 0.497
+    },
+    "v3": {
+     "log_loss": 0.5465,
+     "auc": 0.8258,
+     "mean_p": 0.384,
+     "mean_y": 0.497
+    },
+    "v4b": {
+     "log_loss": 0.5096,
+     "auc": 0.8298,
+     "mean_p": 0.447,
+     "mean_y": 0.497
+    },
+    "v5": {
+     "log_loss": 0.5006,
+     "auc": 0.8342,
+     "mean_p": 0.452,
+     "mean_y": 0.497
+    }
+   },
+   "phases": {
+    "hand-made leaf": {
+     "1-8": {
+      "log_loss": 0.6959,
+      "auc": 0.5551,
+      "mean_p": 0.451,
+      "mean_y": 0.461,
+      "n": 1919
+     },
+     "9-16": {
+      "log_loss": 0.7517,
+      "auc": 0.6009,
+      "mean_p": 0.376,
+      "mean_y": 0.439,
+      "n": 4363
+     },
+     "17-28": {
+      "log_loss": 0.9338,
+      "auc": 0.7079,
+      "mean_p": 0.355,
+      "mean_y": 0.46,
+      "n": 13020
+     },
+     "29-": {
+      "log_loss": 1.1451,
+      "auc": 0.7976,
+      "mean_p": 0.434,
+      "mean_y": 0.538,
+      "n": 20174
+     }
+    },
+    "v2": {
+     "1-8": {
+      "log_loss": 0.7381,
+      "auc": 0.6622,
+      "mean_p": 0.271,
+      "mean_y": 0.461,
+      "n": 1919
+     },
+     "9-16": {
+      "log_loss": 0.6913,
+      "auc": 0.6882,
+      "mean_p": 0.284,
+      "mean_y": 0.439,
+      "n": 4363
+     },
+     "17-28": {
+      "log_loss": 0.5896,
+      "auc": 0.7949,
+      "mean_p": 0.331,
+      "mean_y": 0.46,
+      "n": 13020
+     },
+     "29-": {
+      "log_loss": 0.4696,
+      "auc": 0.8712,
+      "mean_p": 0.465,
+      "mean_y": 0.538,
+      "n": 20174
+     }
+    },
+    "v3": {
+     "1-8": {
+      "log_loss": 0.7414,
+      "auc": 0.6646,
+      "mean_p": 0.265,
+      "mean_y": 0.461,
+      "n": 1919
+     },
+     "9-16": {
+      "log_loss": 0.6978,
+      "auc": 0.6916,
+      "mean_p": 0.274,
+      "mean_y": 0.439,
+      "n": 4363
+     },
+     "17-28": {
+      "log_loss": 0.5889,
+      "auc": 0.8008,
+      "mean_p": 0.324,
+      "mean_y": 0.46,
+      "n": 13020
+     },
+     "29-": {
+      "log_loss": 0.463,
+      "auc": 0.8735,
+      "mean_p": 0.461,
+      "mean_y": 0.538,
+      "n": 20174
+     }
+    },
+    "v4b": {
+     "1-8": {
+      "log_loss": 0.6679,
+      "auc": 0.671,
+      "mean_p": 0.359,
+      "mean_y": 0.461,
+      "n": 1919
+     },
+     "9-16": {
+      "log_loss": 0.6386,
+      "auc": 0.6971,
+      "mean_p": 0.36,
+      "mean_y": 0.439,
+      "n": 4363
+     },
+     "17-28": {
+      "log_loss": 0.5421,
+      "auc": 0.8029,
+      "mean_p": 0.401,
+      "mean_y": 0.46,
+      "n": 13020
+     },
+     "29-": {
+      "log_loss": 0.4415,
+      "auc": 0.8766,
+      "mean_p": 0.506,
+      "mean_y": 0.538,
+      "n": 20174
+     }
+    },
+    "v5": {
+     "1-8": {
+      "log_loss": 0.6965,
+      "auc": 0.6796,
+      "mean_p": 0.306,
+      "mean_y": 0.461,
+      "n": 1919
+     },
+     "9-16": {
+      "log_loss": 0.6439,
+      "auc": 0.6966,
+      "mean_p": 0.348,
+      "mean_y": 0.439,
+      "n": 4363
+     },
+     "17-28": {
+      "log_loss": 0.5305,
+      "auc": 0.8088,
+      "mean_p": 0.418,
+      "mean_y": 0.46,
+      "n": 13020
+     },
+     "29-": {
+      "log_loss": 0.4262,
+      "auc": 0.8835,
+      "mean_p": 0.516,
+      "mean_y": 0.538,
+      "n": 20174
+     }
+    }
+   },
+   "calibration": {
+    "hand-made leaf": [
+     [
+      0.0,
+      0.171,
+      4000
+     ],
+     [
+      0.005,
+      0.259,
+      4000
+     ],
+     [
+      0.034,
+      0.341,
+      4000
+     ],
+     [
+      0.111,
+      0.416,
+      4000
+     ],
+     [
+      0.237,
+      0.458,
+      4000
+     ],
+     [
+      0.391,
+      0.482,
+      4000
+     ],
+     [
+      0.537,
+      0.531,
+      4000
+     ],
+     [
+      0.764,
+      0.646,
+      4000
+     ],
+     [
+      0.955,
+      0.775,
+      4000
+     ],
+     [
+      0.999,
+      0.887,
+      4000
+     ]
+    ],
+    "v2": [
+     [
+      0.013,
+      0.032,
+      4000
+     ],
+     [
+      0.075,
+      0.169,
+      4000
+     ],
+     [
+      0.148,
+      0.284,
+      4000
+     ],
+     [
+      0.221,
+      0.363,
+      4000
+     ],
+     [
+      0.292,
+      0.461,
+      4000
+     ],
+     [
+      0.373,
+      0.53,
+      4000
+     ],
+     [
+      0.472,
+      0.607,
+      4000
+     ],
+     [
+      0.599,
+      0.734,
+      4000
+     ],
+     [
+      0.762,
+      0.843,
+      4000
+     ],
+     [
+      0.939,
+      0.946,
+      4000
+     ]
+    ],
+    "v3": [
+     [
+      0.014,
+      0.033,
+      4000
+     ],
+     [
+      0.077,
+      0.157,
+      4000
+     ],
+     [
+      0.149,
+      0.285,
+      4000
+     ],
+     [
+      0.218,
+      0.367,
+      4000
+     ],
+     [
+      0.286,
+      0.461,
+      4000
+     ],
+     [
+      0.364,
+      0.517,
+      4000
+     ],
+     [
+      0.462,
+      0.613,
+      4000
+     ],
+     [
+      0.587,
+      0.74,
+      4000
+     ],
+     [
+      0.749,
+      0.845,
+      4000
+     ],
+     [
+      0.935,
+      0.948,
+      4000
+     ]
+    ],
+    "v4b": [
+     [
+      0.021,
+      0.032,
+      4000
+     ],
+     [
+      0.103,
+      0.159,
+      4000
+     ],
+     [
+      0.199,
+      0.27,
+      4000
+     ],
+     [
+      0.283,
+      0.366,
+      4000
+     ],
+     [
+      0.365,
+      0.453,
+      4000
+     ],
+     [
+      0.453,
+      0.518,
+      4000
+     ],
+     [
+      0.56,
+      0.626,
+      4000
+     ],
+     [
+      0.693,
+      0.74,
+      4000
+     ],
+     [
+      0.834,
+      0.852,
+      4000
+     ],
+     [
+      0.96,
+      0.952,
+      4000
+     ]
+    ],
+    "v5": [
+     [
+      0.021,
+      0.034,
+      4000
+     ],
+     [
+      0.109,
+      0.146,
+      4000
+     ],
+     [
+      0.201,
+      0.271,
+      4000
+     ],
+     [
+      0.284,
+      0.359,
+      4000
+     ],
+     [
+      0.367,
+      0.46,
+      4000
+     ],
+     [
+      0.464,
+      0.513,
+      4000
+     ],
+     [
+      0.576,
+      0.631,
+      4000
+     ],
+     [
+      0.702,
+      0.737,
+      4000
+     ],
+     [
+      0.838,
+      0.854,
+      4000
+     ],
+     [
+      0.961,
+      0.963,
+      4000
+     ]
+    ]
+   },
+   "correlation": {
+    "hand-made leaf": {
+     "hand-made leaf": 1.0,
+     "v2": 0.665,
+     "v3": 0.66,
+     "v4b": 0.666,
+     "v5": 0.647
+    },
+    "v2": {
+     "hand-made leaf": 0.665,
+     "v2": 1.0,
+     "v3": 0.944,
+     "v4b": 0.92,
+     "v5": 0.913
+    },
+    "v3": {
+     "hand-made leaf": 0.66,
+     "v2": 0.944,
+     "v3": 1.0,
+     "v4b": 0.939,
+     "v5": 0.926
+    },
+    "v4b": {
+     "hand-made leaf": 0.666,
+     "v2": 0.92,
+     "v3": 0.939,
+     "v4b": 1.0,
+     "v5": 0.947
+    },
+    "v5": {
+     "hand-made leaf": 0.647,
+     "v2": 0.913,
+     "v3": 0.926,
+     "v4b": 0.947,
+     "v5": 1.0
+    }
+   },
+   "spread": {
+    "hand-made leaf": 0.373,
+    "v2": 0.289,
+    "v3": 0.286,
+    "v4b": 0.298,
+    "v5": 0.299
+   }
+  },
+  "v5-eval": {
+   "pilot": "net:models/v5.caiv:25,hbot,hbot,hbot",
+   "split": "eval",
+   "positions": 40000,
+   "games": 2978,
+   "by": {
+    "hand-made leaf": {
+     "log_loss": 0.9826,
+     "auc": 0.7146,
+     "mean_p": 0.424,
+     "mean_y": 0.543
+    },
+    "v2": {
+     "log_loss": 0.6413,
+     "auc": 0.7493,
+     "mean_p": 0.419,
+     "mean_y": 0.543
+    },
+    "v3": {
+     "log_loss": 0.6384,
+     "auc": 0.7524,
+     "mean_p": 0.418,
+     "mean_y": 0.543
+    },
+    "v4b": {
+     "log_loss": 0.5891,
+     "auc": 0.7603,
+     "mean_p": 0.491,
+     "mean_y": 0.543
+    },
+    "v5": {
+     "log_loss": 0.5913,
+     "auc": 0.7589,
+     "mean_p": 0.504,
+     "mean_y": 0.543
+    }
+   },
+   "phases": {
+    "hand-made leaf": {
+     "1-8": {
+      "log_loss": 0.7118,
+      "auc": 0.5128,
+      "mean_p": 0.459,
+      "mean_y": 0.51,
+      "n": 1378
+     },
+     "9-16": {
+      "log_loss": 0.8222,
+      "auc": 0.5357,
+      "mean_p": 0.405,
+      "mean_y": 0.483,
+      "n": 3189
+     },
+     "17-28": {
+      "log_loss": 0.9544,
+      "auc": 0.6319,
+      "mean_p": 0.377,
+      "mean_y": 0.5,
+      "n": 9423
+     },
+     "29-": {
+      "log_loss": 1.0313,
+      "auc": 0.7636,
+      "mean_p": 0.441,
+      "mean_y": 0.57,
+      "n": 25661
+     }
+    },
+    "v2": {
+     "1-8": {
+      "log_loss": 0.8416,
+      "auc": 0.5643,
+      "mean_p": 0.267,
+      "mean_y": 0.51,
+      "n": 1378
+     },
+     "9-16": {
+      "log_loss": 0.784,
+      "auc": 0.5998,
+      "mean_p": 0.293,
+      "mean_y": 0.483,
+      "n": 3189
+     },
+     "17-28": {
+      "log_loss": 0.7308,
+      "auc": 0.6828,
+      "mean_p": 0.333,
+      "mean_y": 0.5,
+      "n": 9423
+     },
+     "29-": {
+      "log_loss": 0.5779,
+      "auc": 0.7909,
+      "mean_p": 0.476,
+      "mean_y": 0.57,
+      "n": 25661
+     }
+    },
+    "v3": {
+     "1-8": {
+      "log_loss": 0.8427,
+      "auc": 0.5725,
+      "mean_p": 0.262,
+      "mean_y": 0.51,
+      "n": 1378
+     },
+     "9-16": {
+      "log_loss": 0.7899,
+      "auc": 0.6015,
+      "mean_p": 0.284,
+      "mean_y": 0.483,
+      "n": 3189
+     },
+     "17-28": {
+      "log_loss": 0.7257,
+      "auc": 0.6852,
+      "mean_p": 0.332,
+      "mean_y": 0.5,
+      "n": 9423
+     },
+     "29-": {
+      "log_loss": 0.5743,
+      "auc": 0.7946,
+      "mean_p": 0.477,
+      "mean_y": 0.57,
+      "n": 25661
+     }
+    },
+    "v4b": {
+     "1-8": {
+      "log_loss": 0.7256,
+      "auc": 0.6077,
+      "mean_p": 0.361,
+      "mean_y": 0.51,
+      "n": 1378
+     },
+     "9-16": {
+      "log_loss": 0.7053,
+      "auc": 0.6206,
+      "mean_p": 0.368,
+      "mean_y": 0.483,
+      "n": 3189
+     },
+     "17-28": {
+      "log_loss": 0.657,
+      "auc": 0.6927,
+      "mean_p": 0.419,
+      "mean_y": 0.5,
+      "n": 9423
+     },
+     "29-": {
+      "log_loss": 0.5407,
+      "auc": 0.8005,
+      "mean_p": 0.541,
+      "mean_y": 0.57,
+      "n": 25661
+     }
+    },
+    "v5": {
+     "1-8": {
+      "log_loss": 0.77,
+      "auc": 0.595,
+      "mean_p": 0.315,
+      "mean_y": 0.51,
+      "n": 1378
+     },
+     "9-16": {
+      "log_loss": 0.7229,
+      "auc": 0.6042,
+      "mean_p": 0.365,
+      "mean_y": 0.483,
+      "n": 3189
+     },
+     "17-28": {
+      "log_loss": 0.6557,
+      "auc": 0.6907,
+      "mean_p": 0.433,
+      "mean_y": 0.5,
+      "n": 9423
+     },
+     "29-": {
+      "log_loss": 0.5393,
+      "auc": 0.8016,
+      "mean_p": 0.56,
+      "mean_y": 0.57,
+      "n": 25661
+     }
+    }
+   },
+   "calibration": {
+    "hand-made leaf": [
+     [
+      0.001,
+      0.235,
+      4000
+     ],
+     [
+      0.015,
+      0.324,
+      4000
+     ],
+     [
+      0.063,
+      0.421,
+      4000
+     ],
+     [
+      0.155,
+      0.475,
+      4000
+     ],
+     [
+      0.285,
+      0.53,
+      4000
+     ],
+     [
+      0.432,
+      0.55,
+      4000
+     ],
+     [
+      0.578,
+      0.589,
+      4000
+     ],
+     [
+      0.778,
+      0.655,
+      4000
+     ],
+     [
+      0.939,
+      0.761,
+      4000
+     ],
+     [
+      0.997,
+      0.893,
+      4000
+     ]
+    ],
+    "v2": [
+     [
+      0.028,
+      0.128,
+      4000
+     ],
+     [
+      0.116,
+      0.324,
+      4000
+     ],
+     [
+      0.2,
+      0.417,
+      4000
+     ],
+     [
+      0.273,
+      0.464,
+      4000
+     ],
+     [
+      0.345,
+      0.521,
+      4000
+     ],
+     [
+      0.421,
+      0.57,
+      4000
+     ],
+     [
+      0.507,
+      0.617,
+      4000
+     ],
+     [
+      0.614,
+      0.69,
+      4000
+     ],
+     [
+      0.759,
+      0.781,
+      4000
+     ],
+     [
+      0.926,
+      0.923,
+      4000
+     ]
+    ],
+    "v3": [
+     [
+      0.029,
+      0.127,
+      4000
+     ],
+     [
+      0.118,
+      0.324,
+      4000
+     ],
+     [
+      0.2,
+      0.404,
+      4000
+     ],
+     [
+      0.272,
+      0.464,
+      4000
+     ],
+     [
+      0.342,
+      0.516,
+      4000
+     ],
+     [
+      0.419,
+      0.581,
+      4000
+     ],
+     [
+      0.507,
+      0.619,
+      4000
+     ],
+     [
+      0.616,
+      0.692,
+      4000
+     ],
+     [
+      0.756,
+      0.786,
+      4000
+     ],
+     [
+      0.922,
+      0.92,
+      4000
+     ]
+    ],
+    "v4b": [
+     [
+      0.047,
+      0.112,
+      4000
+     ],
+     [
+      0.173,
+      0.309,
+      4000
+     ],
+     [
+      0.276,
+      0.407,
+      4000
+     ],
+     [
+      0.36,
+      0.46,
+      4000
+     ],
+     [
+      0.439,
+      0.525,
+      4000
+     ],
+     [
+      0.521,
+      0.573,
+      4000
+     ],
+     [
+      0.612,
+      0.627,
+      4000
+     ],
+     [
+      0.712,
+      0.697,
+      4000
+     ],
+     [
+      0.825,
+      0.799,
+      4000
+     ],
+     [
+      0.943,
+      0.925,
+      4000
+     ]
+    ],
+    "v5": [
+     [
+      0.046,
+      0.116,
+      4000
+     ],
+     [
+      0.172,
+      0.315,
+      4000
+     ],
+     [
+      0.275,
+      0.389,
+      4000
+     ],
+     [
+      0.367,
+      0.475,
+      4000
+     ],
+     [
+      0.456,
+      0.524,
+      4000
+     ],
+     [
+      0.545,
+      0.571,
+      4000
+     ],
+     [
+      0.64,
+      0.634,
+      4000
+     ],
+     [
+      0.739,
+      0.695,
+      4000
+     ],
+     [
+      0.847,
+      0.79,
+      4000
+     ],
+     [
+      0.953,
+      0.927,
+      4000
+     ]
+    ]
+   },
+   "correlation": {
+    "hand-made leaf": {
+     "hand-made leaf": 1.0,
+     "v2": 0.667,
+     "v3": 0.662,
+     "v4b": 0.637,
+     "v5": 0.622
+    },
+    "v2": {
+     "hand-made leaf": 0.667,
+     "v2": 1.0,
+     "v3": 0.94,
+     "v4b": 0.914,
+     "v5": 0.902
+    },
+    "v3": {
+     "hand-made leaf": 0.662,
+     "v2": 0.94,
+     "v3": 1.0,
+     "v4b": 0.935,
+     "v5": 0.92
+    },
+    "v4b": {
+     "hand-made leaf": 0.637,
+     "v2": 0.914,
+     "v3": 0.935,
+     "v4b": 1.0,
+     "v5": 0.942
+    },
+    "v5": {
+     "hand-made leaf": 0.622,
+     "v2": 0.902,
+     "v3": 0.92,
+     "v4b": 0.942,
+     "v5": 1.0
+    }
+   },
+   "spread": {
+    "hand-made leaf": 0.364,
+    "v2": 0.273,
+    "v3": 0.272,
+    "v4b": 0.274,
+    "v5": 0.282
+   }
+  }
+ },
+ "importance": {
+  "v3": {
+   "hbot-train": {
+    "turn, step, priority, stack, mana pool": 0.0025,
+    "seat counts (self): life, hand, library, board, power": 0.0659,
+    "seat counts (next seat): life, hand, library, board, power": 0.0143,
+    "seat counts (seat after): life, hand, library, board, power": 0.0166,
+    "seat counts (seat before): life, hand, library, board, power": 0.0164,
+    "commander blocks": 0.0051,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.0007,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": 0.0001,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": 0.0004,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": 0.0001,
+    "globals (round, day/night)": 0.0003,
+    "cards: battlefield (self)": 0.1049,
+    "cards: battlefield (next seat)": 0.0233,
+    "cards: battlefield (seat after)": 0.0203,
+    "cards: battlefield (seat before)": 0.022,
+    "cards: hand (self)": 0.024,
+    "cards: stack": 0.0007,
+    "cards: command zone": 0.0096,
+    "hand-made leaf (self)": 0.0248,
+    "hand-made leaf (opponents)": 0.0046
+   },
+   "v5-train": {
+    "turn, step, priority, stack, mana pool": 0.0029,
+    "seat counts (self): life, hand, library, board, power": 0.0779,
+    "seat counts (next seat): life, hand, library, board, power": 0.0127,
+    "seat counts (seat after): life, hand, library, board, power": 0.011,
+    "seat counts (seat before): life, hand, library, board, power": 0.0105,
+    "commander blocks": 0.0138,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.0005,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": -0.0004,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": 0.0003,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": 0.0001,
+    "globals (round, day/night)": 0.0027,
+    "cards: battlefield (self)": 0.0963,
+    "cards: battlefield (next seat)": 0.0237,
+    "cards: battlefield (seat after)": 0.0236,
+    "cards: battlefield (seat before)": 0.026,
+    "cards: hand (self)": 0.0355,
+    "cards: stack": 0.0023,
+    "cards: command zone": 0.0073,
+    "hand-made leaf (self)": 0.0322,
+    "hand-made leaf (opponents)": 0.002
+   },
+   "v5-eval": {
+    "turn, step, priority, stack, mana pool": 0.0044,
+    "seat counts (self): life, hand, library, board, power": 0.0788,
+    "seat counts (next seat): life, hand, library, board, power": 0.0027,
+    "seat counts (seat after): life, hand, library, board, power": 0.0076,
+    "seat counts (seat before): life, hand, library, board, power": 0.009,
+    "commander blocks": 0.021,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.0015,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": -0.0001,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": 0.0001,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": -0.0005,
+    "globals (round, day/night)": 0.0045,
+    "cards: battlefield (self)": 0.0278,
+    "cards: battlefield (next seat)": 0.0179,
+    "cards: battlefield (seat after)": 0.0158,
+    "cards: battlefield (seat before)": 0.0122,
+    "cards: hand (self)": 0.0166,
+    "cards: stack": 0.0009,
+    "cards: command zone": 0.0029,
+    "hand-made leaf (self)": 0.025,
+    "hand-made leaf (opponents)": -0.004
+   }
+  },
+  "v5": {
+   "hbot-train": {
+    "turn, step, priority, stack, mana pool": 0.0019,
+    "seat counts (self): life, hand, library, board, power": 0.0728,
+    "seat counts (next seat): life, hand, library, board, power": 0.0187,
+    "seat counts (seat after): life, hand, library, board, power": 0.0239,
+    "seat counts (seat before): life, hand, library, board, power": 0.0167,
+    "commander blocks": 0.0039,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.0006,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": 0.0004,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": 0.0004,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": 0.0,
+    "globals (round, day/night)": -0.0008,
+    "cards: battlefield (self)": 0.1387,
+    "cards: battlefield (next seat)": 0.0261,
+    "cards: battlefield (seat after)": 0.0224,
+    "cards: battlefield (seat before)": 0.0252,
+    "cards: hand (self)": 0.0255,
+    "cards: stack": 0.0002,
+    "cards: command zone": 0.0107,
+    "hand-made leaf (self)": 0.0148,
+    "hand-made leaf (opponents)": 0.0045
+   },
+   "v5-train": {
+    "turn, step, priority, stack, mana pool": 0.0046,
+    "seat counts (self): life, hand, library, board, power": 0.0945,
+    "seat counts (next seat): life, hand, library, board, power": 0.0167,
+    "seat counts (seat after): life, hand, library, board, power": 0.017,
+    "seat counts (seat before): life, hand, library, board, power": 0.0116,
+    "commander blocks": 0.0092,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.001,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": -0.0001,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": 0.0004,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": 0.0005,
+    "globals (round, day/night)": 0.0021,
+    "cards: battlefield (self)": 0.1285,
+    "cards: battlefield (next seat)": 0.0313,
+    "cards: battlefield (seat after)": 0.0254,
+    "cards: battlefield (seat before)": 0.0295,
+    "cards: hand (self)": 0.041,
+    "cards: stack": 0.0014,
+    "cards: command zone": 0.0125,
+    "hand-made leaf (self)": 0.0217,
+    "hand-made leaf (opponents)": 0.0017
+   },
+   "v5-eval": {
+    "turn, step, priority, stack, mana pool": 0.0056,
+    "seat counts (self): life, hand, library, board, power": 0.0925,
+    "seat counts (next seat): life, hand, library, board, power": 0.0087,
+    "seat counts (seat after): life, hand, library, board, power": 0.0108,
+    "seat counts (seat before): life, hand, library, board, power": 0.0094,
+    "commander blocks": 0.0167,
+    "pod block (self): poison, commander damage, life gained/lost, monarch": 0.0015,
+    "pod block (next seat): poison, commander damage, life gained/lost, monarch": 0.0002,
+    "pod block (seat after): poison, commander damage, life gained/lost, monarch": -0.0002,
+    "pod block (seat before): poison, commander damage, life gained/lost, monarch": -0.0001,
+    "globals (round, day/night)": 0.0043,
+    "cards: battlefield (self)": 0.0458,
+    "cards: battlefield (next seat)": 0.0215,
+    "cards: battlefield (seat after)": 0.0157,
+    "cards: battlefield (seat before)": 0.0169,
+    "cards: hand (self)": 0.0263,
+    "cards: stack": 0.0003,
+    "cards: command zone": 0.009,
+    "hand-made leaf (self)": 0.0199,
+    "hand-made leaf (opponents)": -0.0026
+   }
+  }
+ },
+ "agreement": {}
+}

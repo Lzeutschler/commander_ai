@@ -362,10 +362,10 @@ func Arena(root string, opts ArenaOptions) (ArenaReport, ArenaTiming, error) {
 	return rep, tim, nil
 }
 
-// drawTable draws game g's table from the pool: a deck of cands for the
+// DrawTable draws game g's table from the pool: a deck of cands for the
 // candidate, three other decks of the whole pool, in a random seat order.
 // It is a function of the first seed, g and the attempt alone.
-func drawTable(rng *rand.Rand, pool *Pool, cands []int) (table []int, seat int) {
+func DrawTable(rng *rand.Rand, pool *Pool, cands []int) (table []int, seat int) {
 	cand := cands[rng.IntN(len(cands))]
 	table = []int{cand}
 	for _, i := range rng.Perm(len(pool.Decks)) {
@@ -418,7 +418,7 @@ func arenaPool(root string, opts ArenaOptions, prov Provenance, mk func() lab.Po
 				var table []int
 				var seat int
 				for attempt := 0; su == nil && attempt < 200; attempt++ {
-					table, seat = drawTable(rng, pool, cands)
+					table, seat = DrawTable(rng, pool, cands)
 					decks := make([]lab.Deck, len(table))
 					for i, d := range table {
 						decks[i] = pool.Decks[d].Deck
