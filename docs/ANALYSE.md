@@ -271,7 +271,9 @@ Damit ist die Frage aus der Kurzfassung beantwortet: Ein Teil des Gelernten ist 
 
 ## Nachtrag: Selbstspiel gegen gemischte Gegner
 
-Auch Schritt 2 ist erledigt, mit negativem Ergebnis (Zahlen in der [README](../README.md#dritte-runde-gemischte-gegner-kein-fortschritt)): Netz v6 ist gegen Netz-Gegner nicht besser als v5 und gegen Heuristik-Bots schwächer. Der wahrscheinliche Grund: Die Bewertung ist eine Zahl ohne Wissen über die Gegner, und im Suchbaum spielt die Gegner immer der Heuristik-Bot. Die Schritte 5, 7 und 8 der folgenden Liste rücken damit nach vorn, ergänzt um ein Gegnermodell in der Suche.
+Auch Schritt 2 ist erledigt, mit negativem Ergebnis (Zahlen in der [README](../README.md#dritte-runde-gemischte-gegner-kein-fortschritt)): Netz v6 ist gegen Netz-Gegner nicht besser als v5 und gegen Heuristik-Bots schwächer. Der wahrscheinliche Grund: Die Bewertung ist eine Zahl ohne Wissen über die Gegner.
+
+Mehr bringt, wie die Suche ihre Gegner annimmt. Im Standard sucht sie die Entscheidungen der Gegner mit, als Koalition gegen den eigenen Platz. Überlässt man die Gegner im Suchbaum dem Heuristik-Bot, gewinnt v5 bei 25 Simulationen 6,1 Punkte gegen Heuristik-Bots und 4,4 Punkte gegen Kopien von sich selbst, bei knapp vierfacher Rechenzeit. Die Schritte 5, 7 und 8 der folgenden Liste rücken damit nach vorn.
 
 ## Nächste Schritte
 

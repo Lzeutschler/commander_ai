@@ -374,6 +374,10 @@ func pilotOf(spec string) (func() lab.Policy, error) {
 	var net *learn.ValueNet
 	var sims string
 	spread := 1.0
+	// The search puts the opponents' decisions in its tree, as one coalition
+	// against the seat (search.Options.OpponentNodes, on by default).
+	// botopp:<pilot> leaves them to the heuristic bot instead.
+	spec, botOpp := strings.CutPrefix(spec, "botopp:")
 	switch {
 	case strings.HasPrefix(spec, "hsearch:"):
 		sims = strings.TrimPrefix(spec, "hsearch:")
@@ -406,12 +410,22 @@ func pilotOf(spec string) (func() lab.Policy, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := learn.NewSearchPolicy(n, net, reg); err != nil {
+	probe, err := learn.NewSearchPolicy(n, net, reg)
+	if err != nil {
 		return nil, err
+	}
+	if botOpp {
+		probe.Opts.OpponentNodes, probe.Opts.OpponentMirror = false, false
+		if err := probe.Opts.Validate(); err != nil {
+			return nil, err
+		}
 	}
 	return func() lab.Policy {
 		p, _ := learn.NewSearchPolicy(n, net, reg)
 		p.Spread = spread
+		if botOpp {
+			p.Opts.OpponentNodes, p.Opts.OpponentMirror = false, false
+		}
 		return p
 	}, nil
 }

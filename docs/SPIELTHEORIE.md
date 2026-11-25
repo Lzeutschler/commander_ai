@@ -146,7 +146,7 @@ Die Suche mit Handbewertung baut am schnellsten das größte Brett. Das Netz ist
 
 **Zwei Befunde, ein Muster.** Den Führenden eindämmen und einen Spieler ausschalten sind beides öffentliche Güter mit privaten Kosten. Ein Spieler, der nur seinen eigenen Sieg maximiert und nicht reden kann, liefert davon zu wenig. Das Netz tut genau das. Menschliche Tische haben dafür Sprache, Ruf und Vergeltung erfunden. Was die Community „Politik" nennt, ist aus dieser Sicht kein Beiwerk, sondern die Lösung eines echten strategischen Problems.
 
-**Die Suche denkt paranoid.** Unsere Baumsuche behandelt die drei Gegner als ein Team, das gemeinsam gegen den Kandidaten spielt. Das ist die einfachste Annahme und gegen Bots gut genug. Sie kann aber nicht abbilden, dass zwei Gegner sich gegenseitig schaden. Die Alternative aus der Literatur, max^n, gibt jedem Spieler eigene Ziele. Ob sie hier hilft, ist offen.
+**Die Suche denkt paranoid.** Unsere Baumsuche behandelt die drei Gegner als ein Team, das gemeinsam gegen den Kandidaten spielt. Das ist die einfachste Annahme und gegen Bots gut genug. Sie kann aber nicht abbilden, dass zwei Gegner sich gegenseitig schaden. Die Alternative aus der Literatur, max^n, gibt jedem Spieler eigene Ziele. Ob sie hier hilft, ist offen. Eine erste Messung zeigt aber, dass die Koalitionsannahme kostet: Spielt im Suchbaum einfach der Heuristik-Bot die Gegner, gewinnt v5 bei 25 Simulationen 51,4 % statt 45,3 %, allerdings bei knapp vierfacher Rechenzeit. Wer annimmt, dass sich der ganze Tisch gegen ihn verschworen hat, spielt schlechter.
 
 ## Faustregeln für den echten Tisch
 

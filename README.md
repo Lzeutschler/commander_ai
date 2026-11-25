@@ -122,9 +122,22 @@ Die dritte Selbstspiel-Runde sollte die Lücke gegen Netz-Gegner schließen. In 
 - **Als reines Zusatzmaterial schaden die neuen Daten nicht, helfen aber auch nicht.** Die Variante v6u nutzt sie ohne Lernziel für die Suche. Sie liegt 2,6 und 0,2 Punkte hinter v5 (42,7 % und 41,6 % auf den beiden Seed-Sätzen), beides nicht gesichert.
 - **Der Vorsprung von v5 bestätigt sich auf frischen Seeds:** 41,8 % gegenüber 35,8 % für die Handbewertung (+5,9 [+3,2; +8,7]). Die bisherigen Ergebnisse hängen also nicht an den immer gleichen 1.600 Tischen.
 
-**Einordnung.** Das Netz gibt eine einzige Zahl aus und sieht nicht, wer am Tisch sitzt. Lernt es aus Tischen mit verschiedenen Gegnern, lernt es einen Mittelwert, der für keinen Tisch genau stimmt. Dazu kommt: Innerhalb der Suche spielt die Gegner weiterhin der Heuristik-Bot, egal wer wirklich dort sitzt. Gegen Netz-Gegner liegt der Hebel deshalb vermutlich nicht in der Bewertung, sondern darin, wie die Suche ihre Gegner annimmt. v5 bleibt das Referenznetz.
+**Einordnung.** Das Netz gibt eine einzige Zahl aus und sieht nicht, wer am Tisch sitzt. Lernt es aus Tischen mit verschiedenen Gegnern, lernt es einen Mittelwert, der für keinen Tisch genau stimmt. v5 bleibt das Referenznetz. Ein größerer Hebel liegt darin, wie die Suche ihre Gegner annimmt, siehe den nächsten Abschnitt.
 
 Bei der Aufzeichnung trat ein Fehler im Kern zutage, der den ganzen Prozess beendet ([#5](https://github.com/Lzeutschler/commander_ai/issues/5)). Die Aufzeichnung läuft seitdem in Abschnitten, und abgebrochene Läufe bleiben verwertbar.
+
+### Wie die Suche ihre Gegner annimmt
+
+Die Baumsuche der Engine sucht auch die Entscheidungen der Gegner mit und nimmt dabei an, dass alle drei gemeinsam gegen den eigenen Platz spielen. Mit `botopp:` vor dem Piloten überlässt sie die Gegner im Suchbaum stattdessen dem Heuristik-Bot und sucht nur die eigenen Entscheidungen. Netz v5, 25 Simulationen, je 1.600 Partien:
+
+| drei Gegner | Gegner als Koalition (Standard) | Gegner vom Bot gespielt | Unterschied |
+|---|---:|---:|---:|
+| Heuristik-Bot | 45,3 % | 51,4 % | +6,1 [+3,5; +8,6] |
+| Kopien von v5 | 23,7 % | 28,1 % | +4,4 [+1,8; +7,0] |
+
+- **Ohne die Koalitionsannahme spielt v5 deutlich stärker**, auch gegen Netz-Gegner. Das ist der erste Schritt, der gegen Kopien von v5 etwas bringt.
+- **Es kostet Rechenzeit.** Jede Simulation läuft dann über mehr Züge. Gegen Heuristik-Bots sind es 5,4 statt 19,7 Partien pro Sekunde. Die Standardsuche mit 100 Simulationen erreicht dieselben 51,4 % bei 4,4 Partien pro Sekunde. Gegen Heuristik-Bots ist es bei gleicher Rechenzeit also etwa ein Gleichstand.
+- **Offen:** der Vergleich bei gleicher Rechenzeit gegen Netz-Gegner und mit 100 Simulationen.
 
 ### Tempo an gezogenen Tischen
 
